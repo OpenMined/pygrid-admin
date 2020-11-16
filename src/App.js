@@ -1,25 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useLayoutEffect } from "react";
+import { Router } from "react-router-dom";
+import { createBrowserHistory } from "history";
+// import { Theme } from "@openmined/omui";
 
-function App() {
+import Routes from "./routes";
+
+const history = createBrowserHistory();
+
+const App = () => {
+  const [action, setAction] = useState(history.action);
+  const [location, setLocation] = useState(history.location);
+
+  useLayoutEffect(() => {
+    history.listen(({ location, action }) => {
+      setLocation(location);
+      setAction(action);
+    });
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    // <Theme>
+      <Router action={action} location={location} navigator={history}>
+        <Routes />
+      </Router>
+    // </Theme>
   );
-}
+};
 
 export default App;

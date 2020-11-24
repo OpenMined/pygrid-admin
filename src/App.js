@@ -1,9 +1,9 @@
 import React, { useState, useLayoutEffect } from "react";
 import { Router } from "react-router-dom";
 import { createBrowserHistory } from "history";
-// import { Theme } from "@openmined/omui";
 
 import Routes from "./routes";
+import { Header } from "./components";
 
 const history = createBrowserHistory();
 
@@ -19,11 +19,10 @@ const App = () => {
   }, []);
 
   return (
-    // <Theme>
-      <Router action={action} location={location} navigator={history}>
-        <Routes />
-      </Router>
-    // </Theme>
+    <Router action={action} location={location} navigator={history}>
+      <Header />
+      <Routes />
+    </Router>
   );
 };
 

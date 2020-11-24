@@ -1208,6 +1208,14 @@
   dependencies:
     "@chakra-ui/utils" "1.0.0-rc.7"
 
+"@chakra-ui/icons@1.0.0-rc.7":
+  version "1.0.0-rc.7"
+  resolved "https://registry.yarnpkg.com/@chakra-ui/icons/-/icons-1.0.0-rc.7.tgz#b82ad3e6950513920467691cd4eec5b029755ff4"
+  integrity sha512-doUVgxRMDePIh1tKpJMjOInbFmtu7X/TOkzZ/2K+xUtAvhTybLi6V1zAAhSGzi/dildOoTaf91Ml1GZpfxPWFw==
+  dependencies:
+    "@chakra-ui/icon" "1.0.0-rc.7"
+    "@types/react" "16.9.44"
+
 "@chakra-ui/image@1.0.0-rc.7":
   version "1.0.0-rc.7"
   resolved "https://registry.yarnpkg.com/@chakra-ui/image/-/image-1.0.0-rc.7.tgz#fb3fd0be226d7c2b685adbc44ce7df7f384e3da0"
@@ -1895,12 +1903,13 @@
   dependencies:
     mkdirp "^1.0.4"
 
-"@openmined/omui@^0.2.2":
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/@openmined/omui/-/omui-0.2.2.tgz#79948fad15877d6fda59d118a3fb771c831a6616"
-  integrity sha512-NRw1TFbUm3xTy9K8pcht8xfLwVR8b5oY0HyjKKW1mqUf55gQB2snl9eOxdocDE1Gj2sMMn5slNf7zyvbZKvnhA==
+"@openmined/omui@0.2.4":
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/@openmined/omui/-/omui-0.2.4.tgz#82801ab4971dd71baa5f43a3beba60604566baa8"
+  integrity sha512-tHKhvPcAQvrcDq7anIIk5bA8h/lBKTpvpwM5N5t2Pnk3JG2eXiP0v2d1v63Aqx5WBUyOgU8sJnOZU4ExzX2uqg==
   dependencies:
     "@chakra-ui/core" "1.0.0-rc.7"
+    "@chakra-ui/icons" "1.0.0-rc.7"
     "@chakra-ui/system" "1.0.0-rc.7"
     "@chakra-ui/theme" "1.0.0-rc.7"
     "@chakra-ui/theme-tools" "1.0.0-rc.7"
@@ -2322,10 +2331,23 @@
   resolved "https://registry.yarnpkg.com/@types/prettier/-/prettier-2.1.5.tgz#b6ab3bba29e16b821d84e09ecfaded462b816b00"
   integrity sha512-UEyp8LwZ4Dg30kVU2Q3amHHyTn1jEdhCIE59ANed76GaT1Vp76DD3ZWSAxgCrw6wJ0TqeoBpqmfUHiUDPs//HQ==
 
+"@types/prop-types@*":
+  version "15.7.3"
+  resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.3.tgz#2ab0d5da2e5815f94b0b9d4b95d1e5f243ab2ca7"
+  integrity sha512-KfRL3PuHmqQLOG+2tGpRO26Ctg+Cq1E01D2DMriKEATHgWLfeNDmq9e29Q9WIky0dQ3NPkd1mzYH8Lm936Z9qw==
+
 "@types/q@^1.5.1":
   version "1.5.4"
   resolved "https://registry.yarnpkg.com/@types/q/-/q-1.5.4.tgz#15925414e0ad2cd765bfef58842f7e26a7accb24"
   integrity sha512-1HcDas8SEj4z1Wc696tH56G8OlRaH/sqZOynNNB+HF0WOeXPaxTtbYzJY2oEfiUxjSKjhCKr+MvR7dCHcEelug==
+
+"@types/react@16.9.44":
+  version "16.9.44"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.9.44.tgz#da84b179c031aef67dc92c33bd3401f1da2fa3bc"
+  integrity sha512-BtLoJrXdW8DVZauKP+bY4Kmiq7ubcJq+H/aCpRfvPF7RAT3RwR73Sg8szdc2YasbAlWBDrQ6Q+AFM0KwtQY+WQ==
+  dependencies:
+    "@types/prop-types" "*"
+    csstype "^3.0.2"
 
 "@types/resolve@0.0.8":
   version "0.0.8"
@@ -4450,6 +4472,11 @@ csstype@^2.5.7:
   version "2.6.14"
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-2.6.14.tgz#004822a4050345b55ad4dcc00be1d9cf2f4296de"
   integrity sha512-2mSc+VEpGPblzAxyeR+vZhJKgYg0Og0nnRi7pmRXFYYxSfnOnW8A5wwQb4n4cE2nIOzqKOAzLCaEX6aBmNEv8A==
+
+csstype@^3.0.2:
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.0.5.tgz#7fdec6a28a67ae18647c51668a9ff95bb2fa7bb8"
+  integrity sha512-uVDi8LpBUKQj6sdxNaTetL6FpeCqTjOvAQuQUa/qAqq8oOd4ivkbhgnqayl0dnPal8Tb/yB1tF+gOvCBiicaiQ==
 
 cyclist@^1.0.1:
   version "1.0.1"
@@ -9803,6 +9830,13 @@ react-focus-lock@2.4.1:
     react-clientside-effect "^1.2.2"
     use-callback-ref "^1.2.1"
     use-sidecar "^1.0.1"
+
+react-icons@^3.11.0:
+  version "3.11.0"
+  resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-3.11.0.tgz#2ca2903dfab8268ca18ebd8cc2e879921ec3b254"
+  integrity sha512-JRgiI/vdF6uyBgyZhVyYJUZAop95Sy4XDe/jmT3R/bKliFWpO/uZBwvSjWEdxwzec7SYbEPNPck0Kff2tUGM2Q==
+  dependencies:
+    camelcase "^5.0.0"
 
 react-is@^16.8.1:
   version "16.13.1"

@@ -1,9 +1,9 @@
-import React from "react";
-import { Theme } from "@openmined/omui";
+import React from 'react';
+import { Theme } from '@openmined/omui';
 
-import Header from "../components/Header";
+import Header from '../components/Header';
 
-import "../styles/globals.css";
+import '../styles/globals.css';
 
 const Layout = ({ children }) => (
   <div className="layout">

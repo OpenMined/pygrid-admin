@@ -1,5 +1,5 @@
-import React from "react";
-import { Container, Box, Heading } from "@openmined/omui";
+import React from 'react';
+import { Container, Box, Heading } from '@openmined/omui';
 
 const Homepage = () => (
   <Container maxW="xl">

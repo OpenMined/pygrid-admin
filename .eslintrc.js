@@ -1,32 +1,28 @@
 module.exports = {
   root: true,
-  parserOptions: {
-    ecmaVersion: 2020,
-    sourceType: 'module',
-    ecmaFeatures: {
-      jsx: true
-    }
-  },
-  settings: {
-    react: {
-      version: 'detect'
-    }
-  },
+  parserOptions: {ecmaVersion: 8},
+  parser: '@typescript-eslint/parser',
+  settings: {react: {version: 'detect'}},
+  ignorePatterns: ['node_modules/*', '.next/*', '.out/*', '!.prettierrc.js'],
   env: {
     browser: true,
-    amd: true,
+    es6: true,
     node: true
   },
+  plugins: ['jsx-a11y', '@typescript-eslint', 'react-hooks'],
   extends: [
     'eslint:recommended',
     'plugin:react/recommended',
     'plugin:jsx-a11y/recommended',
-    'plugin:prettier/recommended'
+    'plugin:prettier/recommended',
+    'plugin:@typescript-eslint/recommended'
   ],
   rules: {
-    'prettier/prettier': ['error', {}, { usePrettierrc: true }],
+    'prettier/prettier': ['error', {}, {usePrettierrc: true}],
+    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/exhaustive-deps': 'warn',
     'react/react-in-jsx-scope': 'off',
-    'react/prop-types': 'off',
+    'react/prop-types': 'off', // TS types for component props
     'jsx-a11y/anchor-is-valid': [
       'error',
       {
@@ -36,4 +32,4 @@ module.exports = {
       }
     ]
   }
-};
+}

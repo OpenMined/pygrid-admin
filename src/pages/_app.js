@@ -8,7 +8,14 @@ import {AxiosProvider} from '../contexts/axios-context'
 import '../styles/globals.css'
 
 const queryCache = new QueryCache()
-const queryClient = new QueryClient({queryCache: queryCache})
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchInterval: 5 * 60 * 1000
+    }
+  },
+  queryCache: queryCache
+})
 
 const Layout = ({children}) => (
   <div className="layout">
@@ -16,8 +23,6 @@ const Layout = ({children}) => (
     {children}
   </div>
 )
-
-// const Layout = ({ children }) => <div className="layout">{children}</div>
 
 function PyGridAdmin({Component, pageProps}) {
   return (

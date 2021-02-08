@@ -1,9 +1,14 @@
 import React from 'react'
 import {Theme} from '@openmined/omui'
+import {QueryCache, QueryClient, QueryClientProvider} from 'react-query'
 
 import Header from '../components/Header'
+import {AxiosProvider} from '../contexts/axios-context'
 
 import '../styles/globals.css'
+
+const queryCache = new QueryCache()
+const queryClient = new QueryClient({queryCache: queryCache})
 
 const Layout = ({children}) => (
   <div className="layout">
@@ -16,11 +21,15 @@ const Layout = ({children}) => (
 
 function PyGridAdmin({Component, pageProps}) {
   return (
-    <Theme>
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
-    </Theme>
+    <AxiosProvider>
+      <QueryClientProvider client={queryClient}>
+        <Theme>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </Theme>
+      </QueryClientProvider>
+    </AxiosProvider>
   )
 }
 

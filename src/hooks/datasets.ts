@@ -7,7 +7,7 @@ export function useDatasets() {
 
   return useQuery('datasets', async () => {
     // 'any' should be replaced by the response type
-    const {data} = await axios.get<any>('/api/datasets')
+    const {data} = await axios.get<any>('/datasets')
     return data
   })
 }

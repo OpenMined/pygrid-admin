@@ -1,5 +1,6 @@
 import {createContext, useMemo} from 'react'
-import Axios, {AxiosInstance} from 'axios'
+import {camelizeKeys, decamelizeKeys} from 'humps'
+import Axios, {AxiosInstance, AxiosResponse, AxiosRequestConfig} from 'axios'
 
 export const AxiosContext = createContext<AxiosInstance>(undefined)
 
@@ -11,11 +12,22 @@ export const AxiosProvider = ({children}: React.PropsWithChildren<unknown>) => {
       }
     })
 
-    /* Set up interceptors if needed
-    axios.interceptors.request.use(config => {
-      // Do some stuff here
-      return config
-    })*/
+    axios.interceptors.response.use((response: AxiosResponse) => {
+      if (response.data && response.headers['content-type'] === 'application/json') {
+        response.data = camelizeKeys(response.data)
+      }
+      return response
+    })
+
+    axios.interceptors.request.use((config: AxiosRequestConfig) => {
+      const newConfig = {...config}
+
+      if (config.data) {
+        newConfig.data = decamelizeKeys(config.data)
+      }
+
+      return newConfig
+    })
 
     return axios
   }, [])

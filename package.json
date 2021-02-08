@@ -17,7 +17,9 @@
   },
   "dependencies": {
     "@openmined/omui": "^0.2.4",
+    "@types/humps": "^2.0.0",
     "axios": "^0.21.1",
+    "humps": "^2.0.1",
     "husky": "^4.3.8",
     "next": "10.0.6",
     "pretty-quick": "^3.1.0",

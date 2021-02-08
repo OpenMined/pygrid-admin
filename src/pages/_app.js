@@ -1,5 +1,6 @@
 import React from 'react'
 import {Theme} from '@openmined/omui'
+import {ReactQueryDevtools} from 'react-query-devtools'
 import {QueryCache, QueryClient, QueryClientProvider} from 'react-query'
 
 import Header from '../components/Header'
@@ -31,6 +32,7 @@ function PyGridAdmin({Component, pageProps}) {
         <Theme>
           <Layout>
             <Component {...pageProps} />
+            <ReactQueryDevtools initialIsOpen={false} />
           </Layout>
         </Theme>
       </QueryClientProvider>

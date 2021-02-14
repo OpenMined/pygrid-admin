@@ -30,6 +30,7 @@ module.exports = {
         specialLink: ['hrefLeft', 'hrefRight'],
         aspects: ['invalidHref', 'preferButton']
       }
-    ]
+    ],
+    '@typescript-eslint/explicit-module-boundary-types': 'off'
   }
 }

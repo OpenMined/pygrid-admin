@@ -4,7 +4,6 @@ import {ReactQueryDevtools} from 'react-query/devtools'
 import {QueryCache, QueryClient, QueryClientProvider} from 'react-query'
 
 import Header from '@/components/header'
-import {AxiosProvider} from '@/contexts/axios-context'
 
 import '@/styles/globals.css'
 
@@ -27,14 +26,12 @@ const Layout: FunctionComponent = ({children}) => (
 
 function PyGridAdmin({Component, pageProps}: AppProps) {
   return (
-    <AxiosProvider>
-      <QueryClientProvider client={queryClient}>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
-    </AxiosProvider>
+    <QueryClientProvider client={queryClient}>
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   )
 }
 

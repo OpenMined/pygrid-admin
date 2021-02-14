@@ -2,7 +2,25 @@ module.exports = {
   purge: ['./src/pages/**/*.{ts,tsx}', './src/components/**/*.{ts,tsx}'],
   darkMode: false, // or 'media' or 'class'
   theme: {
-    extend: {}
+    extend: {
+      fontFamily: {
+        rubik: 'Rubik, sans-serif'
+      },
+      container: theme => ({
+        padding: theme('padding.4')
+      }),
+      extend: {
+        typography: {
+          DEFAULT: {
+            css: {
+              h1: {
+                fontWeight: 'normal'
+              }
+            }
+          }
+        }
+      }
+    }
   },
   variants: {
     extend: {}

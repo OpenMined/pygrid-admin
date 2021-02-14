@@ -1,6 +1,6 @@
-import * as React from 'react'
+import type {FunctionComponent} from 'react'
 
-const ArrowForward: React.FunctionComponent<{className?: string}> = ({className}) => {
+const ArrowForward: FunctionComponent<{className?: string}> = ({className}) => {
   return (
     <svg
       aria-hidden="true"

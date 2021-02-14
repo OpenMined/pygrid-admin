@@ -1,6 +1,6 @@
-import * as React from 'react'
+import type {FunctionComponent} from 'react'
 
-const TriangleDown: React.FunctionComponent<{className?: string}> = ({className}) => {
+const TriangleDown: FunctionComponent<{className?: string}> = ({className}) => {
   return (
     <svg
       aria-hidden="true"
@@ -16,7 +16,7 @@ const TriangleDown: React.FunctionComponent<{className?: string}> = ({className}
   )
 }
 
-const TriangleUp: React.FunctionComponent<{className?: string}> = ({className}) => {
+const TriangleUp: FunctionComponent<{className?: string}> = ({className}) => {
   return (
     <svg
       aria-hidden="true"

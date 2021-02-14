@@ -1,9 +1,8 @@
-import React from 'react'
+import type {FunctionComponent} from 'react'
 import Image from 'next/image'
-
 import {default as NextLink} from 'next/link'
 
-const Header = () => {
+const Header: FunctionComponent = () => {
   return (
     <nav className="sticky top-0">
       <div className="flex flex-row flex-wrap items-center justify-between px-3 shadow bg-gray-50">

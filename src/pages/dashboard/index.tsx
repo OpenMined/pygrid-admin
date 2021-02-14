@@ -1,8 +1,8 @@
-import * as React from 'react'
+import type {FunctionComponent} from 'react'
 import {Card} from '@/components/pages/dashboard/card'
 import cardsData from '@/components/pages/dashboard/card/_data'
 
-const Dashboard: React.FunctionComponent = () => (
+const Dashboard: FunctionComponent = () => (
   <div>
     <section>
       <h1 className="text-4xl text-gray-800">Dashboard</h1>

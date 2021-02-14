@@ -1,4 +1,4 @@
-import {FunctionComponent} from 'react'
+import type {FunctionComponent} from 'react'
 
 // until we get the login working
 const authed = true

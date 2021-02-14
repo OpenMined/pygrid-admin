@@ -1,9 +1,9 @@
-import * as React from 'react'
+import type {FunctionComponent, ReactElement} from 'react'
 
 interface Item {
   value: number | string
   description: string
-  icon?: React.ReactElement
+  icon?: ReactElement
 }
 
 interface CardItems {
@@ -11,7 +11,7 @@ interface CardItems {
   main: Item
   items: Array<Item>
 }
-const Card: React.FunctionComponent<CardItems> = ({title, main, items}) => (
+const Card: FunctionComponent<CardItems> = ({title, main, items}) => (
   <div>
     <small className="font-semibold tracking-wide text-gray-800 uppercase">{title}</small>
     <p className="my-3">

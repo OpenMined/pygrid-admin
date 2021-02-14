@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {FunctionComponent} from 'react'
 import type {AppProps} from 'next/app'
 import {ReactQueryDevtools} from 'react-query/devtools'
 import {QueryCache, QueryClient, QueryClientProvider} from 'react-query'
@@ -18,10 +18,10 @@ const queryClient = new QueryClient({
   queryCache: queryCache
 })
 
-const Layout = ({children}) => (
-  <div className="layout">
+const Layout: FunctionComponent = ({children}) => (
+  <div className="min-h-screen">
     <Header />
-    {children}
+    <div className="container mx-auto mt-8 mb-12">{children}</div>
   </div>
 )
 

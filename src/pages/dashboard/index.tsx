@@ -3,7 +3,7 @@ import {Card} from '@/components/pages/dashboard/card'
 import cardsData from '@/components/pages/dashboard/card/_data'
 
 const Dashboard: React.FunctionComponent = () => (
-  <div className="container mx-auto">
+  <div>
     <section>
       <h1 className="text-4xl text-gray-800">Dashboard</h1>
       <p className="mt-3 mb-6 text-xl text-gray-400">An overview of your PyGrid Node</p>

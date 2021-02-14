@@ -1,4 +1,5 @@
 import React from 'react'
+import type {AppProps} from 'next/app'
 import {Theme} from '@openmined/omui'
 import {ReactQueryDevtools} from 'react-query/devtools'
 import {QueryCache, QueryClient, QueryClientProvider} from 'react-query'
@@ -25,7 +26,7 @@ const Layout = ({children}) => (
   </div>
 )
 
-function PyGridAdmin({Component, pageProps}) {
+function PyGridAdmin({Component, pageProps}: AppProps) {
   return (
     <AxiosProvider>
       <QueryClientProvider client={queryClient}>

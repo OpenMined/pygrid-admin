@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "format": "pretty-quick --staged"
+    "format": "pretty-quick --staged",
+    "build:tailwind": "postcss src/styles/globals.css -o src/styles/tailwind.output.css",
+    "watch:tailwind": "postcss --verbose --watch src/styles/globals.css -o src/styles/tailwind.output.css"
   },
   "husky": {
     "hooks": {

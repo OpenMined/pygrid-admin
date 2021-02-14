@@ -1,6 +1,5 @@
 import React from 'react'
 import type {AppProps} from 'next/app'
-import {Theme} from '@openmined/omui'
 import {ReactQueryDevtools} from 'react-query/devtools'
 import {QueryCache, QueryClient, QueryClientProvider} from 'react-query'
 

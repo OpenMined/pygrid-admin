@@ -16,7 +16,6 @@
     }
   },
   "dependencies": {
-    "@openmined/omui": "^0.2.4",
     "@tailwindcss/aspect-ratio": "^0.2.0",
     "@tailwindcss/line-clamp": "^0.2.0",
     "@tailwindcss/typography": "^0.4.0",

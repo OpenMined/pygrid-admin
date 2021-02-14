@@ -17,14 +17,19 @@
   },
   "dependencies": {
     "@openmined/omui": "^0.2.4",
+    "@types/humps": "^2.0.0",
+    "axios": "^0.21.1",
+    "humps": "^2.0.1",
     "husky": "^4.3.8",
     "next": "10.0.6",
     "pretty-quick": "^3.1.0",
     "react": "17.0.1",
     "react-dom": "17.0.1",
-    "react-icons": "^4.1.0"
+    "react-icons": "^4.1.0",
+    "react-query": "^3.8.2"
   },
   "devDependencies": {
+    "@types/node": "^14.14.25",
     "@typescript-eslint/eslint-plugin": "^4.14.2",
     "@typescript-eslint/parser": "^4.14.2",
     "eslint": "^7.19.0",

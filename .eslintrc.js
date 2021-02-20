@@ -9,7 +9,7 @@ module.exports = {
     es6: true,
     node: true
   },
-  plugins: ['jsx-a11y', '@typescript-eslint', 'react-hooks'],
+  plugins: ['jsx-a11y', '@typescript-eslint', 'react-hooks', 'cypress'],
   extends: [
     'eslint:recommended',
     'plugin:react/recommended',

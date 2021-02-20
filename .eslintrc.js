@@ -7,15 +7,17 @@ module.exports = {
   env: {
     browser: true,
     es6: true,
-    node: true
+    node: true,
+    jest: true
   },
-  plugins: ['jsx-a11y', '@typescript-eslint', 'react-hooks', 'cypress'],
+  plugins: ['jsx-a11y', '@typescript-eslint', 'react-hooks', 'cypress', 'testing-library'],
   extends: [
     'eslint:recommended',
     'plugin:react/recommended',
     'plugin:jsx-a11y/recommended',
     'plugin:prettier/recommended',
-    'plugin:@typescript-eslint/recommended'
+    'plugin:@typescript-eslint/recommended',
+    'plugin:testing-library/recommended'
   ],
   rules: {
     'prettier/prettier': ['error', {}, {usePrettierrc: true}],

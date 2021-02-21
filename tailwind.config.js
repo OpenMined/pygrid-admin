@@ -6,16 +6,17 @@ module.exports = {
       fontFamily: {
         rubik: 'Rubik, sans-serif'
       },
+      lineHeight: {
+        12: '3rem'
+      },
       container: theme => ({
         padding: theme('padding.4')
       }),
-      extend: {
-        typography: {
-          DEFAULT: {
-            css: {
-              h1: {
-                fontWeight: 'normal'
-              }
+      typography: {
+        DEFAULT: {
+          css: {
+            h1: {
+              fontWeight: 'normal'
             }
           }
         }

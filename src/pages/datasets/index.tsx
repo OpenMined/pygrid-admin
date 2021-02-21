@@ -1,6 +1,6 @@
-import {FunctionComponent} from 'react'
-import {Section} from '@/components/pages/datasets/sections'
+import type {FunctionComponent} from 'react'
 import {DatasetCard} from '@/components/pages/datasets/cards/datasets'
+import {ArrowForward} from '@/components/icons/arrows'
 
 const Datasets: FunctionComponent = () => {
   const sections = [
@@ -41,27 +41,35 @@ const Datasets: FunctionComponent = () => {
   ]
 
   return (
-    <div>
-      <section className="space-y-4">
-        <div className="flex flex-row items-center justify-between">
-          <div className="pr-4">
-            <h1 className="text-4xl text-gray-800">Datasets</h1>
-            <p className="mt-3 mb-6 text-xl font-light text-gray-400">Manage all private data hosted in your node</p>
+    <main className="space-y-4">
+      <div className="flex flex-col-reverse items-start space-y-4 space-y-reverse md:space-y-0 md:flex-row md:justify-between">
+        <h1 className="pr-4 text-4xl leading-12">Datasets</h1>
+        <button className="btn" onClick={() => alert('Create new dataset')}>
+          New dataset
+        </button>
+      </div>
+      <p className="mt-3 mb-6 text-xl font-light text-gray-400">Manage all private data hosted in your node</p>
+      <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
+        {sections.map(({title, value, text}) => (
+          <div key={`section-${title}`}>
+            <small className="font-semibold tracking-wide text-gray-800 uppercase">{title}</small>
+            <p className="my-3">
+              <span className="text-xl font-semibold text-gray-800">{value}</span>{' '}
+              <span className="text-gray-400">{text}</span> <ArrowForward className="w-4 h-4 text-blue-600" />
+            </p>
           </div>
-          <button>New dataset</button>
-        </div>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-          {sections.map(section => (
-            <Section key={`section-${section.title}`} {...section} />
-          ))}
-        </div>
-        <div className="space-y-6">
-          {datasets.map(dataset => (
-            <DatasetCard key={`dataset-${dataset.title}`} {...dataset} />
-          ))}
-        </div>
+        ))}
       </section>
-    </div>
+      <section className="space-y-6">
+        {datasets.map(dataset => (
+          <div key={`dataset-${dataset.title}`}>
+            <a href={`/datasets/${dataset.title}`}>
+              <DatasetCard {...dataset} />
+            </a>
+          </div>
+        ))}
+      </section>
+    </main>
   )
 }
 

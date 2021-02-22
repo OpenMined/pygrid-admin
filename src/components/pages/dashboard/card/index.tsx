@@ -21,7 +21,7 @@ const Card: FunctionComponent<CardItems> = ({title, main, items}) => (
     <div>
       {items.map(({value, description, icon: Icon}) => (
         <div key={`${title}-${description}`} className="my-1 text-gray-800">
-          <b>{value}</b> {description} {Icon}
+          <strong>{value}</strong> {description} {Icon}
         </div>
       ))}
     </div>

@@ -1,14 +1,67 @@
-::root {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   body {
-    @apply font-rubik;
+    @apply antialiased text-gray-800 font-rubik;
+  }
+
+  a {
+    @apply text-blue-400 cursor-pointer;
+  }
+
+  button :focus:not(.focus-visible) {
+    outline: none;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply h-12 px-6 text-center text-white uppercase bg-blue-500 rounded-sm whitespace-nowrap;
+  }
+
+  ul.list-horizontal {
+    @apply inline;
+  }
+
+  ul.list-horizontal > li {
+    @apply inline-block;
+  }
+
+  ul.list-horizontal :not(:last-child) {
+    @apply px-3 border-r-2;
+  }
+
+  ul.list-horizontal :first-child {
+    @apply px-0 pr-2;
+  }
+
+  ul.list-horizontal :last-child {
+    @apply px-0 pl-2;
+  }
+
+  /* tabs */
+  [data-reach-tab-list] {
+    @apply my-2;
+  }
+
+  [data-reach-tab-list] :not(:last-child) {
+    @apply pr-6 border-r;
+  }
+
+  [data-reach-tab-list] :not(:first-child) {
+    @apply pl-6;
+  }
+  [data-reach-tab] {
+    @apply text-gray-400;
+  }
+
+  [data-reach-tab][disabled] {
+    @apply text-gray-200;
+  }
+
+  [data-reach-tab][data-selected] {
+    @apply text-gray-800;
   }
 }

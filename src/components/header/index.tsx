@@ -1,7 +1,5 @@
 import type {FunctionComponent} from 'react'
 import Image from 'next/image'
-// import React, {useEffect} from "react";
-
 
 import {default as NextLink} from 'next/link'
 
@@ -18,18 +16,6 @@ const Header: FunctionComponent = () => {
   const router = useRouter();
 
   const list = []
-
-  // const mystyle = {
-  //   marginLeft:"30px",
-  //   position:"relative",
-  //   bottom:"15px"
-  // };
-
-  // const arrowStyle = {
-  //   position:"relative",
-  //   marginLeft:"10px",
-  //   bottom:"13px"
-  // }
 
   function myFunc()
   {

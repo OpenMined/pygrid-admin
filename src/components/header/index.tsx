@@ -1,5 +1,7 @@
 import type {FunctionComponent} from 'react'
 import Image from 'next/image'
+// import React, {useEffect} from "react";
+
 
 import {default as NextLink} from 'next/link'
 
@@ -11,23 +13,23 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const Header: FunctionComponent = () => {
 
-  var routes = ['datasets','models','users','finances','infrastructure','settings'];
+  var routes = ['datasets','models','users','infrastructure','finances','settings'];
 
   const router = useRouter();
 
   const list = []
 
-  const mystyle = {
-    marginLeft:"30px",
-    position:"relative",
-    bottom:"15px"
-  };
+  // const mystyle = {
+  //   marginLeft:"30px",
+  //   position:"relative",
+  //   bottom:"15px"
+  // };
 
-  const arrowStyle = {
-    position:"relative",
-    marginLeft:"10px",
-    bottom:"13px"
-  }
+  // const arrowStyle = {
+  //   position:"relative",
+  //   marginLeft:"10px",
+  //   bottom:"13px"
+  // }
 
   function myFunc()
   {
@@ -36,7 +38,7 @@ const Header: FunctionComponent = () => {
 
     if(curr_path=='dashboard')
     {
-      routes = ['datasets','models','users','finances','infrastructure','settings'];
+      routes = ['datasets','models','users','infrastructure','finances','settings'];
     }
 
     else if(curr_path=='datasets')
@@ -68,34 +70,54 @@ const Header: FunctionComponent = () => {
       if(curr_path === 'dashboard')
       {
         var route_name = route.charAt(0).toUpperCase() + route.slice(1);
-        list.push(<NextLink href={'/'+route} passHref><span className="cursor-pointer" style={mystyle}>{route_name}</span></NextLink>);
+        list.push(<NextLink href={'/'+route} passHref><span className="cursor-pointer block md:inline-block text-black-900 hover:text-black-600 px-3 py-3 border-b-2 border-black-900 md:border-none">{route_name}</span></NextLink>);
       }
       else
       {
         var route_name = route.charAt(0).toUpperCase() + route.slice(1)
-        list.push(<NextLink href={curr_route+'/'+route} passHref><span className="cursor-pointer" style={mystyle}>{route_name}</span></NextLink>);
+        list.push(<NextLink href={curr_route+'/'+route} passHref><span className="cursor-pointer block md:inline-block text-black-900 hover:text-black-600 px-3 py-3 border-b-2 border-black-900 md:border-none">{route_name}</span></NextLink>);
       }
       
     })
+
+    if(process.browser){
+        document.getElementById("hamburger").onclick = function toggleMenu() {
+          const navToggle = document.getElementsByClassName("toggle");
+          for (let i = 0; i < navToggle.length; i++) {
+            navToggle.item(i).classList.toggle("hidden");
+          }
+        };
+    }
 
     return list;
   }
 
   return (
+
+    
+
     <nav className="sticky top-0">
       <div className="flex flex-row flex-wrap items-center justify-between px-3 shadow bg-gray-50">
-        <div className="container mx-auto">
-          <NextLink href="/" passHref>
-            <Image className="cursor-pointer" src="/assets/logo.png" alt="PyGrid home" width={50} height={50}/>
+        <div className="container w-full md:w-auto md:flex flex-row">
+          <NextLink href="/" passHref >
+            <Image className="cursor-pointer block md:inline-block px-3 py-3 mt-5 border-b-2 md:border-none" src="/assets/logo.png" alt="PyGrid home" width={50} height={50}/>
           </NextLink>
 
-          <NextLink href="/" passHref >
-              <FontAwesomeIcon className="cursor-pointer align-baseline" icon={faCaretLeft} color="gray.400" style={arrowStyle}/>
-          </NextLink>
+          {/* <NextLink href="/" passHref >
+              <FontAwesomeIcon className="cursor-pointer" icon={faCaretLeft} color="gray.400"/>
+          </NextLink> */}
+
+          <div className="flex md:hidden float-right pt-3">
+          <button id="hamburger">
+            <img className="toggle block" src="https://img.icons8.com/fluent-systems-regular/2x/menu-squared-2.png" width={30} height={30} />
+            <img className="toggle hidden" src="https://img.icons8.com/fluent-systems-regular/2x/close-window.png" width={30} height={30} />
+          </button>
+        </div>      
+        <div className="toggle hidden w-full md:w-auto md:flex text-right text-bold mt-5 md:mt-0 border-t-2 border-blue-900 md:border-none"> 
 
           {myFunc()}
 
-          
+          </div>
 
         </div>
       </div>

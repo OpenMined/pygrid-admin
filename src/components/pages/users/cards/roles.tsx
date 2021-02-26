@@ -1,7 +1,6 @@
 import type {FunctionComponent} from 'react'
 import {AccordionItem, AccordionButton, AccordionPanel} from '@reach/accordion'
 
-import '@reach/accordion/styles.css'
 import {Card} from '@/components/lib'
 import {IRole} from '@/types'
 

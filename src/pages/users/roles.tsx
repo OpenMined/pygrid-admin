@@ -4,10 +4,10 @@ import {Accordion} from '@reach/accordion'
 
 import {RoleCard} from '@/components/pages/users/cards/roles'
 import {fetchRoles} from '@/pages/api/users'
-import {IRole} from '@/types'
+import {IRole} from '@/types/users'
 
 const Roles: FunctionComponent = () => {
-  const {isLoading, data} = useQuery<Record<string, IRole>, Error>('roles', fetchRoles)
+  const {isLoading, data} = useQuery<IRole[], Error>('roles', fetchRoles)
 
   return (
     <main className="space-y-4">

@@ -5,7 +5,7 @@ import {
   IFetchGroupsResponse,
   IFetchRolesResponse,
   IFetchUsersResponse
-} from '@/types'
+} from '@/types/api-responses'
 
 export const fetchUsers = async () => {
   const {data} = await axios.get<IFetchUsersResponse>('/users')

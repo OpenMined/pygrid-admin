@@ -6,8 +6,8 @@ import {RoleCard} from '@/components/pages/users/cards/roles'
 import {fetchRoles} from '@/pages/api/users'
 import {IRole} from '@/types'
 
-const Users: FunctionComponent = () => {
-  const {isLoading, data} = useQuery<Record<string, IRole>, Error>('users', fetchRoles)
+const Roles: FunctionComponent = () => {
+  const {isLoading, data} = useQuery<Record<string, IRole>, Error>('roles', fetchRoles)
 
   return (
     <main className="space-y-4">
@@ -31,4 +31,4 @@ const Users: FunctionComponent = () => {
   )
 }
 
-export default Users
+export default Roles

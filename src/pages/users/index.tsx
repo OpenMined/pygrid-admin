@@ -1,22 +1,22 @@
-import { FunctionComponent } from 'react'
-import { useQuery } from 'react-query'
+import {FunctionComponent} from 'react'
+import {useQuery} from 'react-query'
 
-import { UserCard } from '@/components/pages/users/cards/users'
-import { ArrowForward } from '@/components/icons/arrows'
-import { fetchGroups, fetchRoles, fetchUsers } from '@/pages/api/users'
+import {UserCard} from '@/components/pages/users/cards/users'
+import {ArrowForward} from '@/components/icons/arrows'
+import {fetchGroups, fetchRoles, fetchUsers} from '@/pages/api/users'
 
-import type { IGroup, IRole, IUser } from '@/types/users'
+import type {IGroup, IRole, IUser} from '@/types/users'
 
 const Users: FunctionComponent = () => {
-  const { isLoading, data: usersData, error } = useQuery<IUser[], Error>('users', fetchUsers)
+  const {isLoading, data: usersData, error} = useQuery<IUser[], Error>('users', fetchUsers)
 
-  const { data: groupsData } = useQuery<IGroup[], Error>('groups', fetchGroups)
-  const { data: rolesData } = useQuery<IRole[], Error>('roles', fetchRoles)
+  const {data: groupsData} = useQuery<IGroup[], Error>('groups', fetchGroups)
+  const {data: rolesData} = useQuery<IRole[], Error>('roles', fetchRoles)
 
   const sections = [
-    { title: 'Total users', value: usersData && usersData.length, text: 'users' },
-    { title: 'Total groups', value: groupsData && groupsData.length, text: 'groups' },
-    { title: 'Total roles', value: rolesData && Object.keys(rolesData).length, text: 'roles' }
+    {title: 'Total users', value: usersData && usersData.length, text: 'users'},
+    {title: 'Total groups', value: groupsData && groupsData.length, text: 'groups'},
+    {title: 'Total roles', value: rolesData && Object.keys(rolesData).length, text: 'roles'}
   ]
 
   return (
@@ -33,7 +33,7 @@ const Users: FunctionComponent = () => {
       {!isLoading && !error && (
         <>
           <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-            {sections.map(({ title, value, text }) => (
+            {sections.map(({title, value, text}) => (
               <div key={`section-${title}`}>
                 <small className="font-semibold tracking-wide text-gray-800 uppercase">{title}</small>
                 <p className="my-3">

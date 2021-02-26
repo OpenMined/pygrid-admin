@@ -17,7 +17,7 @@ const Groups: FunctionComponent = () => {
           Create Group
         </button>
       </div>
-      <p className="mt-3 mb-6 text-xl font-light text-gray-400">Manage all administrative user roles</p>
+      <p className="mt-3 mb-6 text-xl font-light text-gray-400">Manage and permission all user groups</p>
       {!isLoading && !error && (
         <Accordion collapsible multiple className="space-y-6">
           {Object.keys(data).map(roleID => (

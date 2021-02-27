@@ -1,5 +1,5 @@
 import React from 'react'
-import Modal from '../../components/modals'
+import CreateUserModal from '../../components/modals/users/create/index'
 
 const Users = () => {
   const [openCreateUserModal, setOpenCreateUserModal] = React.useState(false)
@@ -13,16 +13,11 @@ const Users = () => {
         onClick={() => setOpenCreateUserModal(true)}>
         Create User
       </button>
-      <Modal
+      <CreateUserModal
         isOpen={openCreateUserModal}
         onClose={() => setOpenCreateUserModal(false)}
-        onConfirm={() => setOpenCreateUserModal(false)}>
-        <p className="my-4 text-gray-600 text-lg leading-relaxed">
-          I always felt like I could do anything. That’s the main thing people are controlled by! Thoughts- their
-          perception of themselves! slowed down by their perception of themselves. If taught you can’t do anything, you
-          won’t do anything. I was taught I could do everything.
-        </p>
-      </Modal>
+        onConfirm={() => setOpenCreateUserModal(false)}
+      />
     </>
   )
 }

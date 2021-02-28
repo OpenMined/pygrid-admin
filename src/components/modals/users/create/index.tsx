@@ -1,10 +1,17 @@
-import React from 'react'
-import Modal from '../../index'
+import {createUser} from '@/pages/api/users'
+import {FunctionComponent, useState} from 'react'
+import {Modal} from '../../modal'
 
-const CreateUserModal = ({isOpen, onClose, onConfirm}) => {
-  const [email, setEmail] = React.useState('')
-  const [password, setPassword] = React.useState('')
-  const [role, setRole] = React.useState('User')
+interface ICreateUserModalProps {
+  isOpen: boolean
+  onClose: () => void
+  onConfirm: () => void
+}
+
+const CreateUserModal: FunctionComponent<ICreateUserModalProps> = ({isOpen, onClose, onConfirm}) => {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [role, setRole] = useState('User')
 
   const isValid = () => {
     return email !== '' && password !== ''
@@ -12,21 +19,24 @@ const CreateUserModal = ({isOpen, onClose, onConfirm}) => {
 
   const handleSubmit = () => {
     const user = {email, password, role}
+
+    createUser(user).then(() => {
+      onConfirm()
+    })
   }
 
   const Footer = () => (
     <>
       <button
-        className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-3 mb-1"
         type="button"
-        style={{transition: 'all .15s ease'}}
+        className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-3 mb-1"
         onClick={onClose}>
         Cancel
       </button>
       <button
-        className="bg-green-500 text-white active:bg-green-600 disabled:opacity-50 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
         type="button"
-        style={{transition: 'all .15s ease'}}
+        disabled={!isValid()}
+        className="bg-green-500 text-white active:bg-green-600 disabled:opacity-50 font-bold uppercase text-sm px-6 py-3 shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
         onClick={handleSubmit}>
         Create
       </button>
@@ -88,4 +98,4 @@ const CreateUserModal = ({isOpen, onClose, onConfirm}) => {
   )
 }
 
-export default CreateUserModal
+export {CreateUserModal}

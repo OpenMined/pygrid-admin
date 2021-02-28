@@ -1,17 +1,17 @@
-import React from 'react'
+import {FunctionComponent, useState, useEffect} from 'react'
 
 interface IModalProps {
   isOpen: boolean
-  onClose: any
+  onClose: () => void
   children: any
   header: string
-  footer: any
+  footer: () => void
 }
 
-const Modal: React.FC<IModalProps> = ({isOpen, onClose, children, header, footer}) => {
-  const [showModal, setShowModal] = React.useState(false)
+const Modal: FunctionComponent<IModalProps> = ({isOpen, onClose, children, header, footer}) => {
+  const [showModal, setShowModal] = useState(false)
 
-  React.useEffect(() => {
+  useEffect(() => {
     setShowModal(isOpen)
   }, [isOpen])
 
@@ -50,4 +50,4 @@ const Modal: React.FC<IModalProps> = ({isOpen, onClose, children, header, footer
   )
 }
 
-export default Modal
+export {Modal}

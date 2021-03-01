@@ -4,7 +4,6 @@ import {useQuery} from 'react-query'
 import {UserCard} from '@/components/pages/users/cards/users'
 import {ArrowForward} from '@/components/icons/arrows'
 import {fetchGroups, fetchRoles, fetchUsers} from '@/pages/api/users'
-
 import type {IGroup, IRole, IUser} from '@/types/users'
 
 const Users: FunctionComponent = () => {
@@ -44,13 +43,14 @@ const Users: FunctionComponent = () => {
             ))}
           </section>
           <section className="space-y-6">
-            {usersData.map(user => (
-              <div key={`user-${user.id}`}>
-                <a href={`/users/${user.id}`}>
-                  <UserCard {...user} />
-                </a>
-              </div>
-            ))}
+            {usersData &&
+              usersData.map(user => (
+                <div key={`user-${user.id}`}>
+                  <a href={`/users/${user.id}`}>
+                    <UserCard {...user} />
+                  </a>
+                </div>
+              ))}
           </section>
         </>
       )}

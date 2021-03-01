@@ -1,16 +1,14 @@
-import {FunctionComponent, useState} from 'react'
+import type {FunctionComponent} from 'react'
+import {useState} from 'react'
 import {useQuery} from 'react-query'
-
 import {UserCard} from '@/components/pages/users/cards/users'
+import {CreateUserModal} from '@/components/modals/users/create'
 import {ArrowForward} from '@/components/icons/arrows'
 import {fetchGroups, fetchRoles, fetchUsers} from '@/pages/api/users'
-
 import type {IGroup, IRole, IUser} from '@/types/users'
-import {CreateUserModal} from '@/components/modals/users/create'
 
 const Users: FunctionComponent = () => {
   const [openCreateUserModal, setOpenCreateUserModal] = useState(false)
-
   const {isLoading, data: usersData, error} = useQuery<IUser[], Error>('users', fetchUsers)
 
   const {data: groupsData} = useQuery<IGroup[], Error>('groups', fetchGroups)
@@ -47,19 +45,20 @@ const Users: FunctionComponent = () => {
             ))}
           </section>
           <section className="space-y-6">
-            {usersData?.map(user => (
-              <div key={`user-${user.id}`}>
-                <a href={`/users/${user.id}`}>
-                  <UserCard {...user} />
-                </a>
-              </div>
-            ))}
+            {usersData &&
+              usersData.map(user => (
+                <div key={`user-${user.id}`}>
+                  <a href={`/users/${user.id}`}>
+                    <UserCard {...user} />
+                  </a>
+                </div>
+              ))}
           </section>
         </>
       )}
       <CreateUserModal
-        isOpen={openCreateUserModal}
         onClose={() => setOpenCreateUserModal(false)}
+        isOpen={openCreateUserModal}
         onConfirm={() => setOpenCreateUserModal(false)}
       />
     </main>

@@ -1,12 +1,14 @@
-import {FunctionComponent} from 'react'
+import type {FunctionComponent} from 'react'
+import {useState} from 'react'
 import {useQuery} from 'react-query'
-
 import {UserCard} from '@/components/pages/users/cards/users'
+import {CreateUserModal} from '@/components/modals/users/create'
 import {ArrowForward} from '@/components/icons/arrows'
 import {fetchGroups, fetchRoles, fetchUsers} from '@/pages/api/users'
 import type {IGroup, IRole, IUser} from '@/types/users'
 
 const Users: FunctionComponent = () => {
+  const [openCreateUserModal, setOpenCreateUserModal] = useState(false)
   const {isLoading, data: usersData, error} = useQuery<IUser[], Error>('users', fetchUsers)
 
   const {data: groupsData} = useQuery<IGroup[], Error>('groups', fetchGroups)
@@ -22,7 +24,7 @@ const Users: FunctionComponent = () => {
     <main className="space-y-4">
       <div className="flex flex-col-reverse items-start space-y-4 space-y-reverse md:space-y-0 md:flex-row md:justify-between">
         <h1 className="pr-4 text-4xl leading-12">Users</h1>
-        <button className="btn" onClick={() => alert('Create new user')}>
+        <button className="btn" onClick={() => setOpenCreateUserModal(true)}>
           Create User
         </button>
       </div>
@@ -54,6 +56,11 @@ const Users: FunctionComponent = () => {
           </section>
         </>
       )}
+      <CreateUserModal
+        onClose={() => setOpenCreateUserModal(false)}
+        isOpen={openCreateUserModal}
+        onConfirm={() => setOpenCreateUserModal(false)}
+      />
     </main>
   )
 }

@@ -1,7 +1,7 @@
 import type {FunctionComponent} from 'react'
 import {Card} from '@/components/lib'
 
-import {IUser} from '@/types'
+import {IUser} from '@/types/users'
 
 const UserCard: FunctionComponent<IUser> = ({email, id, role}) => (
   <Card className="space-y-2 cursor-pointer">

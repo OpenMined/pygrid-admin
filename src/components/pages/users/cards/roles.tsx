@@ -2,7 +2,7 @@ import type {FunctionComponent} from 'react'
 import {AccordionItem, AccordionButton, AccordionPanel} from '@reach/accordion'
 
 import {Card} from '@/components/lib'
-import {IRole} from '@/types'
+import {IRole} from '@/types/users'
 
 const RoleCard: FunctionComponent<IRole> = ({
   name,
@@ -25,7 +25,7 @@ const RoleCard: FunctionComponent<IRole> = ({
   ]
 
   return (
-    <Card className="space-y-2 cursor-pointer flex">
+    <Card className="flex space-y-2 cursor-pointer">
       <AccordionItem>
         <AccordionButton>
           <h2 className="text-xl text-gray-800 text-semibold">{name}</h2>

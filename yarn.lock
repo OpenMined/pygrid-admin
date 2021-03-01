@@ -713,6 +713,17 @@
   resolved "https://registry.yarnpkg.com/@opentelemetry/context-base/-/context-base-0.14.0.tgz#c67fc20a4d891447ca1a855d7d70fa79a3533001"
   integrity sha512-sDOAZcYwynHFTbLo6n8kIbLiVF3a3BLkrmehJUyEbT9F+Smbi47kLGS2gG2g0fjBLR/Lr1InPD7kXL7FaTqEkw==
 
+"@reach/accordion@^0.13.2":
+  version "0.13.2"
+  resolved "https://registry.yarnpkg.com/@reach/accordion/-/accordion-0.13.2.tgz#0fd6ac089df685bf092233b4a1efcec123fcc377"
+  integrity sha512-qZZNPNm04C/ZiWSqLDjBhPUIYcdAl/15nCiaqqiWUB867pEoU6Xqb+0zjKP9FF+fCjLPulioHL4HX/IHddYAoA==
+  dependencies:
+    "@reach/auto-id" "0.13.2"
+    "@reach/descendants" "0.13.2"
+    "@reach/utils" "0.13.2"
+    prop-types "^15.7.2"
+    tslib "^2.1.0"
+
 "@reach/auto-id@0.13.2":
   version "0.13.2"
   resolved "https://registry.yarnpkg.com/@reach/auto-id/-/auto-id-0.13.2.tgz#6c7fe7142285707b0f38b2f556f32accb467df32"

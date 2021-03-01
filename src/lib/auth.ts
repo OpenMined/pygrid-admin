@@ -4,13 +4,17 @@ import jwtDecode from 'jwt-decode'
 const AUTH_KEY = '__pygrid_admin_auth'
 
 export function setToken(token: string): string {
-  localStorage.setItem(AUTH_KEY, token)
+  if (typeof window !== 'undefined') {
+    localStorage.setItem(AUTH_KEY, token)
+  }
+
   return token
 }
 
 export function getToken(): string {
-  const token = localStorage.getItem(AUTH_KEY)
-  return token
+  if (typeof window !== 'undefined') {
+    return localStorage.getItem(AUTH_KEY)
+  }
 }
 
 export function getDecodedToken(): {id: number} {
@@ -19,7 +23,9 @@ export function getDecodedToken(): {id: number} {
 }
 
 export function logout() {
-  localStorage.removeItem(AUTH_KEY)
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem(AUTH_KEY)
+  }
 }
 
 export function login(credentials: {email: string; password: string}): Promise<string | ErrorMessage> {

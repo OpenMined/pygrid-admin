@@ -1,5 +1,4 @@
 import type {FunctionComponent} from 'react'
-import {ReactQueryDevtools} from 'react-query/devtools'
 import {QueryCache, QueryClient, QueryClientProvider} from 'react-query'
 import {AuthProvider} from '@/context/auth-context'
 
@@ -16,7 +15,6 @@ const queryClient = new QueryClient({
 const AppProviders: FunctionComponent = ({children}) => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>{children}</AuthProvider>
-    <ReactQueryDevtools initialIsOpen={false} />
   </QueryClientProvider>
 )
 

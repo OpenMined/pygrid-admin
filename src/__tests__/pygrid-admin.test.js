@@ -22,6 +22,4 @@ describe('App', () => {
     screen.debug()
     expect(replace).toHaveBeenCalledWith('/login')
   })
-
-  it('users can be authenticated', async () => {})
 })

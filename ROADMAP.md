@@ -91,8 +91,8 @@
   - [ ] Dataset
     - [ ] Create
     - [ ] Get [#42](https://github.com/OpenMined/pygrid-admin/issues/42)
-    - [ ] Update [#42](https://github.com/OpenMined/pygrid-admin/issues/
-    - [ ] Delete [#42](https://github.com/OpenMined/pygrid-admin/issues/
+    - [ ] Update [#42](https://github.com/OpenMined/pygrid-admin/issues/42)
+    - [ ] Delete [#42](https://github.com/OpenMined/pygrid-admin/issues/42)
   - [ ] Requests
     - [ ] Create
     - [ ] Get [#45](https://github.com/OpenMined/pygrid-admin/issues/45)

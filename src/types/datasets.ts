@@ -1,5 +1,5 @@
 export interface IDataset {
-  name: string
+  title: string
   description: string
   tags: string[]
   tensors: number

@@ -7,5 +7,8 @@ module.exports = {
   collectCoverage: true,
   collectCoverageFrom: ['components/**/*.js', 'pages/**/*.js'],
   coverageReporters: ['lcov', 'text'],
-  resetMocks: true
+  resetMocks: true,
+  moduleNameMapper: {
+    '@/(.*)': ['<rootDir>/src/$1']
+  }
 }

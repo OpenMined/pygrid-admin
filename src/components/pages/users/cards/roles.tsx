@@ -1,8 +1,8 @@
 import type {FunctionComponent} from 'react'
 import {AccordionItem, AccordionButton, AccordionPanel} from '@reach/accordion'
-
 import {Card} from '@/components/lib'
 import {IRole} from '@/types/users'
+import '@reach/accordion/styles.css'
 
 const RoleCard: FunctionComponent<IRole> = ({
   name,

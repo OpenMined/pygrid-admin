@@ -1,8 +1,12 @@
 import type {FunctionComponent} from 'react'
+import {useQuery} from 'react-query'
 import {DatasetCard} from '@/components/pages/datasets/cards/datasets'
 import {ArrowForward} from '@/components/icons/arrows'
-
+import {fetchDatasets} from '@/pages/api/datasets'
+import type {IDataset} from '@/types/datasets'
+import {Plus} from '@/components/icons/plus'
 const Datasets: FunctionComponent = () => {
+  const {isLoading, data: datasetsData, error} = useQuery<IDataset[], Error>('datasets', fetchDatasets)
   const sections = [
     {title: 'Permissions changes', value: 19, text: 'requests'},
     {title: 'Budget changes', value: 5, text: 'requests'},
@@ -44,31 +48,38 @@ const Datasets: FunctionComponent = () => {
     <main className="space-y-4">
       <div className="flex flex-col-reverse items-start space-y-4 space-y-reverse md:space-y-0 md:flex-row md:justify-between">
         <h1 className="pr-4 text-4xl leading-12">Datasets</h1>
-        <button className="btn" onClick={() => alert('Create new dataset')}>
-          New dataset
+        <button
+          className="btn hover:bg-blue-600 hover:shadow-sm inline-flex items-center space-x-6"
+          onClick={() => alert('Create new dataset')}>
+          <Plus className="h-4 w-4 hover:animate-spin" />
+          <span>New dataset</span>
         </button>
       </div>
-      <p className="mt-3 mb-6 text-xl font-light text-gray-400">Manage all private data hosted in your node</p>
-      <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-        {sections.map(({title, value, text}) => (
-          <div key={`section-${title}`}>
-            <small className="font-semibold tracking-wide text-gray-800 uppercase">{title}</small>
-            <p className="my-3">
-              <span className="text-xl font-semibold text-gray-800">{value}</span>{' '}
-              <span className="text-gray-400">{text}</span> <ArrowForward className="w-4 h-4 text-blue-600" />
-            </p>
-          </div>
-        ))}
-      </section>
-      <section className="space-y-6">
-        {datasets.map(dataset => (
-          <div key={`dataset-${dataset.title}`}>
-            <a href={`/datasets/${dataset.title}`}>
-              <DatasetCard {...dataset} />
-            </a>
-          </div>
-        ))}
-      </section>
+      <p className="pb-4 mb-6 text-xl font-light text-gray-400">Manage all private data hosted in your node</p>
+      {!isLoading && !error && (
+        <>
+          <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
+            {sections.map(({title, value, text}) => (
+              <div key={`section-${title}`}>
+                <small className="font-semibold tracking-wide text-gray-800 uppercase">{title}</small>
+                <p className="my-3">
+                  <span className="text-xl font-semibold text-gray-800">{value}</span>{' '}
+                  <span className="text-gray-400">{text}</span> <ArrowForward className="w-4 h-4 text-blue-600" />
+                </p>
+              </div>
+            ))}
+          </section>
+          <section className="space-y-6">
+            {datasets.map(dataset => (
+              <div key={`dataset-${dataset.title}`}>
+                <a href={`/datasets/${dataset.title}`}>
+                  <DatasetCard {...dataset} />
+                </a>
+              </div>
+            ))}
+          </section>
+        </>
+      )}
     </main>
   )
 }

@@ -1,4 +1,4 @@
-import {createRole} from '@/pages/api/users'
+import {createRole} from '@/pages/api/roles'
 import {FunctionComponent, useState} from 'react'
 import {Modal} from '../../modal'
 

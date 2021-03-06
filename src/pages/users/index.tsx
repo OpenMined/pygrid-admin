@@ -4,7 +4,10 @@ import {useQuery} from 'react-query'
 import {UserCard} from '@/components/pages/users/cards/users'
 import {CreateUserModal} from '@/components/modals/users/create'
 import {ArrowForward} from '@/components/icons/arrows'
-import {fetchGroups, fetchRoles, fetchUsers} from '@/pages/api/users'
+import {fetchUsers} from '@/pages/api/users'
+import {fetchRoles} from '@/pages/api/roles'
+import {fetchGroups} from '../api/groups'
+
 import type {IGroup, IRole, IUser} from '@/types/users'
 
 const Users: FunctionComponent = () => {

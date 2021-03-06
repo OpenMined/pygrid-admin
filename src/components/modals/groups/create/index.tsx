@@ -1,4 +1,4 @@
-import {createGroup} from '@/pages/api/users'
+import {createGroup} from '@/pages/api/groups'
 import {FunctionComponent, useState} from 'react'
 import {Modal} from '../../modal'
 

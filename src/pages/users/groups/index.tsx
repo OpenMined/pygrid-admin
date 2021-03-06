@@ -5,7 +5,7 @@ import {Accordion} from '@reach/accordion'
 
 import {CreateGroupModal} from '@/components/modals/groups/create'
 import {GroupCard} from '@/components/pages/users/cards/groups'
-import {fetchGroups} from '@/pages/api/users'
+import {fetchGroups} from '@/pages/api/groups'
 import {IGroup} from '@/types/users'
 
 const Groups: FunctionComponent = () => {
@@ -23,9 +23,9 @@ const Groups: FunctionComponent = () => {
       <p className="mt-3 mb-6 text-xl font-light text-gray-400">Manage and permission all user groups</p>
       {!isLoading && !error && (
         <Accordion collapsible multiple className="space-y-6">
-          {Object.keys(data).map(roleID => (
-            <div key={`user-${roleID}`}>
-              <GroupCard {...data[roleID]} />
+          {data.map(group => (
+            <div key={`user-${group}`}>
+              <GroupCard {...group} />
             </div>
           ))}
         </Accordion>

@@ -4,7 +4,11 @@ export type IFetchUsersResponse = IUser[]
 
 export type IFetchRolesResponse = IRole[]
 
+export type IFetchRoleResponse = IRole
+
 export type IFetchGroupsResponse = IGroup[]
+
+export type IFetchGroupResponse = IRole
 
 export interface IFetchLoginResponse {
   token: string
@@ -21,5 +25,9 @@ export interface ICreateGroupResponse {
 }
 
 export interface ICreateRoleResponse {
+  message: string
+}
+
+export interface IDeleteRoleResponse {
   message: string
 }

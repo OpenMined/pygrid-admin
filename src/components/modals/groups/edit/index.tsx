@@ -1,26 +1,30 @@
 import {ButtonRound} from '@/components/lib'
-import {createGroup} from '@/pages/api/groups'
+import {editGroup} from '@/pages/api/groups'
+import Router from 'next/router'
 import {FunctionComponent, useState} from 'react'
 import {Modal} from '../../modal'
 
-interface ICreateGroupModal {
+interface IEditGroupModal {
+  id: string
+  name: string
   isOpen: boolean
   onClose: () => void
   onConfirm: () => void
 }
 
-const CreateGroupModal: FunctionComponent<ICreateGroupModal> = ({isOpen, onClose, onConfirm}) => {
-  const [name, setName] = useState('')
+const EditGroupModal: FunctionComponent<IEditGroupModal> = ({id, isOpen, onClose, onConfirm, ...group}) => {
+  const [name, setName] = useState(group.name)
 
   const isValid = () => {
     return name !== ''
   }
 
   const handleSubmit = () => {
-    const group = {name}
+    const group = {id, name}
 
-    createGroup(group).then(() => {
+    editGroup(group).then(() => {
       onConfirm()
+      Router.push('/users/groups')
     })
   }
 
@@ -29,20 +33,20 @@ const CreateGroupModal: FunctionComponent<ICreateGroupModal> = ({isOpen, onClose
       <ButtonRound
         className="text-red-500 bg-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-3 mb-1"
         onClick={onClose}>
-        Cancel
+        Discard
       </ButtonRound>
       <ButtonRound
         disabled={!isValid()}
         className="bg-green-500 text-white active:bg-green-600 disabled:opacity-50 font-bold uppercase text-sm px-6 py-3 shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
         onClick={handleSubmit}>
-        Create
+        Save Changes
       </ButtonRound>
     </>
   )
 
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose} header="Create Group" footer={<Footer />}>
+      <Modal isOpen={isOpen} onClose={onClose} header="Edit Group Group" footer={<Footer />}>
         <form autoComplete="off" className="m-5">
           <div className="mt-5">
             <label htmlFor="name" className="text-sm block font-bold pb-2">
@@ -55,6 +59,7 @@ const CreateGroupModal: FunctionComponent<ICreateGroupModal> = ({isOpen, onClose
               autoComplete="off"
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline border-blue-300"
               placeholder="Enter the group name"
+              value={name}
               onChange={e => setName(e.target.value)}
             />
           </div>
@@ -64,4 +69,4 @@ const CreateGroupModal: FunctionComponent<ICreateGroupModal> = ({isOpen, onClose
   )
 }
 
-export {CreateGroupModal}
+export {EditGroupModal}

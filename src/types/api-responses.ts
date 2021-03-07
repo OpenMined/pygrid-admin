@@ -28,6 +28,14 @@ export interface ICreateRoleResponse {
   message: string
 }
 
+export interface IEditRoleResponse {
+  message: string
+}
+
 export interface IDeleteRoleResponse {
+  message: string
+}
+
+export interface IDeleteGroupResponse {
   message: string
 }

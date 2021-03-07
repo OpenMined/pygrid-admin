@@ -25,7 +25,9 @@ const Groups: FunctionComponent = () => {
         <Accordion collapsible multiple className="space-y-6">
           {data.map(group => (
             <div key={`user-${group}`}>
-              <GroupCard {...group} />
+              <a href={`/users/groups/${group.id}`}>
+                <GroupCard {...group} />
+              </a>
             </div>
           ))}
         </Accordion>

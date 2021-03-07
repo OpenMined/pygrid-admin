@@ -12,6 +12,15 @@ module.exports = {
       container: theme => ({
         padding: theme('padding.4')
       }),
+      keyframes: {
+        punch: {
+          '0%, 100%': {transform: 'rotate(-38deg)'},
+          '50%': {transform: 'rotate(71deg)'}
+        }
+      },
+      animation: {
+        punch: 'punch 250ms ease-in-out'
+      },
       typography: {
         DEFAULT: {
           css: {
@@ -24,7 +33,10 @@ module.exports = {
     }
   },
   variants: {
-    extend: {}
+    extend: {
+      animation: ['hover', 'focus', 'active'],
+      transitionProperty: ['hover']
+    }
   },
   plugins: [
     require('@tailwindcss/line-clamp'),

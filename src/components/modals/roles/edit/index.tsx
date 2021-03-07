@@ -1,24 +1,33 @@
 import {ButtonRound} from '@/components/lib'
 import {toSentence} from '@/lib/utils'
-import {createRole} from '@/pages/api/roles'
+import {editRole} from '@/pages/api/roles'
 import {FunctionComponent, useState} from 'react'
 import {Modal} from '../../modal'
 
-interface ICreateRoleModalProps {
+interface IEditRoleModalProps {
   isOpen: boolean
   onClose: () => void
   onConfirm: () => void
+  id: string
+  name: string
+  canTriageRequests: boolean
+  canEditSettings: boolean
+  canCreateUsers: boolean
+  canCreateGroups: boolean
+  canEditRoles: boolean
+  canManageInfrastructure: boolean
+  canUploadData: boolean
 }
 
-const CreateRoleModal: FunctionComponent<ICreateRoleModalProps> = ({isOpen, onClose, onConfirm}) => {
-  const [name, setName] = useState('')
-  const [canTriageRequests, setCanTriageRequests] = useState(false)
-  const [canEditSettings, setCanEditSettings] = useState(false)
-  const [canCreateUsers, setCanCreateUsers] = useState(false)
-  const [canCreateGroups, setCanCreateGroups] = useState(false)
-  const [canEditRoles, setCanEditRoles] = useState(false)
-  const [canManageInfrastructure, setCanManageInfrastructure] = useState(false)
-  const [canUploadData, setCanUploadData] = useState(false)
+const EditRoleModal: FunctionComponent<IEditRoleModalProps> = ({id, isOpen, onClose, onConfirm, ...role}) => {
+  const [name, setName] = useState(role.name)
+  const [canTriageRequests, setCanTriageRequests] = useState(role.canTriageRequests)
+  const [canEditSettings, setCanEditSettings] = useState(role.canEditSettings)
+  const [canCreateUsers, setCanCreateUsers] = useState(role.canCreateUsers)
+  const [canCreateGroups, setCanCreateGroups] = useState(role.canCreateGroups)
+  const [canEditRoles, setCanEditRoles] = useState(role.canEditRoles)
+  const [canManageInfrastructure, setCanManageInfrastructure] = useState(role.canManageInfrastructure)
+  const [canUploadData, setCanUploadData] = useState(role.canUploadData)
 
   const isValid = () => {
     return name !== ''
@@ -26,6 +35,7 @@ const CreateRoleModal: FunctionComponent<ICreateRoleModalProps> = ({isOpen, onCl
 
   const handleSubmit = () => {
     const role = {
+      id,
       name,
       canTriageRequests,
       canEditSettings,
@@ -36,8 +46,9 @@ const CreateRoleModal: FunctionComponent<ICreateRoleModalProps> = ({isOpen, onCl
       canUploadData
     }
 
-    createRole(role).then(() => {
+    editRole(role).then(res => {
       onConfirm()
+      console.log(res)
     })
   }
 
@@ -46,13 +57,13 @@ const CreateRoleModal: FunctionComponent<ICreateRoleModalProps> = ({isOpen, onCl
       <ButtonRound
         className="text-red-500 bg-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-3 mb-1"
         onClick={onClose}>
-        Cancel
+        Discard
       </ButtonRound>
       <ButtonRound
         disabled={!isValid()}
         className="bg-green-500 text-white active:bg-green-600 disabled:opacity-50 font-bold uppercase text-sm px-6 py-3 shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
         onClick={handleSubmit}>
-        Create
+        Save Changes
       </ButtonRound>
     </>
   )
@@ -69,11 +80,11 @@ const CreateRoleModal: FunctionComponent<ICreateRoleModalProps> = ({isOpen, onCl
 
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose} header="Create Role" footer={<Footer />}>
+      <Modal isOpen={isOpen} onClose={onClose} header="Edit Role" footer={<Footer />}>
         <form autoComplete="off" className="m-5">
           <div>
             <label htmlFor="name" className="text-sm block font-bold  pb-2">
-              Role Name
+              Edit Role Name
             </label>
             <input
               type="text"
@@ -82,10 +93,11 @@ const CreateRoleModal: FunctionComponent<ICreateRoleModalProps> = ({isOpen, onCl
               autoComplete="off"
               className="shadow appearance-none border rounded w-full py-2 mb-4 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline border-blue-300 "
               placeholder="User"
+              value={name}
               onChange={e => setName(e.target.value)}
             />
           </div>
-          <span className="text-sm block font-bold">Permissions</span>
+          <span className="text-sm block font-bold">Edit Permissions</span>
           {permissions.map(({id, value, setter}) => (
             <div key={id} className="mt-2">
               {/* eslint-disable-next-line jsx-a11y/no-onchange */}
@@ -101,4 +113,4 @@ const CreateRoleModal: FunctionComponent<ICreateRoleModalProps> = ({isOpen, onCl
   )
 }
 
-export {CreateRoleModal}
+export {EditRoleModal}

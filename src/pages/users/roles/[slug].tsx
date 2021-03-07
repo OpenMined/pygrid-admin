@@ -8,11 +8,13 @@ import {IRole} from '@/types/users'
 import {permissions} from '@/lib/user-permissions'
 import {toSentence} from '@/lib/utils'
 import {DeleteRoleModal} from '@/components/modals/roles/delete'
+import {EditRoleModal} from '@/components/modals/roles/edit'
 
 const Role: FunctionComponent = () => {
   const router = useRouter()
   const {slug} = router.query
 
+  const [openEditRoleModal, setOpenEditRoleModal] = useState(false)
   const [openDeleteRoleModal, setOpenDeleteRoleModal] = useState(false)
   const {isLoading, data} = useQuery<IRole, Error>(['role', slug], () => fetchRole({id: slug}))
 
@@ -28,7 +30,7 @@ const Role: FunctionComponent = () => {
             Role: {name} <span className="text-gray-300">#{id}</span>
           </h1>
           <div className="flex flex-row space-x-2">
-            <ButtonRound onClick={() => alert('Edit Role')}>Edit Role</ButtonRound>
+            <ButtonRound onClick={() => setOpenEditRoleModal(true)}>Edit Role</ButtonRound>
             <ButtonGhost className="text-sm" onClick={() => setOpenDeleteRoleModal(true)}>
               Delete role
             </ButtonGhost>
@@ -51,6 +53,13 @@ const Role: FunctionComponent = () => {
         onClose={() => setOpenDeleteRoleModal(false)}
         isOpen={openDeleteRoleModal}
         onConfirm={() => setOpenDeleteRoleModal(false)}
+      />
+      <EditRoleModal
+        id={id}
+        onClose={() => setOpenEditRoleModal(false)}
+        isOpen={openEditRoleModal}
+        onConfirm={() => setOpenEditRoleModal(false)}
+        {...data}
       />
     </main>
   )

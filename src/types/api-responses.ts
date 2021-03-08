@@ -1,4 +1,5 @@
 import {IGroup, IRole, IUser} from './users'
+import {IDataset} from './datasets'
 
 export interface IFetchUsersResponse {
   users: IUser[]
@@ -23,5 +24,21 @@ export interface ICreateUserResponse {
 }
 
 export interface ICreateGroupResponse {
+  message: string
+}
+
+export interface IFetchDatasetResponse {
+  dataset: IDataset
+}
+
+export interface ICreateDatasetResponse {
+  dataset: IDataset
+}
+
+export interface IEditDatasetResponse {
+  message: string
+}
+
+export interface IDeleteDatasetResponse {
   message: string
 }

@@ -56,13 +56,19 @@ const Datasets: FunctionComponent = () => {
   const DatasetsList = ({datasets}) => {
     return (
       <>
-        {datasets.map(dataset => (
-          <div key={`dataset-${dataset.title}`}>
-            <a href={`/datasets/${dataset.title}`}>
-              <DatasetCard {...dataset} />
-            </a>
-          </div>
-        ))}
+        {datasets.length > 0 ? (
+          <>
+            {datasets.map(dataset => (
+              <div key={`dataset-${dataset.title}`}>
+                <a href={`/datasets/${dataset.title}`}>
+                  <DatasetCard {...dataset} />
+                </a>
+              </div>
+            ))}
+          </>
+        ) : (
+          <div>No matches found.</div>
+        )}
       </>
     )
   }
@@ -100,7 +106,9 @@ const Datasets: FunctionComponent = () => {
           <Stats />
           <SearchBar placeholder={'Search Datasets'} search={searchText} onChange={text => setSearchText(text)} />
           <section className="space-y-6">
-            <DatasetsList datasets={datasets.filter(item => item.title.includes(searchText))} />
+            <DatasetsList
+              datasets={datasets.filter(item => item.title.toLowerCase().includes(searchText.toLowerCase()))}
+            />
           </section>
         </>
       )}

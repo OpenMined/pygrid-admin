@@ -1,14 +1,23 @@
-import type {FunctionComponent} from 'react'
+import {FunctionComponent, useState} from 'react'
 import {useQuery} from 'react-query'
 import {DatasetCard} from '@/components/pages/datasets/cards/datasets'
 import {ArrowForward} from '@/components/icons/arrows'
-import {fetchDatasets} from '@/pages/api/datasets'
-import type {IDataset} from '@/types/datasets'
+import {fetchDatasets, fetchRequests} from '@/pages/api/datasets'
+import type {IDataset, IRequest} from '@/types/datasets'
 import {Plus} from '@/components/icons/plus'
+import {SearchBar} from '@/components/forms/searchbar'
+import {title} from 'process'
+
 const Datasets: FunctionComponent = () => {
   const {isLoading, data: datasetsData, error} = useQuery<IDataset[], Error>('datasets', fetchDatasets)
+  const {data: requests} = useQuery<IRequest[], Error>('requests', fetchRequests)
+  const [searchText, setSearchText] = useState('')
   const sections = [
-    {title: 'Permissions changes', value: 19, text: 'requests'},
+    {
+      title: 'Permissions changes',
+      value: requests && requests.filter(x => x.request_type === 'permissions' && x.status === 'pending').length,
+      text: 'requests'
+    },
     {title: 'Budget changes', value: 5, text: 'requests'},
     {title: 'Tensors pending deletion', value: 3, text: 'tensors'}
   ]
@@ -44,6 +53,36 @@ const Datasets: FunctionComponent = () => {
     }
   ]
 
+  const DatasetsList = ({datasets}) => {
+    return (
+      <>
+        {datasets.map(dataset => (
+          <div key={`dataset-${dataset.title}`}>
+            <a href={`/datasets/${dataset.title}`}>
+              <DatasetCard {...dataset} />
+            </a>
+          </div>
+        ))}
+      </>
+    )
+  }
+
+  const Stats = () => {
+    return (
+      <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
+        {sections.map(({title, value, text}) => (
+          <div key={`section-${title}`}>
+            <small className="font-semibold tracking-wide text-gray-800 uppercase">{title}</small>
+            <p className="my-3">
+              <span className="text-xl font-semibold text-gray-800">{value}</span>{' '}
+              <span className="text-gray-400">{text}</span> <ArrowForward className="w-4 h-4 text-blue-600" />
+            </p>
+          </div>
+        ))}
+      </section>
+    )
+  }
+
   return (
     <main className="space-y-4">
       <div className="flex flex-col-reverse items-start space-y-4 space-y-reverse md:space-y-0 md:flex-row md:justify-between">
@@ -51,32 +90,17 @@ const Datasets: FunctionComponent = () => {
         <button
           className="btn hover:bg-blue-600 hover:shadow-sm inline-flex items-center space-x-6"
           onClick={() => alert('Create new dataset')}>
-          <Plus className="h-4 w-4 hover:animate-spin" />
+          <Plus className="h-4 w-4" />
           <span>New dataset</span>
         </button>
       </div>
       <p className="pb-4 mb-6 text-xl font-light text-gray-400">Manage all private data hosted in your node</p>
-      {!isLoading && !error && (
+      {true && (
         <>
-          <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-            {sections.map(({title, value, text}) => (
-              <div key={`section-${title}`}>
-                <small className="font-semibold tracking-wide text-gray-800 uppercase">{title}</small>
-                <p className="my-3">
-                  <span className="text-xl font-semibold text-gray-800">{value}</span>{' '}
-                  <span className="text-gray-400">{text}</span> <ArrowForward className="w-4 h-4 text-blue-600" />
-                </p>
-              </div>
-            ))}
-          </section>
+          <Stats />
+          <SearchBar placeholder={'Search Datasets'} search={searchText} onChange={text => setSearchText(text)} />
           <section className="space-y-6">
-            {datasets.map(dataset => (
-              <div key={`dataset-${dataset.title}`}>
-                <a href={`/datasets/${dataset.title}`}>
-                  <DatasetCard {...dataset} />
-                </a>
-              </div>
-            ))}
+            <DatasetsList datasets={datasets.filter(item => item.title.includes(searchText))} />
           </section>
         </>
       )}

@@ -19,3 +19,12 @@ export interface IDataset {
     [key: string]: ITensor
   }
 }
+
+export interface IRequest {
+  id: number
+  user_id: number
+  object_id: number
+  reason: string
+  status: string
+  request_type: string
+}

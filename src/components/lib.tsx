@@ -25,3 +25,8 @@ export const ButtonAsLink: FunctionComponent<{className?: string} & HTMLAttribut
     {...props}
   />
 )
+
+export const ButtonAsIcon: FunctionComponent<{className?: string} & HTMLAttributes<HTMLButtonElement>> = ({
+  className,
+  ...props
+}) => <button className={cn('btn', 'h-auto px-0 bg-transparent focus:outline-none', className)} {...props} />

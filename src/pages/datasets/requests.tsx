@@ -40,31 +40,36 @@ const Requests: FunctionComponent = () => {
     }
   ]
 
+  // TODO : Add logic functionality to accept and reject permissions/budgets
   return (
     <main className="space-y-4">
       <h1 className="text-4xl text-gray-800">Requests</h1>
       <p className="text-xl font-light text-gray-400">Accept or deny any permissions or privacy budget changes</p>
-      <div className="grid grid-cols-1 gap-6 xl:gap-8 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-6 xl:gap-8 lg:grid-cols-2 pt-10">
         <section>
-          <small className="font-semibold tracking-wide text-gray-800 uppercase">Permissions changes</small>
-          <div className="space-y-6 xl:space-y-8">
+          <small className="font-semibold tracking-wide text-sm text-gray-800 uppercase">Permissions changes</small>
+          <div className="space-y-6 xl:space-y-6 pt-5">
             {permissionChanges.map(permission => (
               <PermissionRequestCard
                 {...permission}
                 key={`permission-card-${permission.dataset}-${permission.tensors}-${permission.userId}`}
                 onClickReason={() => alert('View reason')}
+                onClickAccept={() => alert('Accept clicked')}
+                onClickReject={() => alert('Reject clicked')}
               />
             ))}
           </div>
         </section>
         <section>
-          <small className="font-semibold tracking-wide text-gray-800 uppercase">Budget changes</small>
-          <div className="space-y-6 xl:space-y-8">
+          <small className="font-semibold tracking-wide text-sm text-gray-800 uppercase">Budget changes</small>
+          <div className="space-y-6 xl:space-y-6 pt-5">
             {budgetChanges.map(budget => (
               <BudgetChangesCard
                 {...budget}
                 key={`budget-card-${budget.userId}-${budget.epsilonAfterChange}`}
                 onClickReason={() => alert('View reason')}
+                onClickAccept={() => alert('Accept clicked')}
+                onClickReject={() => alert('Reject clicked')}
               />
             ))}
           </div>

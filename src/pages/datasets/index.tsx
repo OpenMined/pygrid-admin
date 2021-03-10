@@ -7,6 +7,7 @@ import type {IDataset, IRequest} from '@/types/datasets'
 import {Plus} from '@/components/icons/plus'
 import {SearchBar} from '@/components/forms/searchbar'
 import {title} from 'process'
+import Link from 'next/link'
 
 const Datasets: FunctionComponent = () => {
   const {isLoading, data: datasetsData, error} = useQuery<IDataset[], Error>('datasets', fetchDatasets)
@@ -16,10 +17,11 @@ const Datasets: FunctionComponent = () => {
     {
       title: 'Permissions changes',
       value: requests && requests.filter(x => x.request_type === 'permissions' && x.status === 'pending').length,
-      text: 'requests'
+      text: 'requests',
+      link: '/datasets/requests'
     },
-    {title: 'Budget changes', value: 5, text: 'requests'},
-    {title: 'Tensors pending deletion', value: 3, text: 'tensors'}
+    {title: 'Budget changes', value: 5, text: 'requests', link: '/datasets/requests'},
+    {title: 'Tensors pending deletion', value: 3, text: 'tensors', link: '/datasets/tensors'}
   ]
 
   const datasets = [
@@ -76,12 +78,17 @@ const Datasets: FunctionComponent = () => {
   const Stats = () => {
     return (
       <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-        {sections.map(({title, value, text}) => (
+        {sections.map(({title, value, text, link}) => (
           <div key={`section-${title}`}>
             <small className="font-semibold tracking-wide text-gray-800 uppercase">{title}</small>
             <p className="my-3">
               <span className="text-xl font-semibold text-gray-800">{value}</span>{' '}
-              <span className="text-gray-400">{text}</span> <ArrowForward className="w-4 h-4 text-blue-600" />
+              <span className="text-gray-400">{text}</span>
+              <Link href={link}>
+                <a>
+                  <ArrowForward className="w-4 h-4 text-blue-600" />
+                </a>
+              </Link>
             </p>
           </div>
         ))}

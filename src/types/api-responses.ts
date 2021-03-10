@@ -1,16 +1,14 @@
 import {IGroup, IRole, IUser} from './users'
 
-export interface IFetchUsersResponse {
-  users: IUser[]
-}
+export type IFetchUsersResponse = IUser[]
 
-export interface IFetchRolesResponse {
-  roles: IRole[]
-}
+export type IFetchRolesResponse = IRole[]
 
-export interface IFetchGroupsResponse {
-  groups: IGroup[]
-}
+export type IFetchRoleResponse = IRole
+
+export type IFetchGroupsResponse = IGroup[]
+
+export type IFetchGroupResponse = IRole
 
 export interface IFetchLoginResponse {
   token: string
@@ -23,5 +21,21 @@ export interface ICreateUserResponse {
 }
 
 export interface ICreateGroupResponse {
+  message: string
+}
+
+export interface ICreateRoleResponse {
+  message: string
+}
+
+export interface IEditRoleResponse {
+  message: string
+}
+
+export interface IDeleteRoleResponse {
+  message: string
+}
+
+export interface IDeleteGroupResponse {
   message: string
 }

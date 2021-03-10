@@ -4,7 +4,10 @@ import {useQuery} from 'react-query'
 import {UserCard} from '@/components/pages/users/cards/users'
 import {CreateUserModal} from '@/components/modals/users/create'
 import {ArrowForward} from '@/components/icons/arrows'
-import {fetchGroups, fetchRoles, fetchUsers} from '@/pages/api/users'
+import {fetchUsers} from '@/pages/api/users'
+import {fetchRoles} from '@/pages/api/roles'
+import {fetchGroups} from '../api/groups'
+
 import type {IGroup, IRole, IUser} from '@/types/users'
 
 const Users: FunctionComponent = () => {
@@ -15,9 +18,9 @@ const Users: FunctionComponent = () => {
   const {data: rolesData} = useQuery<IRole[], Error>('roles', fetchRoles)
 
   const sections = [
-    {title: 'Total users', value: usersData && usersData.length, text: 'users'},
-    {title: 'Total groups', value: groupsData && groupsData.length, text: 'groups'},
-    {title: 'Total roles', value: rolesData && Object.keys(rolesData).length, text: 'roles'}
+    {title: 'Total users', value: usersData && usersData.length, text: 'users', ref: '/'},
+    {title: 'Total groups', value: groupsData && groupsData.length, text: 'groups', ref: '/groups'},
+    {title: 'Total roles', value: rolesData && Object.keys(rolesData).length, text: 'roles', ref: '/roles'}
   ]
 
   return (
@@ -34,14 +37,14 @@ const Users: FunctionComponent = () => {
       {!isLoading && !error && (
         <>
           <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-            {sections.map(({title, value, text}) => (
-              <div key={`section-${title}`}>
+            {sections.map(({title, value, text, ref}) => (
+              <a key={`section-${title}`} href={`/users${ref}`}>
                 <small className="font-semibold tracking-wide text-gray-800 uppercase">{title}</small>
                 <p className="my-3">
                   <span className="text-xl font-semibold text-gray-800">{value}</span>{' '}
                   <span className="text-gray-400">{text}</span> <ArrowForward className="w-4 h-4 text-blue-600" />
                 </p>
-              </div>
+              </a>
             ))}
           </section>
           <section className="space-y-6">

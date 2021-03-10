@@ -25,3 +25,8 @@ export const ButtonAsLink: FunctionComponent<{className?: string} & HTMLAttribut
     {...props}
   />
 )
+
+export const ButtonRound: FunctionComponent<{className?: string} & HTMLAttributes<HTMLButtonElement>> = ({
+  className,
+  ...props
+}) => <button className={cn('btn', 'rounded-md', className)} {...props} />

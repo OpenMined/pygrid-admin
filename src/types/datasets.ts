@@ -23,8 +23,10 @@ export interface IDataset {
 export interface IRequest {
   id: number
   user_id: number
+  user_email: string
   object_id: number
   reason: string
-  status: string
-  request_type: string
+  status: 'accepted' | 'pending' | 'denied'
+  request_type: 'budget' | 'permissions'
+  date: Date
 }

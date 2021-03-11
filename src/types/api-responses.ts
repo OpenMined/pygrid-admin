@@ -31,10 +31,18 @@ export interface IFetchDatasets {
   datasets: IDataset[]
 }
 
+export interface IFetchDataset {
+  dataset: IDataset
+}
+
 export interface IFetchRequests {
   requests: IRequest[]
 }
 
 export interface IFetchTensors {
   tensors: IDataset[]
+}
+
+export interface IAcceptRequest {
+  message: string
 }

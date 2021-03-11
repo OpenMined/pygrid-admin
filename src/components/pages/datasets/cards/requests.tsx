@@ -2,14 +2,14 @@ import type {FunctionComponent, MouseEventHandler} from 'react'
 import {Card, ButtonAsLink, ButtonAsIcon} from '@/components/lib'
 import {Check} from '@/components/icons/check'
 import {Close} from '@/components/icons/close'
+import {User} from '@/components/icons/user'
 
 // TODO: check permissions with Ionesio
 // TODO: check budget logic with Ionesio
 
 interface PermissionRequestProperties {
-  userAvatarURL: string
-  userName: string
-  userId: string | number
+  user_email: string
+  user_id: string | number
   retrieving: string
   tensors: string
   dataset: string
@@ -19,9 +19,8 @@ interface PermissionRequestProperties {
 }
 
 interface BudgetChangesProperties {
-  userAvatarURL: string
-  userName: string
-  userId: string | number
+  user_email: string
+  user_id: string | number
   retrieving: string
   epsilonCurrent: number
   epsilonAfterChange: number
@@ -31,19 +30,18 @@ interface BudgetChangesProperties {
 }
 
 interface UserRquestingProps {
-  userAvatarURL: string
-  userName: string
-  userId: string | number
+  user_email: string
+  user_id: string | number
   retrieving: string
 }
 
-const UserRequestingUI: FunctionComponent<UserRquestingProps> = ({userAvatarURL, userId, userName, retrieving}) => (
+const UserRequestingUI: FunctionComponent<UserRquestingProps> = ({user_id, user_email, retrieving}) => (
   <div className="flex flex-row items-center">
-    <img className="inline w-6 h-6 mr-2 rounded-full" alt="" src={userAvatarURL} />
+    <User className="inline w-6 h-6 mr-2 rounded-full" />
     <span>
       {/* TODO: Change to a modal view here instead of linking to the profile in full */}
-      <a href={`/users/u/${userId}`} target="blank">
-        {userName}
+      <a href={`/users/u/${user_id}`} target="blank">
+        {user_email}
       </a>{' '}
       wants to retrieve <a href={`/datasets/tensors/t/${retrieving}`}>{retrieving}</a>
     </span>
@@ -51,9 +49,8 @@ const UserRequestingUI: FunctionComponent<UserRquestingProps> = ({userAvatarURL,
 )
 
 export const PermissionRequestCard: FunctionComponent<PermissionRequestProperties> = ({
-  userAvatarURL,
-  userName,
-  userId,
+  user_email,
+  user_id,
   retrieving,
   tensors,
   dataset,
@@ -62,7 +59,7 @@ export const PermissionRequestCard: FunctionComponent<PermissionRequestPropertie
   onClickReject
 }) => (
   <Card>
-    <UserRequestingUI userAvatarURL={userAvatarURL} userName={userName} userId={userId} retrieving={retrieving} />
+    <UserRequestingUI user_email={user_email} user_id={user_id} retrieving={retrieving} />
     <div className="flex flex-row pr-4 mt-4 relative">
       <div className="flex flex-col font-light text-gray-800">
         <div>
@@ -95,9 +92,8 @@ export const PermissionRequestCard: FunctionComponent<PermissionRequestPropertie
 )
 
 export const BudgetChangesCard: FunctionComponent<BudgetChangesProperties> = ({
-  userAvatarURL,
-  userName,
-  userId,
+  user_email,
+  user_id,
   retrieving,
   epsilonCurrent,
   epsilonAfterChange,
@@ -109,7 +105,7 @@ export const BudgetChangesCard: FunctionComponent<BudgetChangesProperties> = ({
 
   return (
     <Card>
-      <UserRequestingUI userAvatarURL={userAvatarURL} userName={userName} userId={userId} retrieving={retrieving} />
+      <UserRequestingUI user_email={user_email} user_id={user_id} retrieving={retrieving} />
       <div className="flex flex-row pr-4 mt-4 relative">
         <div className="flex flex-col font-light text-gray-800">
           <div>

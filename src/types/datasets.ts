@@ -28,5 +28,5 @@ export interface IRequest {
   reason: string
   status: 'accepted' | 'pending' | 'denied'
   request_type: 'budget' | 'permissions'
-  date: Date
+  created_at: Date
 }

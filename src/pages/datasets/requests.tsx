@@ -9,7 +9,7 @@ const Requests: FunctionComponent = () => {
       dataset: 'Diabetes Study 01.289.301',
       tensors: 'data.target',
       retrieving: 'requesting tensor',
-      date: Date.now()
+      created_at: Date.now()
     },
     {
       user_email: 'admin@openmined.com',
@@ -17,7 +17,7 @@ const Requests: FunctionComponent = () => {
       dataset: 'Diabetes Study 01.289.301',
       tensors: 'data.target',
       retrieving: 'requesting tensor',
-      date: Date.now()
+      created_at: Date.now()
     }
   ]
 
@@ -32,7 +32,7 @@ const Requests: FunctionComponent = () => {
         <small className="font-semibold tracking-wide text-sm text-gray-800 uppercase">Permissions changes</small>
         <div className="space-y-6 xl:space-y-6 pt-5">
           {permissionChanges
-            .sort((a, b) => b.date - a.date)
+            .sort((a, b) => b.created_at - a.created_at)
             .map(permission => (
               <PermissionRequestCard
                 {...permission}

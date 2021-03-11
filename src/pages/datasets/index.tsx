@@ -6,7 +6,6 @@ import {fetchDatasets, fetchRequests} from '@/pages/api/datasets'
 import type {IDataset, IRequest} from '@/types/datasets'
 import {Plus} from '@/components/icons/plus'
 import {SearchBar} from '@/components/forms/searchbar'
-import {title} from 'process'
 import Link from 'next/link'
 
 const Datasets: FunctionComponent = () => {
@@ -16,38 +15,37 @@ const Datasets: FunctionComponent = () => {
   const sections = [
     {
       title: 'Permissions changes',
-      value: requests && requests.filter(x => x.request_type === 'permissions' && x.status === 'pending').length,
+      value: requests ? requests.filter(x => x.request_type === 'permissions' && x.status === 'pending').length : 0,
       text: 'requests',
       link: '/datasets/requests'
     },
-    {title: 'Budget changes', value: 5, text: 'requests', link: '/datasets/requests'},
     {title: 'Tensors pending deletion', value: 3, text: 'tensors', link: '/datasets/tensors'}
   ]
 
   const datasets = [
     {
-      title: 'Diabetes Study 01.289.301',
+      name: 'Diabetes Study 01.289.301',
       description:
         'This was a double-blind diabetes study done in coordination with UC Santa Barbara between July 1st, 2017 and January 1st, 2019.',
       tags: ['diabetes', 'california', 'healthcare', 'UCSF', 'beekeeper'],
       tensors: 2
     },
     {
-      title: 'Dementia MRI Scans (10k)',
+      name: 'Dementia MRI Scans (10k)',
       description:
         'Performed a database dump of exactly 10,000 patient records from our EMR. All patients were diagnosed with dementia within 10 years of the MRIs.',
       tags: ['dementia', 'mri', 'healthcare', 'UCSF'],
       tensors: 6
     },
     {
-      title: 'Diabetes Study 01.289.301',
+      name: 'Diabetes Study 01.289.301',
       description:
         'This was a double-blind diabetes study done in coordination with UC Santa Barbara between July 1st, 2017 and January 1st, 2019.',
       tags: ['diabetes', 'california', 'healthcare', 'UCSF', 'beekeeper'],
       tensors: 2
     },
     {
-      title: 'Dementia MRI Scans (10k)',
+      name: 'Dementia MRI Scans (10k)',
       description:
         'Performed a database dump of exactly 10,000 patient records from our EMR. All patients were diagnosed with dementia within 10 years of the MRIs.',
       tags: ['dementia', 'mri', 'healthcare', 'UCSF'],
@@ -96,6 +94,8 @@ const Datasets: FunctionComponent = () => {
     )
   }
 
+  // TODO : Support pagination.
+  // TODO : Filter datasets by tags
   return (
     <main className="space-y-4">
       <div className="flex flex-col-reverse items-start space-y-4 space-y-reverse md:space-y-0 md:flex-row md:justify-between">
@@ -108,13 +108,13 @@ const Datasets: FunctionComponent = () => {
         </button>
       </div>
       <p className="pb-4 mb-6 text-xl font-light text-gray-400">Manage all private data hosted in your node</p>
-      {true && (
+      {!isLoading && !error && (
         <>
           <Stats />
           <SearchBar placeholder={'Search Datasets'} search={searchText} onChange={text => setSearchText(text)} />
           <section className="space-y-6">
             <DatasetsList
-              datasets={datasets.filter(item => item.title.toLowerCase().includes(searchText.toLowerCase()))}
+              datasets={datasetsData.filter(item => item.name.toLowerCase().includes(searchText.toLowerCase()))}
             />
           </section>
         </>

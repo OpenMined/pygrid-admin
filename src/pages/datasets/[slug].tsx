@@ -3,7 +3,7 @@ import {Tag, ButtonGhost} from '@/components/lib'
 import {Tabs, TabList, Tab, TabPanels, TabPanel} from '@reach/tabs'
 import {FileIcon} from '@/components/icons/file'
 
-const Dataset: FunctionComponent<{slug?: string}> = ({slug}) => {
+const Dataset: FunctionComponent<{slug?: string}> = () => {
   const DatasetData = {
     title: 'Diabetes Study 01.289.301',
     description:

@@ -6,6 +6,7 @@ export interface IUser {
 }
 
 export interface IRole {
+  id: string
   name: string
   canTriageRequests: boolean
   canEditSettings: boolean

@@ -28,8 +28,8 @@
 
 **March 1st, 2021**:
 
-- Users
-- Postman
+- ~~Users~~
+- ~~Postman~~
 
 **March 8th, 2021**:
 
@@ -66,25 +66,25 @@
 
 # Completion sheet
 
-- [ ] Users flow #14
-  - [ ] Users
-    - [ ] [#16](https://github.com/OpenMined/pygrid-admin/issues/16) Create
-    - [ ] [#15](https://github.com/OpenMined/pygrid-admin/issues/15) Get
-    - [ ] [#15](https://github.com/OpenMined/pygrid-admin/issues/15) All
-    - [ ] Update
-    - [ ] Delete
-  - [ ] Groups
-    - [ ] [#18](https://github.com/OpenMined/pygrid-admin/issues/18) Create
-    - [ ] [#21](https://github.com/OpenMined/pygrid-admin/issues/21) Get
-    - [ ] [#19](https://github.com/OpenMined/pygrid-admin/issues/19) All
-    - [ ] [#21](https://github.com/OpenMined/pygrid-admin/issues/21) Update
-    - [ ] [#21](https://github.com/OpenMined/pygrid-admin/issues/21) Delete
-  - [ ] Roles
-    - [ ] [#23](https://github.com/OpenMined/pygrid-admin/issues/23) Create
-    - [ ] [#24](https://github.com/OpenMined/pygrid-admin/issues/24) Get
-    - [ ] [#22](https://github.com/OpenMined/pygrid-admin/issues/22) All
-    - [ ] [#24](https://github.com/OpenMined/pygrid-admin/issues/24) Update
-    - [ ] [#24](https://github.com/OpenMined/pygrid-admin/issues/24) Delete
+- [x] Users flow #14
+  - [x] Users
+    - [x] [#16](https://github.com/OpenMined/pygrid-admin/issues/16) Create
+    - [x] [#15](https://github.com/OpenMined/pygrid-admin/issues/15) Get
+    - [x] [#15](https://github.com/OpenMined/pygrid-admin/issues/15) All
+    - [ ] ~~Update~~
+    - [ ] ~~Delete~~
+  - [x] Groups
+    - [x] [#18](https://github.com/OpenMined/pygrid-admin/issues/18) Create
+    - [x] [#21](https://github.com/OpenMined/pygrid-admin/issues/21) Get
+    - [x] [#19](https://github.com/OpenMined/pygrid-admin/issues/19) All
+    - [x] [#21](https://github.com/OpenMined/pygrid-admin/issues/21) Update
+    - [x] [#21](https://github.com/OpenMined/pygrid-admin/issues/21) Delete
+  - [x] Roles
+    - [x] [#23](https://github.com/OpenMined/pygrid-admin/issues/23) Create
+    - [x] [#24](https://github.com/OpenMined/pygrid-admin/issues/24) Get
+    - [x] [#22](https://github.com/OpenMined/pygrid-admin/issues/22) All
+    - [x] [#24](https://github.com/OpenMined/pygrid-admin/issues/24) Update
+    - [x] [#24](https://github.com/OpenMined/pygrid-admin/issues/24) Delete
 - [ ] Datasets [#31](https://github.com/OpenMined/pygrid-admin/issues/31)
   - [ ] Datasets
     - [ ] Get datasets [#43](https://github.com/OpenMined/pygrid-admin/issues/43)

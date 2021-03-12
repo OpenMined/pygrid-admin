@@ -4,7 +4,7 @@ export interface IDataset {
   description: string
   manifest: string
   tags: string[]
-  created_at: Date
+  createdAt: Date
   tensors?: Record<string, ITensor>
 }
 

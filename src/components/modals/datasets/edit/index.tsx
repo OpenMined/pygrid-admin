@@ -1,24 +1,30 @@
-import {FunctionComponent, useState} from 'react'
+import {FunctionComponent, useEffect, useState} from 'react'
 import {ButtonRound} from '@/components/lib'
-import {createDataset} from '@/pages/api/datasets'
+import {editDataset} from '@/pages/api/datasets'
 import {Modal} from '../../modal'
+import {IDataset} from '@/types/datasets'
 
-interface ICreateDatasetModalProps {
+interface IEditDatasetModalProps {
   isOpen: boolean
   onClose: () => void
   onConfirm: () => void
+  dataset: IDataset
 }
 
-const CreateDatasetModal: FunctionComponent<ICreateDatasetModalProps> = ({isOpen, onClose, onConfirm}) => {
+const EditDatasetModal: FunctionComponent<IEditDatasetModalProps> = ({isOpen, onClose, onConfirm, dataset}) => {
   const [formObject, setFormObject] = useState({
-    name: '',
-    description: '',
-    manifest: '',
-    tags: '',
-    created_at: new Date()
+    name: dataset.name,
+    description: dataset.description,
+    manifest: dataset.manifest,
+    tags: dataset.tags.toString(),
+    created_at: dataset.createdAt
   })
 
   const [tensors, setTensors] = useState([])
+
+  useEffect(() => {
+    setTensors(mapDictToTensors())
+  }, [])
 
   const handleChange = event => {
     const {name, value} = event.target
@@ -34,8 +40,17 @@ const CreateDatasetModal: FunctionComponent<ICreateDatasetModalProps> = ({isOpen
     return newTensors
   }
 
+  const mapDictToTensors = () => {
+    const newTensors = []
+    Object.entries(dataset.tensors).map(([name, tensor]) =>
+      newTensors.push({name, manifest: tensor.manifest, content: ''})
+    )
+    return newTensors
+  }
+
   const handleSubmit = () => {
     const newDataset = {
+      id: dataset?.id,
       name: formObject.name,
       description: formObject.description,
       manifest: formObject.manifest,
@@ -44,7 +59,7 @@ const CreateDatasetModal: FunctionComponent<ICreateDatasetModalProps> = ({isOpen
       tensors: {...mapTensorsToDict()}
     }
 
-    createDataset(newDataset).then(() => onConfirm())
+    editDataset(newDataset).then(() => onConfirm())
   }
 
   const appendTensors = () => {
@@ -93,6 +108,7 @@ const CreateDatasetModal: FunctionComponent<ICreateDatasetModalProps> = ({isOpen
             autoComplete="off"
             className="shadow appearance-none border rounded w-full py-2 mb-4 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline border-blue-300 "
             placeholder="tensor_name"
+            value={el.name}
             onChange={e => handleTensors(i, e)}
           />
         </div>
@@ -107,6 +123,7 @@ const CreateDatasetModal: FunctionComponent<ICreateDatasetModalProps> = ({isOpen
             autoComplete="off"
             className="shadow appearance-none border rounded w-full py-2 mb-4 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline border-blue-300 "
             placeholder="mpg, cyl"
+            value={el.manifest}
             onChange={e => handleTensors(i, e)}
           />
         </div>
@@ -138,13 +155,13 @@ const CreateDatasetModal: FunctionComponent<ICreateDatasetModalProps> = ({isOpen
       <ButtonRound
         className="bg-green-500 text-white active:bg-green-600 disabled:opacity-50 font-bold uppercase text-sm px-6 py-3 shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
         onClick={handleSubmit}>
-        Create
+        Edit
       </ButtonRound>
     </>
   )
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} header="Create Dataset" footer={<Footer />}>
+    <Modal isOpen={isOpen} onClose={onClose} header="Edit Dataset" footer={<Footer />}>
       <form autoComplete="off" className="m-5">
         <div>
           <label htmlFor="name" className="text-sm block font-bold  pb-2">
@@ -157,6 +174,7 @@ const CreateDatasetModal: FunctionComponent<ICreateDatasetModalProps> = ({isOpen
             autoComplete="off"
             className="shadow appearance-none border rounded w-full py-2 mb-4 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline border-blue-300 "
             placeholder="Dataset"
+            value={formObject.name}
             onChange={handleChange}
           />
         </div>
@@ -171,6 +189,7 @@ const CreateDatasetModal: FunctionComponent<ICreateDatasetModalProps> = ({isOpen
             autoComplete="off"
             className="shadow appearance-none border rounded w-full py-2 mb-4 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline border-blue-300 "
             placeholder="Description"
+            value={formObject.description}
             onChange={handleChange}
           />
         </div>
@@ -185,6 +204,7 @@ const CreateDatasetModal: FunctionComponent<ICreateDatasetModalProps> = ({isOpen
             autoComplete="off"
             className="shadow appearance-none border rounded w-full py-2 mb-4 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline border-blue-300 "
             placeholder="Manifest"
+            value={formObject.manifest}
             onChange={handleChange}
           />
         </div>
@@ -199,6 +219,7 @@ const CreateDatasetModal: FunctionComponent<ICreateDatasetModalProps> = ({isOpen
             autoComplete="off"
             className="shadow appearance-none border rounded w-full py-2 mb-4 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline border-blue-300 "
             placeholder="Diabetes, Healthcare"
+            value={formObject.tags}
             onChange={handleChange}
           />
         </div>
@@ -212,7 +233,7 @@ const CreateDatasetModal: FunctionComponent<ICreateDatasetModalProps> = ({isOpen
             id="dataset_created_at"
             autoComplete="off"
             className="shadow appearance-none border rounded w-full py-2 mb-4 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline border-blue-300 "
-            placeholder="01/01/2021"
+            value={formObject.created_at}
             onChange={handleChange}
           />
         </div>
@@ -238,4 +259,4 @@ const CreateDatasetModal: FunctionComponent<ICreateDatasetModalProps> = ({isOpen
   )
 }
 
-export {CreateDatasetModal}
+export {EditDatasetModal}

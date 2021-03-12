@@ -40,7 +40,7 @@ export const editDataset = async ({id, name, description, manifest, tags, create
       tensors
     }
 
-    const {data} = await axios.put<IEditDatasetResponse>('/dcfl/', payload)
+    const {data} = await axios.put<IEditDatasetResponse>(`/dcfl/datasets/${id}`, payload)
     return data
   }
 }

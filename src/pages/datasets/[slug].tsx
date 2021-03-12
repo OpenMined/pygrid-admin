@@ -8,6 +8,7 @@ import {FileIcon} from '@/components/icons/file'
 
 import {IDataset, ITensor} from '@/types/datasets'
 import {fetchDataset} from '../api/datasets'
+import {EditDatasetModal} from '@/components/modals/datasets/edit'
 import {DeleteDatasetModal} from '@/components/modals/datasets/delete'
 
 const Dataset: FunctionComponent = () => {
@@ -15,11 +16,13 @@ const Dataset: FunctionComponent = () => {
   const {slug} = router.query
 
   const [openDeleteDatasetModal, setOpenDeleteDatasetModal] = useState(false)
+  const [openEditDatasetModal, setOpenEditDatasetModal] = useState(false)
+
   const {isLoading, data: dataset} = useQuery<IDataset, Error>(['dataset', slug], () => fetchDataset({id: slug}))
 
   if (isLoading || dataset === undefined) return null
 
-  const {id, name, description, tags, tensors} = dataset
+  const {id, name, manifest, description, tags, tensors} = dataset
 
   const handleTensors = (name: string, tensor: ITensor) => (
     <Tabs key={`tensor-${name}`}>
@@ -30,7 +33,6 @@ const Dataset: FunctionComponent = () => {
       <hr />
       <TabPanels>
         <TabPanel>
-          {JSON.stringify(tensor)}
           <section className="flex flex-col mt-4 space-y-1">
             <span>
               <strong>File</strong>: <FileIcon className="h-4 text-gray-400" />{' '}
@@ -81,7 +83,7 @@ const Dataset: FunctionComponent = () => {
         <div className="flex flex-col-reverse items-start justify-between space-y-4 space-y-reverse md:flex-row md:space-y-0">
           <h1 className="pr-4 text-4xl leading-12">{name}</h1>
           <div className="flex flex-row space-x-2">
-            <button className="btn" onClick={() => alert('Edit dataset')}>
+            <button className="btn" onClick={() => setOpenEditDatasetModal(true)}>
               Edit dataset
             </button>
             <ButtonGhost className="text-sm" onClick={() => setOpenDeleteDatasetModal(true)}>
@@ -102,6 +104,12 @@ const Dataset: FunctionComponent = () => {
         <h2 className="text-sm font-semibold tracking-widest uppercase">Tensors</h2>
         {Object.entries(tensors).map(([name, tensor]) => handleTensors(name, tensor))}
       </div>
+      <EditDatasetModal
+        onClose={() => setOpenEditDatasetModal(false)}
+        isOpen={openEditDatasetModal}
+        onConfirm={() => setOpenEditDatasetModal(false)}
+        dataset={dataset}
+      />
       <DeleteDatasetModal
         id={id}
         onClose={() => setOpenDeleteDatasetModal(false)}

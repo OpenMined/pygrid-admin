@@ -11,6 +11,8 @@ export type IFetchGroupsResponse = IGroup[]
 
 export type IFetchGroupResponse = IRole
 
+export type IFetchDatasetResponse = IDataset
+
 export interface IFetchLoginResponse {
   token: string
   key: string
@@ -23,10 +25,6 @@ export interface ICreateUserResponse {
 
 export interface ICreateGroupResponse {
   message: string
-}
-
-export interface IFetchDatasetResponse {
-  dataset: IDataset
 }
 
 export interface ICreateDatasetResponse {

@@ -1,5 +1,5 @@
 export interface IDataset {
-  id: number
+  id: string
   name: string
   description: string
   manifest: string

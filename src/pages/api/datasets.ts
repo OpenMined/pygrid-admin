@@ -9,7 +9,7 @@ import {
 export const fetchDataset = async ({id}) => {
   if (id !== undefined) {
     const {data} = await axios.get<IFetchDatasetResponse>(`/dcfl/datasets/${id}`)
-    return data.dataset
+    return data
   }
 }
 

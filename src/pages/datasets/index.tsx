@@ -1,8 +1,11 @@
-import type {FunctionComponent} from 'react'
+import {FunctionComponent, useState} from 'react'
 import {DatasetCard} from '@/components/pages/datasets/cards/datasets'
 import {ArrowForward} from '@/components/icons/arrows'
+import {CreateDatasetModal} from '@/components/modals/datasets/create'
 
 const Datasets: FunctionComponent = () => {
+  const [openCreateDatasetModal, setOpenCreateDatasetModal] = useState(false)
+
   const sections = [
     {title: 'Permissions changes', value: 19, text: 'requests'},
     {title: 'Budget changes', value: 5, text: 'requests'},
@@ -44,7 +47,7 @@ const Datasets: FunctionComponent = () => {
     <main className="space-y-4">
       <div className="flex flex-col-reverse items-start space-y-4 space-y-reverse md:space-y-0 md:flex-row md:justify-between">
         <h1 className="pr-4 text-4xl leading-12">Datasets</h1>
-        <button className="btn" onClick={() => alert('Create new dataset')}>
+        <button className="btn" onClick={() => setOpenCreateDatasetModal(true)}>
           New dataset
         </button>
       </div>
@@ -69,6 +72,11 @@ const Datasets: FunctionComponent = () => {
           </div>
         ))}
       </section>
+      <CreateDatasetModal
+        isOpen={openCreateDatasetModal}
+        onClose={() => setOpenCreateDatasetModal(false)}
+        onConfirm={() => setOpenCreateDatasetModal(false)}
+      />
     </main>
   )
 }

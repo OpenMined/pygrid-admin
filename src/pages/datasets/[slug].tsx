@@ -28,15 +28,13 @@ const Dataset: FunctionComponent = () => {
     <Tabs key={`tensor-${name}`}>
       <TabList>
         <Tab>data</Tab>
-        <Tab>target</Tab>
       </TabList>
       <hr />
       <TabPanels>
         <TabPanel>
           <section className="flex flex-col mt-4 space-y-1">
             <span>
-              <strong>File</strong>: <FileIcon className="h-4 text-gray-400" />{' '}
-              <span className="underline">diabetes_data.csv</span>
+              <strong>File</strong>: <FileIcon className="h-4 text-gray-400" /> <span>{name}</span>
             </span>
             <span>
               <strong>Shape</strong>: <span className="text-gray-400">{JSON.stringify(tensor.shape)}</span>
@@ -48,30 +46,13 @@ const Dataset: FunctionComponent = () => {
               <strong>Schema</strong>:{' '}
               <span className="text-gray-400">
                 <ul className="list-horizontal">
-                  <li>id</li>
-                  <li>birthdate</li>
-                  <li>sex</li>
-                  <li>diagnosis_date</li>
-                  <li>type</li>
-                  <li>weight</li>
-                  <li>glucose_level</li>
-                  <li>medications</li>
+                  {tensor.manifest.split(',').map(el => (
+                    <li key={`${el}-element`}>{el}</li>
+                  ))}
                 </ul>
               </span>
             </span>
-            <span>
-              <strong>Entities</strong>: <span className="text-gray-400">10,000 unique entities</span>
-            </span>
-            <span>
-              <strong>Default Permissions</strong>: <span className="text-gray-400">search-only</span>
-            </span>
-            <span>
-              <strong>Permissions</strong>: <a href="/">7 users, 2 groups</a>
-            </span>
           </section>
-        </TabPanel>
-        <TabPanel>
-          <section className="flex flex-col mt-4 space-y-1">Target</section>
         </TabPanel>
       </TabPanels>
     </Tabs>
@@ -99,6 +80,10 @@ const Dataset: FunctionComponent = () => {
             </Tag>
           ))}
         </div>
+      </div>
+      <div className="space-y-4">
+        <h2 className="text-sm font-semibold tracking-widest uppercase">Manifest</h2>
+        <p>{manifest}</p>
       </div>
       <div className="space-y-4">
         <h2 className="text-sm font-semibold tracking-widest uppercase">Tensors</h2>

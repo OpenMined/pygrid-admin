@@ -14,7 +14,7 @@ export interface IDataset {
   description: string
   manifest: string
   tags: string[]
-  created_at: Date
+  createdAt: Date
   tensors: {
     [key: string]: ITensor
   }
@@ -22,11 +22,11 @@ export interface IDataset {
 
 export interface IRequest {
   id: number
-  user_id: number
-  user_email: string
-  object_id: number
+  userId: number
+  userEmail: string
+  objectId: number
   reason: string
   status: 'accepted' | 'pending' | 'denied'
-  request_type: 'budget' | 'permissions'
-  created_at: Date
+  requestType: 'budget' | 'permissions'
+  createdAt: Date
 }

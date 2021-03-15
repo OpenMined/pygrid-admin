@@ -1,15 +1,14 @@
 import type {FunctionComponent, MouseEventHandler} from 'react'
+import Link from 'next/link'
 import {Card, ButtonAsLink, ButtonAsIcon} from '@/components/lib'
-import {Check} from '@/components/icons/check'
-import {Close} from '@/components/icons/close'
+import {CheckMark, XMark} from '@/components/icons/marks'
 import {User} from '@/components/icons/user'
-
 // TODO: check permissions with Ionesio
 // TODO: check budget logic with Ionesio
 
 interface PermissionRequestProperties {
-  user_email: string
-  user_id: string | number
+  userEmail: string
+  userId: string | number
   retrieving: string
   tensors: string
   dataset: string
@@ -18,39 +17,26 @@ interface PermissionRequestProperties {
   onClickReject: MouseEventHandler<HTMLButtonElement>
 }
 
-interface BudgetChangesProperties {
-  user_email: string
-  user_id: string | number
-  retrieving: string
-  epsilonCurrent: number
-  epsilonAfterChange: number
-  onClickReason: MouseEventHandler<HTMLButtonElement>
-  onClickAccept: MouseEventHandler<HTMLButtonElement>
-  onClickReject: MouseEventHandler<HTMLButtonElement>
-}
-
-interface UserRquestingProps {
-  user_email: string
-  user_id: string | number
+interface UserRequestingProps {
+  userEmail: string
+  userId: string | number
   retrieving: string
 }
 
-const UserRequestingUI: FunctionComponent<UserRquestingProps> = ({user_id, user_email, retrieving}) => (
+const UserRequestingUI: FunctionComponent<UserRequestingProps> = ({userId, userEmail, retrieving}) => (
   <div className="flex flex-row items-center">
     <User className="inline w-6 h-6 mr-2 rounded-full" />
     <span>
       {/* TODO: Change to a modal view here instead of linking to the profile in full */}
-      <a href={`/users/u/${user_id}`} target="blank">
-        {user_email}
-      </a>{' '}
-      wants to retrieve <a href={`/datasets/tensors/t/${retrieving}`}>{retrieving}</a>
+      <Link href={`/users/u/${userId}`}>{userEmail}</Link> wants to retrieve{' '}
+      <Link href={`/datasets/tensors/t/${retrieving}`}>{retrieving}</Link>
     </span>
   </div>
 )
 
 export const PermissionRequestCard: FunctionComponent<PermissionRequestProperties> = ({
-  user_email,
-  user_id,
+  userEmail,
+  userId,
   retrieving,
   tensors,
   dataset,
@@ -58,10 +44,10 @@ export const PermissionRequestCard: FunctionComponent<PermissionRequestPropertie
   onClickAccept,
   onClickReject
 }) => (
-  <Card>
-    <UserRequestingUI user_email={user_email} user_id={user_id} retrieving={retrieving} />
-    <div className="flex flex-row pr-4 mt-4 relative">
-      <div className="flex flex-col font-light text-gray-800">
+  <Card className="flex flex-col font-light md:flex-row md:space-x-2 flex-nowrap">
+    <div className="w-full">
+      <UserRequestingUI userEmail={userEmail} userId={userId} retrieving={retrieving} />
+      <div className="flex flex-col my-2 text-gray-800">
         <div>
           <strong>Tensors</strong>: <span className="text-gray-400">{tensors}</span>
         </div>
@@ -75,68 +61,18 @@ export const PermissionRequestCard: FunctionComponent<PermissionRequestPropertie
           </ButtonAsLink>
         </span>
       </div>
-      <div className="flex flex-row space-x-6 pr-3 absolute right-0">
-        <div className="flex flex-col m-auto">
-          <ButtonAsIcon onClick={onClickAccept}>
-            <Check className="w-6 h-6 text-green-500" />
-          </ButtonAsIcon>
-        </div>
-        <div className="flex flex-col m-auto">
-          <ButtonAsIcon onClick={onClickReject}>
-            <Close className="w-5 h-5 text-red-500" />
-          </ButtonAsIcon>
-        </div>
+    </div>
+    <div className="self-end flex-shrink-0 text-gray-400 self-center flex-row flex space-x-6">
+      <div className="flex flex-col m-auto">
+        <ButtonAsIcon onClick={onClickAccept}>
+          <CheckMark className="w-6 h-6 text-green-500" />
+        </ButtonAsIcon>
+      </div>
+      <div className="flex flex-col m-auto">
+        <ButtonAsIcon onClick={onClickReject}>
+          <XMark className="w-6 h-6 text-red-500" />
+        </ButtonAsIcon>
       </div>
     </div>
   </Card>
 )
-
-export const BudgetChangesCard: FunctionComponent<BudgetChangesProperties> = ({
-  user_email,
-  user_id,
-  retrieving,
-  epsilonCurrent,
-  epsilonAfterChange,
-  onClickReason,
-  onClickAccept,
-  onClickReject
-}) => {
-  const increase = Math.round(((epsilonAfterChange - epsilonCurrent) / epsilonCurrent) * 100)
-
-  return (
-    <Card>
-      <UserRequestingUI user_email={user_email} user_id={user_id} retrieving={retrieving} />
-      <div className="flex flex-row pr-4 mt-4 relative">
-        <div className="flex flex-col font-light text-gray-800">
-          <div>
-            <strong>Current epsilon</strong>: <span className="text-gray-400">{epsilonCurrent} units</span>
-          </div>
-          <div>
-            <strong>Epsilon after change</strong>:{' '}
-            <span className="text-gray-400">
-              {epsilonAfterChange} units {epsilonCurrent > 0 && `(${increase}% increase)`}
-            </span>
-          </div>
-          <span>
-            <strong>Reason</strong>:{' '}
-            <ButtonAsLink onClick={onClickReason} aria-label="View budget request reason">
-              Click to view
-            </ButtonAsLink>
-          </span>
-        </div>
-        <div className="flex flex-row space-x-6 pr-3 absolute right-0">
-          <div className="flex flex-col m-auto">
-            <ButtonAsIcon onClick={onClickAccept}>
-              <Check className="w-6 h-6 text-green-500" />
-            </ButtonAsIcon>
-          </div>
-          <div className="flex flex-col m-auto">
-            <ButtonAsIcon onClick={onClickReject}>
-              <Close className="w-5 h-5 text-red-500" />
-            </ButtonAsIcon>
-          </div>
-        </div>
-      </div>
-    </Card>
-  )
-}

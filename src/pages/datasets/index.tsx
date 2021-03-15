@@ -1,12 +1,12 @@
 import {FunctionComponent, useState} from 'react'
 import {useQuery} from 'react-query'
+import Link from 'next/link'
 import {DatasetCard} from '@/components/pages/datasets/cards/datasets'
 import {ArrowForward} from '@/components/icons/arrows'
 import {fetchDatasets, fetchRequests} from '@/pages/api/datasets'
 import type {IDataset, IRequest} from '@/types/datasets'
-import {Plus} from '@/components/icons/plus'
-import {SearchBar} from '@/components/forms/searchbar'
-import Link from 'next/link'
+import {Plus} from '@/components/icons/marks'
+import {SearchBar} from '@/components/lib'
 
 const Datasets: FunctionComponent = () => {
   const {isLoading, data: datasetsData, error} = useQuery<IDataset[], Error>('datasets', fetchDatasets)
@@ -15,7 +15,7 @@ const Datasets: FunctionComponent = () => {
   const sections = [
     {
       title: 'Permissions changes',
-      value: requests ? requests.filter(x => x.request_type === 'permissions' && x.status === 'pending').length : 0,
+      value: requests ? requests.filter(x => x.requestType === 'permissions' && x.status === 'pending').length : 0,
       text: 'requests',
       link: '/datasets/requests'
     },
@@ -28,49 +28,55 @@ const Datasets: FunctionComponent = () => {
       description:
         'This was a double-blind diabetes study done in coordination with UC Santa Barbara between July 1st, 2017 and January 1st, 2019.',
       tags: ['diabetes', 'california', 'healthcare', 'UCSF', 'beekeeper'],
-      tensors: 2
+      tensors: {
+        data: {
+          shape: [1000, 8],
+          type: 'float 64 bits',
+          manifest: '',
+          entities: 3526,
+          permissions: {
+            users: [12345, 54321],
+            groups: [12345, 54321]
+          }
+        }
+      }
     },
     {
       name: 'Dementia MRI Scans (10k)',
       description:
         'Performed a database dump of exactly 10,000 patient records from our EMR. All patients were diagnosed with dementia within 10 years of the MRIs.',
       tags: ['dementia', 'mri', 'healthcare', 'UCSF'],
-      tensors: 6
-    },
-    {
-      name: 'Diabetes Study 01.289.301',
-      description:
-        'This was a double-blind diabetes study done in coordination with UC Santa Barbara between July 1st, 2017 and January 1st, 2019.',
-      tags: ['diabetes', 'california', 'healthcare', 'UCSF', 'beekeeper'],
-      tensors: 2
-    },
-    {
-      name: 'Dementia MRI Scans (10k)',
-      description:
-        'Performed a database dump of exactly 10,000 patient records from our EMR. All patients were diagnosed with dementia within 10 years of the MRIs.',
-      tags: ['dementia', 'mri', 'healthcare', 'UCSF'],
-      tensors: 6
+      tensors: {
+        data: {
+          shape: [1000, 8],
+          type: 'float 64 bits',
+          manifest: '',
+          entities: 3526,
+          permissions: {
+            users: [12345, 54321],
+            groups: [12345, 54321]
+          }
+        }
+      }
     }
   ]
 
   const DatasetsList = ({datasets}) => {
-    return (
-      <>
-        {datasets.length > 0 ? (
-          <>
-            {datasets.map(dataset => (
-              <div key={`dataset-${dataset.title}`}>
-                <a href={`/datasets/${dataset.title}`}>
-                  <DatasetCard {...dataset} />
-                </a>
-              </div>
-            ))}
-          </>
-        ) : (
-          <div>No matches found.</div>
-        )}
-      </>
-    )
+    if (datasets.length > 0) {
+      return (
+        <>
+          {datasets.map(dataset => (
+            <div key={`dataset-${dataset.name}`}>
+              <a href={`/datasets/${dataset.name}`}>
+                <DatasetCard {...dataset} numberTensors={Object.keys(dataset.tensors).length} />
+              </a>
+            </div>
+          ))}
+        </>
+      )
+    } else {
+      return <div>No matches found.</div>
+    }
   }
 
   const Stats = () => {
@@ -108,13 +114,13 @@ const Datasets: FunctionComponent = () => {
         </button>
       </div>
       <p className="pb-4 mb-6 text-xl font-light text-gray-400">Manage all private data hosted in your node</p>
-      {!isLoading && !error && (
+      {true && (
         <>
           <Stats />
           <SearchBar placeholder={'Search Datasets'} search={searchText} onChange={text => setSearchText(text)} />
           <section className="space-y-6">
             <DatasetsList
-              datasets={datasetsData.filter(item => item.name.toLowerCase().includes(searchText.toLowerCase()))}
+              datasets={datasets.filter(item => item.name.toLowerCase().includes(searchText.toLowerCase()))}
             />
           </section>
         </>

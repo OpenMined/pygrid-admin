@@ -4,20 +4,20 @@ import {PermissionRequestCard} from '@/components/pages/datasets/cards/requests'
 const Requests: FunctionComponent = () => {
   const permissionChanges = [
     {
-      user_email: 'owner@openmined.com',
-      user_id: 19239123,
+      userEmail: 'owner@openmined.com',
+      userId: 19239123,
       dataset: 'Diabetes Study 01.289.301',
       tensors: 'data.target',
       retrieving: 'requesting tensor',
-      created_at: Date.now()
+      createdAt: Date.now()
     },
     {
-      user_email: 'admin@openmined.com',
-      user_id: 'asdasd19212312392',
+      userEmail: 'admin@openmined.com',
+      userId: 'asdasd19212312392',
       dataset: 'Diabetes Study 01.289.301',
       tensors: 'data.target',
       retrieving: 'requesting tensor',
-      created_at: Date.now()
+      createdAt: Date.now()
     }
   ]
 
@@ -30,13 +30,13 @@ const Requests: FunctionComponent = () => {
       <p className="text-xl font-light text-gray-400">Accept or deny any permissions</p>
       <section>
         <small className="font-semibold tracking-wide text-sm text-gray-800 uppercase">Permissions changes</small>
-        <div className="space-y-6 xl:space-y-6 pt-5">
+        <div className="space-y-6 pt-5">
           {permissionChanges
-            .sort((a, b) => b.created_at - a.created_at)
+            .sort((a, b) => b.createdAt - a.createdAt)
             .map(permission => (
               <PermissionRequestCard
                 {...permission}
-                key={`permission-card-${permission.dataset}-${permission.tensors}-${permission.user_id}`}
+                key={`permission-card-${permission.dataset}-${permission.tensors}-${permission.userId}`}
                 onClickReason={() => alert('View reason')}
                 onClickAccept={() => alert('Accept clicked')}
                 onClickReject={() => alert('Reject clicked')}

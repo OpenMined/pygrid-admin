@@ -27,7 +27,7 @@ const Requests: FunctionComponent = () => {
   return (
     <main className="space-y-4">
       <h1 className="text-4xl text-gray-800">Requests</h1>
-      <p className="text-xl font-light text-gray-400">Accept or deny any permissions</p>
+      <p className="text-xl font-light text-gray-400">Accept or deny permissions</p>
       <section>
         <small className="font-semibold tracking-wide text-sm text-gray-800 uppercase">Permissions changes</small>
         <div className="space-y-6 pt-5">

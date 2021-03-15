@@ -1,8 +1,13 @@
 import type {FunctionComponent} from 'react'
 import {TensorsCard} from '@/components/pages/datasets/cards/tensors'
 import {ArrowForward} from '@/components/icons/arrows'
+import {useQuery} from 'react-query'
+import {ITensor} from '@/types/datasets'
+import {deleteTensor, fetchTensors} from '@/pages/api/datasets'
 
 const Tensors: FunctionComponent = () => {
+  const {isLoading, data: tensorsData, error} = useQuery<ITensor[], Error>('tensors', fetchTensors)
+
   const permissionsChangesRequests = 2
 
   const tensors = [
@@ -46,6 +51,13 @@ const Tensors: FunctionComponent = () => {
     tensorsExpiry: '30 days'
   }
 
+  const fakeProps = {
+    userAvatarURL: 'https://ca.slack-edge.com/T6963A864-UP9PYUFJT-614414739a77-512',
+    userName: 'Hericles Emanuel',
+    userId: 'asdasd19212312392',
+    downloadedAt: '22 days'
+  }
+
   return (
     <main className="space-y-8">
       <div>
@@ -70,13 +82,16 @@ const Tensors: FunctionComponent = () => {
       </p>
       <section className="grid grid-cols-1 gap-4 xl:gap-4">
         <div className="space-y-6 xl:space-y-8">
-          {tensors.map(tensor => (
-            <TensorsCard
-              {...tensor}
-              key={`tensor-${tensor.tensorInformation.tensors}`}
-              onDelete={() => alert('Delete tensor')}
-            />
-          ))}
+          {!isLoading &&
+            !error &&
+            tensorsData.map(tensor => (
+              <TensorsCard
+                {...tensor}
+                {...fakeProps}
+                key={`tensor-${tensor.id}`}
+                onDelete={() => deleteTensor(tensor.id).then(msg => alert(msg))}
+              />
+            ))}
         </div>
       </section>
     </main>

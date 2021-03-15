@@ -12,10 +12,15 @@ const Datasets: FunctionComponent = () => {
   const {isLoading, data: datasetsData, error} = useQuery<IDataset[], Error>('datasets', fetchDatasets)
   const {data: requests} = useQuery<IRequest[], Error>('requests', fetchRequests)
   const [searchText, setSearchText] = useState('')
+
   const sections = [
     {
       title: 'Permissions changes',
-      value: requests ? requests.filter(x => x.request_type === 'permissions' && x.status === 'pending').length : 0,
+      value: requests
+        ? requests.filter(x => {
+            return x.requestType === 'permissions' && x.status === 'pending'
+          }).length
+        : 0,
       text: 'requests',
       link: '/datasets/requests'
     },

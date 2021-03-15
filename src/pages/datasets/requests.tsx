@@ -1,27 +1,16 @@
-import type {FunctionComponent} from 'react'
+import {FunctionComponent} from 'react'
+import {useQuery} from 'react-query'
+import {IDataset, IRequest} from '@/types/datasets'
 import {PermissionRequestCard} from '@/components/pages/datasets/cards/requests'
+import {fetchRequests, fetchDatasets, denyRequest, acceptRequest} from '@/pages/api/datasets'
 
 const Requests: FunctionComponent = () => {
-  const permissionChanges = [
-    {
-      user_email: 'owner@openmined.com',
-      user_id: 19239123,
-      dataset: 'Diabetes Study 01.289.301',
-      tensors: 'data.target',
-      retrieving: 'requesting tensor',
-      created_at: Date.now()
-    },
-    {
-      user_email: 'admin@openmined.com',
-      user_id: 'asdasd19212312392',
-      dataset: 'Diabetes Study 01.289.301',
-      tensors: 'data.target',
-      retrieving: 'requesting tensor',
-      created_at: Date.now()
-    }
-  ]
+  const {isLoading, data: requests, error} = useQuery<IRequest[], Error>('requests', fetchRequests)
+  const {data: datasetsData} = useQuery<IDataset[], Error>('datasets', fetchDatasets)
 
-  // TODO : Add logic functionality to accept and reject permissions/budgets
+  if (!datasetsData) return null
+
+  // TODO : Add logic functionality to accept and reject permissions/budget'1s
   // TODO : Trigger accept and reject modals to onClickAccept and onClickReject
   // TODO : Hook to PyGrid API
   return (
@@ -31,17 +20,24 @@ const Requests: FunctionComponent = () => {
       <section>
         <small className="font-semibold tracking-wide text-sm text-gray-800 uppercase">Permissions changes</small>
         <div className="space-y-6 xl:space-y-6 pt-5">
-          {permissionChanges
-            .sort((a, b) => b.created_at - a.created_at)
-            .map(permission => (
-              <PermissionRequestCard
-                {...permission}
-                key={`permission-card-${permission.dataset}-${permission.tensors}-${permission.user_id}`}
-                onClickReason={() => alert('View reason')}
-                onClickAccept={() => alert('Accept clicked')}
-                onClickReject={() => alert('Reject clicked')}
-              />
-            ))}
+          {!isLoading &&
+            !error &&
+            requests
+              .filter(x => x.status === 'pending')
+              .sort((a, b) => {
+                return new Date(b.date).getTime() - new Date(a.date).getTime()
+              })
+              .map(permission => (
+                <PermissionRequestCard
+                  {...permission}
+                  tensors={'data.target'}
+                  dataset={datasetsData.find(x => x.id === permission.objectId).name}
+                  retrieving={'requesting tensor'}
+                  key={`permission-card-${permission.objectId}-${permission.userId}`}
+                  onClickAccept={() => acceptRequest(permission.id.toString())}
+                  onClickReject={() => denyRequest(permission.id.toString())}
+                />
+              ))}
         </div>
       </section>
     </main>

@@ -11,6 +11,10 @@ export type IFetchGroupsResponse = IGroup[]
 
 export type IFetchGroupResponse = IRole
 
+export interface IMessageResponse {
+  msg: string
+}
+
 export interface IFetchLoginResponse {
   token: string
   key: string
@@ -42,7 +46,7 @@ export interface IFetchTensors {
 }
 
 export interface IAcceptRequest {
-    message: string
+  message: string
 }
 
 export interface ICreateRoleResponse {
@@ -58,4 +62,5 @@ export interface IDeleteRoleResponse {
 }
 
 export interface IDeleteGroupResponse {
-
+  message: string
+}

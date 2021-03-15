@@ -1,4 +1,6 @@
 export interface ITensor {
+  id: string
+  tags: string[]
   shape: []
   type: string
   manifest: string
@@ -10,6 +12,7 @@ export interface ITensor {
 }
 
 export interface IDataset {
+  id: string
   name: string
   description: string
   manifest: string
@@ -22,11 +25,11 @@ export interface IDataset {
 
 export interface IRequest {
   id: number
-  user_id: number
-  user_email: string
-  object_id: number
+  userId: number
+  userName: string
+  objectId: string
   reason: string
   status: 'accepted' | 'pending' | 'denied'
-  request_type: 'budget' | 'permissions'
-  created_at: Date
+  requestType: 'budget' | 'permissions'
+  date: Date
 }

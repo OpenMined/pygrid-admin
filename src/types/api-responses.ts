@@ -42,7 +42,7 @@ export interface IFetchTensors {
 }
 
 export interface IAcceptRequest {
-    message: string
+  message: string
 }
 
 export interface ICreateRoleResponse {
@@ -58,4 +58,5 @@ export interface IDeleteRoleResponse {
 }
 
 export interface IDeleteGroupResponse {
-
+  message: string
+}

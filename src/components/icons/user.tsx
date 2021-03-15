@@ -3,10 +3,7 @@ import cn from 'classnames'
 
 const User: FunctionComponent<{className?: string}> = ({className}) => {
   return (
-    <svg
-      className={cn('inline', className)}
-      viewBox="0 0 512 512"
-      xmlns="http://www.w3.org/2000/svg">
+    <svg className={cn('inline', className)} viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
       <g>
         <g>
           <g>

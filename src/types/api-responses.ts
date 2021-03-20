@@ -1,4 +1,5 @@
 import {IGroup, IRole, IUser} from './users'
+import {IDataset, IRequest} from './datasets'
 
 export type IFetchUsersResponse = IUser[]
 
@@ -21,6 +22,26 @@ export interface ICreateUserResponse {
 }
 
 export interface ICreateGroupResponse {
+  message: string
+}
+
+export interface IFetchDatasets {
+  datasets: IDataset[]
+}
+
+export interface IFetchDataset {
+  dataset: IDataset
+}
+
+export interface IFetchRequests {
+  requests: IRequest[]
+}
+
+export interface IFetchTensors {
+  tensors: IDataset[]
+}
+
+export interface IAcceptRequest {
   message: string
 }
 

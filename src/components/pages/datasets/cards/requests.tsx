@@ -1,41 +1,53 @@
 import type {FunctionComponent, MouseEventHandler} from 'react'
-import {Card, ButtonAsLink} from '@/components/lib'
-
-// TODO: update types all over this file
+import Link from 'next/link'
+import {Card, ButtonAsLink, ButtonAsIcon} from '@/components/lib'
+import {CheckMark, XMark} from '@/components/icons/marks'
+import {User} from '@/components/icons/user'
 // TODO: check permissions with Ionesio
 // TODO: check budget logic with Ionesio
 
-const UserRequestingUI: FunctionComponent<{
-  userAvatarURL: string
-  userName: string
-  userId: string | number
-  retrieving: string
-}> = ({userAvatarURL, userId, userName, retrieving}) => (
-  <div className="flex flex-row items-center">
-    <img className="inline w-6 h-6 mr-2 rounded-full" alt="" src={userAvatarURL} />
-    <span>
-      {/* TODO: Change to a modal view here instead of linking to the profile in full */}
-      <a href={`/users/u/${userId}`} target="blank">
-        {userName}
-      </a>{' '}
-      wants to retrieve <a href={`/datasets/tensors/t/${retrieving}`}>{retrieving}</a>
-    </span>
-  </div>
-)
-
-export const PermissionRequestCard: FunctionComponent<{
-  userAvatarURL: string
-  userName: string
+interface PermissionRequestProperties {
+  userEmail: string
   userId: string | number
   retrieving: string
   tensors: string
   dataset: string
   onClickReason: MouseEventHandler<HTMLButtonElement>
-}> = ({userAvatarURL, userName, userId, retrieving, tensors, dataset, onClickReason}) => (
-  <Card>
-    <UserRequestingUI userAvatarURL={userAvatarURL} userName={userName} userId={userId} retrieving={retrieving} />
-    <div className="flex flex-row pr-4 mt-4">
-      <div className="flex flex-col font-light text-gray-800">
+  onClickAccept: MouseEventHandler<HTMLButtonElement>
+  onClickReject: MouseEventHandler<HTMLButtonElement>
+}
+
+interface UserRequestingProps {
+  userEmail: string
+  userId: string | number
+  retrieving: string
+}
+
+const UserRequestingUI: FunctionComponent<UserRequestingProps> = ({userId, userEmail, retrieving}) => (
+  <div className="flex flex-row items-center">
+    <User className="inline w-6 h-6 mr-2 rounded-full" />
+    <span>
+      {/* TODO: Change to a modal view here instead of linking to the profile in full */}
+      <Link href={`/users/u/${userId}`}>{userEmail}</Link> wants to retrieve{' '}
+      <Link href={`/datasets/tensors/t/${retrieving}`}>{retrieving}</Link>
+    </span>
+  </div>
+)
+
+export const PermissionRequestCard: FunctionComponent<PermissionRequestProperties> = ({
+  userEmail,
+  userId,
+  retrieving,
+  tensors,
+  dataset,
+  onClickReason,
+  onClickAccept,
+  onClickReject
+}) => (
+  <Card className="flex flex-col font-light md:flex-row md:space-x-2 flex-nowrap">
+    <div className="w-full">
+      <UserRequestingUI userEmail={userEmail} userId={userId} retrieving={retrieving} />
+      <div className="flex flex-col my-2 text-gray-800">
         <div>
           <strong>Tensors</strong>: <span className="text-gray-400">{tensors}</span>
         </div>
@@ -50,42 +62,17 @@ export const PermissionRequestCard: FunctionComponent<{
         </span>
       </div>
     </div>
+    <div className="self-end flex-shrink-0 text-gray-400 self-center flex-row flex space-x-6">
+      <div className="flex flex-col m-auto">
+        <ButtonAsIcon onClick={onClickAccept}>
+          <CheckMark className="w-6 h-6 text-green-500" />
+        </ButtonAsIcon>
+      </div>
+      <div className="flex flex-col m-auto">
+        <ButtonAsIcon onClick={onClickReject}>
+          <XMark className="w-6 h-6 text-red-500" />
+        </ButtonAsIcon>
+      </div>
+    </div>
   </Card>
 )
-
-export const BudgetChangesCard: FunctionComponent<{
-  userAvatarURL: string
-  userName: string
-  userId: string | number
-  retrieving: string
-  epsilonCurrent: number
-  epsilonAfterChange: number
-  onClickReason: MouseEventHandler<HTMLButtonElement>
-}> = ({userAvatarURL, userName, userId, retrieving, epsilonCurrent, epsilonAfterChange, onClickReason}) => {
-  const increase = Math.round(((epsilonAfterChange - epsilonCurrent) / epsilonCurrent) * 100)
-
-  return (
-    <Card>
-      <UserRequestingUI userAvatarURL={userAvatarURL} userName={userName} userId={userId} retrieving={retrieving} />
-      <div className="flex flex-row pr-4 mt-4">
-        <div className="flex flex-col font-light text-gray-800">
-          <div>
-            <strong>Current epsilon</strong>: <span className="text-gray-400">{epsilonCurrent} units</span>
-          </div>
-          <div>
-            <strong>Epsilon after change</strong>:{' '}
-            <span className="text-gray-400">
-              {epsilonAfterChange} units {epsilonCurrent > 0 && `(${increase}% increase)`}
-            </span>
-          </div>
-          <span>
-            <strong>Reason</strong>:{' '}
-            <ButtonAsLink onClick={onClickReason} aria-label="View budget request reason">
-              Click to view
-            </ButtonAsLink>
-          </span>
-        </div>
-      </div>
-    </Card>
-  )
-}

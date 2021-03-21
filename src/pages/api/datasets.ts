@@ -1,6 +1,7 @@
 import axios from '@/utils/api-axios'
+
 import {IFetchDataset, IAcceptRequest, IMessageResponse, IFetchTensors} from '@/types/api-responses'
-import {IDataset, IRequest, ITensor} from '@/types/datasets'
+import {IDataset, IRequest} from '@/types/datasets'
 
 export const fetchDatasets = async () => {
   const {data} = await axios.get<IDataset[]>('/dcfl/datasets')
@@ -17,13 +18,13 @@ export const fetchRequests = async () => {
   return data
 }
 
-export const acceptRequest = async (id: string) => {
+export const acceptRequest = async (id: number) => {
   const payload = {status: 'accepted'}
   const {data} = await axios.put<IAcceptRequest>('/dcfl/requests/' + id, payload)
   return data.message
 }
 
-export const denyRequest = async (id: string) => {
+export const denyRequest = async (id: number) => {
   const payload = {status: 'denied'}
   const {data} = await axios.put<IAcceptRequest>('/dcfl/requests/' + id, payload)
   return data.message

@@ -1,9 +1,9 @@
-import {FunctionComponent, MouseEventHandler, useState} from 'react'
+import { FunctionComponent, MouseEventHandler, useState } from 'react'
 import Dialog from '@reach/dialog'
-import {Card, ButtonAsLink, ButtonAsIcon} from '@/components/lib'
-import {Check} from '@/components/icons/check'
-import {Close} from '@/components/icons/close'
-import {User} from '@/components/icons/user'
+import Link from 'next/link'
+import { Card, ButtonAsLink, ButtonAsIcon } from '@/components/lib'
+import { CheckMark, XMark } from '@/components/icons/marks'
+import { User } from '@/components/icons/user'
 import '@reach/dialog/styles.css'
 
 // TODO: check permissions with Ionesio
@@ -20,24 +20,19 @@ interface PermissionRequestProperties {
   onClickReject: MouseEventHandler<HTMLButtonElement>
 }
 
-interface BudgetChangesProperties {
-  userName: string
-  userId: string | number
-  retrieving: string
-  epsilonCurrent: number
-  epsilonAfterChange: number
-  onClickReason: MouseEventHandler<HTMLButtonElement>
-  onClickAccept: MouseEventHandler<HTMLButtonElement>
-  onClickReject: MouseEventHandler<HTMLButtonElement>
-}
-
-interface UserRquestingProps {
+interface UserRequestingProps {
   userName: string
   userId: string | number
   retrieving: string
 }
 
-const RequestReasonModal = ({isOpen, onClose, reason, onClickAccept, onClickReject}) => (
+interface UserRequestingProps {
+  userName: string
+  userId: string | number
+  retrieving: string
+}
+
+const RequestReasonModal = ({ isOpen, onClose, reason, onClickAccept, onClickReject }) => (
   <Dialog
     isOpen={isOpen}
     onDismiss={onClose}
@@ -76,18 +71,17 @@ const RequestReasonModal = ({isOpen, onClose, reason, onClickAccept, onClickReje
   </Dialog>
 )
 
-const UserRequestingUI: FunctionComponent<UserRquestingProps> = ({userId, userName, retrieving}) => (
+const UserRequestingUI: FunctionComponent<UserRequestingProps> = ({ userId, userName, retrieving }) => (
   <div className="flex flex-row items-center">
     <User className="inline w-6 h-6 mr-2 rounded-full" />
     <span>
       {/* TODO: Change to a modal view here instead of linking to the profile in full */}
-      <a href={`/users/u/${userId}`} target="blank">
-        {userName}
-      </a>{' '}
-      wants to retrieve <a href={`/datasets/tensors/t/${retrieving}`}>{retrieving}</a>
+      <Link href={`/users/u/${userId}`}>{userName}</Link> wants to retrieve{' '}
+      <Link href={`/datasets/tensors/t/${retrieving}`}>{retrieving}</Link>
     </span>
   </div>
 )
+
 
 export const PermissionRequestCard: FunctionComponent<PermissionRequestProperties> = ({
   userName,
@@ -102,10 +96,10 @@ export const PermissionRequestCard: FunctionComponent<PermissionRequestPropertie
   const [openReasonModal, setOpenReasonModal] = useState(false)
 
   return (
-    <Card>
-      <UserRequestingUI userName={userName} userId={userId} retrieving={retrieving} />
-      <div className="flex flex-row pr-4 mt-4 relative">
-        <div className="flex flex-col font-light text-gray-800">
+    <Card className="flex flex-col font-light md:flex-row md:space-x-2 flex-nowrap">
+      <div className="w-full">
+        <UserRequestingUI userName={userName} userId={userId} retrieving={retrieving} />
+        <div className="flex flex-col my-2 text-gray-800">
           <div>
             <strong>Tensors</strong>: <span className="text-gray-400">{tensors}</span>
           </div>
@@ -114,26 +108,22 @@ export const PermissionRequestCard: FunctionComponent<PermissionRequestPropertie
           </div>
           <span>
             <strong>Reason</strong>:{' '}
-            <ButtonAsLink
-              aria-label="View permission request reason"
-              onClick={() => {
-                setOpenReasonModal(true)
-              }}>
+            <ButtonAsLink aria-label="View permission request reason" onClick={() => setOpenReasonModal(true)}>
               Click to view
-            </ButtonAsLink>
+          </ButtonAsLink>
           </span>
         </div>
-        <div className="flex flex-row space-x-6 pr-3 absolute right-0">
-          <div className="flex flex-col m-auto">
-            <ButtonAsIcon onClick={onClickAccept}>
-              <Check className="w-6 h-6 text-green-500" />
-            </ButtonAsIcon>
-          </div>
-          <div className="flex flex-col m-auto">
-            <ButtonAsIcon onClick={onClickReject}>
-              <Close className="w-5 h-5 text-red-500" />
-            </ButtonAsIcon>
-          </div>
+      </div>
+      <div className="self-end flex-shrink-0 text-gray-400 self-center flex-row flex space-x-6">
+        <div className="flex flex-col m-auto">
+          <ButtonAsIcon onClick={onClickAccept}>
+            <CheckMark className="w-6 h-6 text-green-500" />
+          </ButtonAsIcon>
+        </div>
+        <div className="flex flex-col m-auto">
+          <ButtonAsIcon onClick={onClickReject}>
+            <XMark className="w-6 h-6 text-red-500" />
+          </ButtonAsIcon>
         </div>
       </div>
       <RequestReasonModal
@@ -143,56 +133,6 @@ export const PermissionRequestCard: FunctionComponent<PermissionRequestPropertie
         onClickReject={onClickReject}
         onClose={() => setOpenReasonModal(false)}
       />
-    </Card>
-  )
-}
-
-export const BudgetChangesCard: FunctionComponent<BudgetChangesProperties> = ({
-  userName,
-  userId,
-  retrieving,
-  epsilonCurrent,
-  epsilonAfterChange,
-  onClickReason,
-  onClickAccept,
-  onClickReject
-}) => {
-  const increase = Math.round(((epsilonAfterChange - epsilonCurrent) / epsilonCurrent) * 100)
-
-  return (
-    <Card>
-      <UserRequestingUI userName={userName} userId={userId} retrieving={retrieving} />
-      <div className="flex flex-row pr-4 mt-4 relative">
-        <div className="flex flex-col font-light text-gray-800">
-          <div>
-            <strong>Current epsilon</strong>: <span className="text-gray-400">{epsilonCurrent} units</span>
-          </div>
-          <div>
-            <strong>Epsilon after change</strong>:{' '}
-            <span className="text-gray-400">
-              {epsilonAfterChange} units {epsilonCurrent > 0 && `(${increase}% increase)`}
-            </span>
-          </div>
-          <span>
-            <strong>Reason</strong>:{' '}
-            <ButtonAsLink onClick={onClickReason} aria-label="View budget request reason">
-              Click to view
-            </ButtonAsLink>
-          </span>
-        </div>
-        <div className="flex flex-row space-x-6 pr-3 absolute right-0">
-          <div className="flex flex-col m-auto">
-            <ButtonAsIcon onClick={onClickAccept}>
-              <Check className="w-6 h-6 text-green-500" />
-            </ButtonAsIcon>
-          </div>
-          <div className="flex flex-col m-auto">
-            <ButtonAsIcon onClick={onClickReject}>
-              <Close className="w-5 h-5 text-red-500" />
-            </ButtonAsIcon>
-          </div>
-        </div>
-      </div>
     </Card>
   )
 }

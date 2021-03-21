@@ -17,7 +17,7 @@ export interface IDataset {
   description: string
   manifest: string
   tags: string[]
-  created_at: Date
+  createdAt: Date
   tensors: {
     [key: string]: ITensor
   }

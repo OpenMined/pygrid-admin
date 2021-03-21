@@ -1,4 +1,5 @@
 import type {FunctionComponent, PropsWithChildren, HTMLAttributes} from 'react'
+import {Search} from '@/components/icons/search'
 import cn from 'classnames'
 
 export const Tag: FunctionComponent<PropsWithChildren<{className?: string}>> = ({className, children}) => (
@@ -29,9 +30,32 @@ export const ButtonAsLink: FunctionComponent<{className?: string} & HTMLAttribut
 export const ButtonAsIcon: FunctionComponent<{className?: string} & HTMLAttributes<HTMLButtonElement>> = ({
   className,
   ...props
-}) => <button className={cn('btn', 'h-auto px-0 bg-transparent focus:outline-none', className)} {...props} />
+}) => <button className={cn('btn h-auto px-0 bg-transparent focus:outline-none', className)} {...props} />
 
 export const ButtonRound: FunctionComponent<{className?: string} & HTMLAttributes<HTMLButtonElement>> = ({
   className,
   ...props
 }) => <button className={cn('btn', 'rounded-md', className)} {...props} />
+
+interface SearchBarProperties {
+  search: string
+  placeholder: string
+  onChange: (text: string) => void
+}
+
+export const SearchBar: FunctionComponent<SearchBarProperties> = ({search, placeholder, onChange}) => {
+  return (
+    <div className="flex text-gray-800 bg-gray-50 container mx-auto border border-gray-200 rounded-md">
+      <div className="flex">
+        <Search className="m-auto h-4 w-4 fill-current" />
+      </div>
+      <input
+        name="search"
+        placeholder={placeholder}
+        className="text-xl flex-1 bg-transparent h-12 px-5 rounded-full focus:outline-none"
+        onChange={e => onChange(e.target.value)}
+        value={search}
+      />
+    </div>
+  )
+}

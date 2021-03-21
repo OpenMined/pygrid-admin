@@ -1,6 +1,6 @@
 import type {FunctionComponent} from 'react'
 import {Card} from '@/components/lib'
-import {Close} from '@/components/icons/close'
+import {XMark} from '@/components/icons/marks'
 
 // TODO: update types all over this file
 // TODO: check tensors with Ionesio
@@ -91,7 +91,7 @@ export const TensorsCard: FunctionComponent<{
       <div className="self-end flex-shrink-0 text-gray-400 md:self-center">
         scheduled to delete in {daysUntilDeletion}
         <button className="w-4 mx-2 text-red-500 bg-transparent" onClick={onDelete} aria-label="Delete this tensor">
-          <Close />
+          <XMark />
         </button>
       </div>
     </Card>

@@ -94,4 +94,13 @@
   [data-reach-tab][data-selected] {
     @apply text-gray-800;
   }
+
+  .toggle-dot {
+    @apply transition duration-300 ease-in-out;
+  }
+
+  input:checked ~ .toggle-dot {
+    @apply bg-white;
+    transform: translateX(100%);
+  }
 }

@@ -26,6 +26,7 @@
     "@reach/dialog": "^0.13.2",
     "@reach/tabs": "^0.13.2",
     "@tailwindcss/aspect-ratio": "^0.2.0",
+    "@tailwindcss/forms": "^0.2.1",
     "@tailwindcss/line-clamp": "^0.2.0",
     "@tailwindcss/typography": "^0.4.0",
     "@types/humps": "^2.0.0",

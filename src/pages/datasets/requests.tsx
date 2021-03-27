@@ -1,18 +1,18 @@
-import { FunctionComponent } from 'react'
-import { useQuery } from 'react-query'
-import { IDataset, IRequest } from '@/types/datasets'
-import { PermissionRequestCard } from '@/components/pages/datasets/cards/requests'
-import { fetchRequests, fetchDatasets, denyRequest, acceptRequest } from '@/pages/api/datasets'
+import {FunctionComponent} from 'react'
+import {useQuery} from 'react-query'
+import {IDataset, IRequest} from '@/types/datasets'
+import {PermissionRequestCard} from '@/components/pages/datasets/cards/requests'
+import {fetchRequests, fetchDatasets, denyRequest, acceptRequest} from '@/pages/api/datasets'
 
 const Requests: FunctionComponent = () => {
-  const { isLoading, data: requests, error } = useQuery<IRequest[], Error>('requests', fetchRequests)
-  const { data: datasetsData } = useQuery<IDataset[], Error>('datasets', fetchDatasets)
+  const {isLoading, data: requests, error} = useQuery<IRequest[], Error>('requests', fetchRequests)
+  const {data: datasetsData} = useQuery<IDataset[], Error>('datasets', fetchDatasets)
 
   if (!datasetsData) return null
 
   const getDatasetName = (objectId: string): string => {
     const dataset = datasetsData.find(x => x.id === objectId)
-    return dataset !== undefined? dataset.name : " - "
+    return dataset !== undefined ? dataset.name : ' - '
   }
 
   // TODO : Add logic functionality to accept and reject permissions/budget'1s

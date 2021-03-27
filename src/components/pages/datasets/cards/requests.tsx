@@ -1,9 +1,9 @@
-import { FunctionComponent, MouseEventHandler, useState } from 'react'
+import {FunctionComponent, MouseEventHandler, useState} from 'react'
 import Dialog from '@reach/dialog'
 import Link from 'next/link'
-import { Card, ButtonAsLink, ButtonAsIcon } from '@/components/lib'
-import { CheckMark, XMark } from '@/components/icons/marks'
-import { User } from '@/components/icons/user'
+import {Card, ButtonAsLink, ButtonAsIcon} from '@/components/lib'
+import {CheckMark, XMark} from '@/components/icons/marks'
+import {User} from '@/components/icons/user'
 import '@reach/dialog/styles.css'
 
 // TODO: check permissions with Ionesio
@@ -32,7 +32,7 @@ interface UserRequestingProps {
   retrieving: string
 }
 
-const RequestReasonModal = ({ isOpen, onClose, reason, onClickAccept, onClickReject }) => (
+const RequestReasonModal = ({isOpen, onClose, reason, onClickAccept, onClickReject}) => (
   <Dialog
     isOpen={isOpen}
     onDismiss={onClose}
@@ -71,7 +71,7 @@ const RequestReasonModal = ({ isOpen, onClose, reason, onClickAccept, onClickRej
   </Dialog>
 )
 
-const UserRequestingUI: FunctionComponent<UserRequestingProps> = ({ userId, userName, retrieving }) => (
+const UserRequestingUI: FunctionComponent<UserRequestingProps> = ({userId, userName, retrieving}) => (
   <div className="flex flex-row items-center">
     <User className="inline w-6 h-6 mr-2 rounded-full" />
     <span>
@@ -81,7 +81,6 @@ const UserRequestingUI: FunctionComponent<UserRequestingProps> = ({ userId, user
     </span>
   </div>
 )
-
 
 export const PermissionRequestCard: FunctionComponent<PermissionRequestProperties> = ({
   userName,
@@ -110,7 +109,7 @@ export const PermissionRequestCard: FunctionComponent<PermissionRequestPropertie
             <strong>Reason</strong>:{' '}
             <ButtonAsLink aria-label="View permission request reason" onClick={() => setOpenReasonModal(true)}>
               Click to view
-          </ButtonAsLink>
+            </ButtonAsLink>
           </span>
         </div>
       </div>

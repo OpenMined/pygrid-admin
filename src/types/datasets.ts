@@ -1,6 +1,7 @@
 export interface ITensor {
   id: string
   tags: string[]
+  description: string
   shape: []
   type: string
   manifest: string

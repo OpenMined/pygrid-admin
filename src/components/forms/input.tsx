@@ -7,12 +7,15 @@ interface InputProps {
   placeholder: string
   hint?: string
   onChange: (value: any) => void
+  required: boolean
 }
 
-const Input: FunctionComponent<InputProps> = ({value, label, placeholder, hint, onChange}) => {
+const Input: FunctionComponent<InputProps> = ({value, label, placeholder, hint, onChange, required}) => {
+  const [isValid, setIsValid] = useState(value != '' || !required)
+
   return (
     <div className="space-y-2">
-      <div className="inline-block space-x-2">
+      <div className="space-x-2 inline-flex items-center">
         <label className="text-lg text-gray-700">{label}</label>
       </div>
 
@@ -22,12 +25,21 @@ const Input: FunctionComponent<InputProps> = ({value, label, placeholder, hint, 
           type="text"
           className={cn(
             'flex-1 block w-full shadow-sm rounded-none rounded-md sm:text-sm border-gray-300',
-            'focus:ring-indigo-500 focus:border-indigo-500 '
+            isValid ? 'focus:ring-indigo-500 focus:border-indigo-500' : 'focus:ring-red-500 focus:border-red-500'
           )}
-          onChange={e => onChange(e.target.value)}
+          onChange={e => {
+            onChange(e.target.value)
+            setIsValid(e.target.value != '' || !required)
+          }}
           placeholder={placeholder}></input>
       </div>
-      {hint ? <p className="text-sm ml-1 text-gray-500">{hint}</p> : null}
+      {isValid ? (
+        hint ? (
+          <p className="text-sm ml-1 text-gray-500">{hint}</p>
+        ) : null
+      ) : (
+        <p className="text-sm ml-1 text-red-500">This field is required</p>
+      )}
     </div>
   )
 }

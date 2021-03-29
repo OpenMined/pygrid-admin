@@ -20,8 +20,8 @@ const Toggle: FunctionComponent<InputProps> = ({value, label, hint, onChange}) =
         <label className="cursor-pointer">
           <div className="relative">
             <input type="checkbox" className="hidden" checked={value} onChange={e => onChange(e.target.checked)} />
-            <div className="toggle-line w-16 h-8 bg-gray-200 rounded-full shadow-inner border border-gray-400"></div>
-            <div className="toggle-dot absolute w-8 h-8 bg-white rounded-full shadow inset-y-0 left-0 inline-flex items-center">
+            <div className="toggle-line w-16 h-6 bg-gray-200 rounded-full shadow-inner border border-gray-400"></div>
+            <div className="toggle-dot absolute w-8 h-8 bg-white rounded-full shadow -inset-y-1 left-0 inline-flex items-center">
               {value ? (
                 <CheckMark className="w-4 h-4 mx-auto text-green-500" />
               ) : (

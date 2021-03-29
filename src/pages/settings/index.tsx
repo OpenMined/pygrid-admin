@@ -1,16 +1,22 @@
 import {Input} from '@/components/forms/input'
 import {Toggle} from '@/components/forms/toggle'
 import {ButtonRound} from '@/components/lib'
+import {ISettings} from '@/types/settings'
 import React, {FunctionComponent, useState} from 'react'
+import {useQuery} from 'react-query'
+import {fetchSettings} from '../api/settings'
 
 const Settings: FunctionComponent = () => {
+  const {isLoading, data: settingsData, error} = useQuery<ISettings[], Error>('datasets', fetchSettings)
   const [domainName, setDomainName] = useState('University of Essex')
-  const [awsCredentials, setAwsCredentials] = useState('')
-  const [gcpCredentials, setGcpCredentials] = useState('')
-  const [azureCredentials, setAzureCredentials] = useState('')
+  const [cpCredentials, setCpCredentials] = useState('')
+  const [cacheStrategy, setCacheStrategy] = useState('')
   const [tensorExpirationPolicy, setTensorExpirationPolicy] = useState('0')
   const [replicateDatabase, setReplicateDatabase] = useState(true)
-  const [canSave, setCanSave] = useState(false)
+  const [autoScale, setAutoScale] = useState(true)
+  const [allowUserSignup, setAllowUserSignup] = useState(true)
+
+  const isValid = domainName && cpCredentials && cacheStrategy && tensorExpirationPolicy ? true : false
 
   return (
     <main className="space-y-4">
@@ -21,41 +27,35 @@ const Settings: FunctionComponent = () => {
           <h3 className="text-2xl text-gray-800">General Domain Settings</h3>
           <hr className="mt-3" />
         </div>
-        <Input
-          value={domainName}
-          label="Domain Name"
-          placeholder="Example"
-          hint="Set your domain name"
-          onChange={value => {
-            setDomainName(value)
-          }}
-        />
-        <div className="grid grid-flow-row md:grid-flow-col gap-4">
+        <div className="grid grid-flow-row md:grid-rows-1 md:grid-cols-3 md:grid-flow-col gap-4">
           <Input
-            value={awsCredentials}
-            label="AWS Credentials"
-            placeholder="nilcwjicwiweije90391nmos"
+            value={domainName}
+            required={true}
+            label="Domain Name"
+            placeholder="My Domain"
             hint="Set your domain name"
             onChange={value => {
-              setAwsCredentials(value)
+              setDomainName(value)
             }}
           />
           <Input
-            value={gcpCredentials}
-            label="GCP Credentials"
+            value={cpCredentials}
+            required={true}
+            label="Cloud Provider API Credentials"
             placeholder="nilcwjicwiweije90391nmos"
-            hint="Set your domain name"
+            hint="Set your cloud provider access keys"
             onChange={value => {
-              setGcpCredentials(value)
+              setCpCredentials(value)
             }}
           />
           <Input
-            value={azureCredentials}
-            label="Azure Credentials"
+            value={cacheStrategy}
+            required={true}
+            label="Cache Strategy"
             placeholder="nilcwjicwiweije90391nmos"
-            hint="Set your domain name"
+            hint="Configure the domain's cache strategy"
             onChange={value => {
-              setAzureCredentials(value)
+              setCacheStrategy(value)
             }}
           />
         </div>
@@ -65,6 +65,7 @@ const Settings: FunctionComponent = () => {
         </div>
         <Input
           value={tensorExpirationPolicy}
+          required={true}
           label="Tensor Expiration Policy"
           placeholder="nilcwjicwiweije90391nmos"
           hint="Set your tensor expiration policy in days"
@@ -72,15 +73,35 @@ const Settings: FunctionComponent = () => {
             setTensorExpirationPolicy(value)
           }}
         />
-        <Toggle
-          value={replicateDatabase}
-          label="Replicate Database"
-          hint="Set whether you want to replicate db"
-          onChange={value => {
-            setReplicateDatabase(value)
-          }}
-        />
-        <ButtonRound className="absolute right-0 disabled">Save</ButtonRound>
+        <div className="grid grid-flow-row md:grid-rows-1 md:grid-cols-3 md:grid-flow-col gap-4">
+          <Toggle
+            value={replicateDatabase}
+            label="Replicate Database"
+            hint="Set whether you want to replicate db"
+            onChange={value => {
+              setReplicateDatabase(value)
+            }}
+          />
+          <Toggle
+            value={autoScale}
+            label="Infraestructure Auto Scale"
+            hint="Allow infraestructure auto scaling"
+            onChange={value => {
+              setAutoScale(value)
+            }}
+          />
+          <Toggle
+            value={allowUserSignup}
+            label="Allow User Signup"
+            hint="Allow users to signup in your domain"
+            onChange={value => {
+              setAllowUserSignup(value)
+            }}
+          />
+        </div>
+        <ButtonRound className="absolute right-0 disabled:opacity-50" {...{disabled: !isValid}} onClick={() => alert("Submit")}>
+          Save
+        </ButtonRound>
       </div>
     </main>
   )

@@ -1,6 +1,5 @@
 import {IGroup, IRole, IUser} from './users'
 import {IDataset, IRequest} from './datasets'
-import { ISettings } from './settings'
 
 export type IFetchUsersResponse = IUser[]
 

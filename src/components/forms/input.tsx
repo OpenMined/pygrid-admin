@@ -1,4 +1,4 @@
-import {FunctionComponent, useState} from 'react'
+import {FunctionComponent, LegacyRef, RefObject, useState} from 'react'
 import cn from 'classnames'
 
 interface InputProps {
@@ -6,11 +6,11 @@ interface InputProps {
   label: string
   placeholder: string
   hint?: string
-  onChange: (value: any) => void
   required: boolean
+  onChange(value: string | boolean | number): void
 }
 
-const Input: FunctionComponent<InputProps> = ({value, label, placeholder, hint, onChange, required}) => {
+const Input: FunctionComponent<InputProps> = ({value, label, placeholder, hint, required, onChange}) => {
   const [isValid, setIsValid] = useState(value != '' || !required)
 
   return (
@@ -28,8 +28,8 @@ const Input: FunctionComponent<InputProps> = ({value, label, placeholder, hint, 
             isValid ? 'focus:ring-indigo-500 focus:border-indigo-500' : 'focus:ring-red-500 focus:border-red-500'
           )}
           onChange={e => {
-            onChange(e.target.value)
             setIsValid(e.target.value != '' || !required)
+            onChange(e.target.value)
           }}
           placeholder={placeholder}></input>
       </div>

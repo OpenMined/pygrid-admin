@@ -6,7 +6,7 @@ interface InputProps {
   value: boolean
   label: string
   hint?: string
-  onChange: (value: boolean) => void
+  onChange(value: string | boolean | number): void
 }
 
 const Toggle: FunctionComponent<InputProps> = ({value, label, hint, onChange}) => {

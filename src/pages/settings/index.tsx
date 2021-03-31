@@ -1,9 +1,7 @@
 import {Input} from '@/components/forms/input'
 import {Toggle} from '@/components/forms/toggle'
 import {ButtonRound} from '@/components/lib'
-import {ISettings} from '@/types/settings'
-import React, {createRef, FunctionComponent, useEffect, useState} from 'react'
-import {useQuery} from 'react-query'
+import React, {FunctionComponent, useEffect, useState} from 'react'
 import {fetchSettings, updateSettings} from '../api/settings'
 
 const Settings: FunctionComponent = () => {
@@ -22,7 +20,6 @@ const Settings: FunctionComponent = () => {
   }
 
   if (settingsData != null) {
-    console.log(settingsData)
     return (
       <main className="space-y-4">
         <h1 className="text-4xl text-gray-800">Settings</h1>

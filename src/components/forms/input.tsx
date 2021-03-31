@@ -7,7 +7,7 @@ interface InputProps {
   placeholder: string
   hint?: string
   required: boolean
-  onChange(value: string | boolean | number): void
+  onChange(value: string): void
 }
 
 const Input: FunctionComponent<InputProps> = ({value, label, placeholder, hint, required, onChange}) => {

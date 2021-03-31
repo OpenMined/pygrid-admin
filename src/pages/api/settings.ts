@@ -7,29 +7,29 @@ export const fetchSettings = async () => {
 }
 
 export const updateSettings = async ({
-  domainName,
+  nodeName,
   awsCredentials,
   gcpCredentials,
   azureCredentials,
   cacheStrategy,
   tensorExpirationPolicy,
-  replicateDatabase,
+  replicateDb,
   autoScale,
   allowUserSignup
 }) => {
   const payload = {
-    domainName: domainName,
+    nodeName: nodeName,
     awsCredentials: awsCredentials,
     gcpCredentials: gcpCredentials,
     azureCredentials: azureCredentials,
     cacheStrategy: cacheStrategy,
     tensorExpirationPolicy: tensorExpirationPolicy,
-    replicateDatabase: replicateDatabase,
+    replicateDb: replicateDb,
     autoScale: autoScale,
     allowUserSignup: allowUserSignup
   }
-
-  const {data} = await axios.post<ISettings>('/setup', payload)
+  console.log(payload)
+  const {data} = await axios.post<ISettings>('/setup/', payload)
 
   return data
 }

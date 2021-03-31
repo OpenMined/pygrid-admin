@@ -1,12 +1,8 @@
 import axios from '@/utils/api-axios'
 import {IAssociationRequest, IWorker} from '@/types/infrastructure'
 
-type IFetchWorkersResponse = {
-  workers: IWorker[]
-}
-
 export const fetchWorkers = async () => {
-  const {data} = await axios.get<IFetchWorkersResponse>('/dcfl/workers')
+  const {data} = await axios.get<IWorker[]>('/dcfl/workers')
   return data
 }
 

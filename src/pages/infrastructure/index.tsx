@@ -1,13 +1,13 @@
 import {FunctionComponent, useState} from 'react'
 import {Tabs, TabList, Tab, TabPanels, TabPanel} from '@reach/tabs'
 import Dialog from '@reach/dialog'
-import {deleteWorker, fetchAssociationRequests, respondAssociationRequest} from '@/pages/api/infrastructure'
+import {deleteWorker, fetchAssociationRequests, fetchWorkers, respondAssociationRequest} from '@/pages/api/infrastructure'
 import {XMark} from '@/components/icons/marks'
 import {SearchBar} from '@/components/lib'
 import {AssociationRequestCard} from '@/components/pages/infrastructure/cards/requests'
 
 import '@reach/dialog/styles.css'
-import {IAssociationRequest} from '@/types/infrastructure'
+import {IAssociationRequest, IWorker} from '@/types/infrastructure'
 import {useQuery} from 'react-query'
 
 const DeleteWorkerModal = ({isOpen, onClose, onClickAccept}) => (
@@ -53,46 +53,15 @@ const Infrastructure: FunctionComponent = () => {
   const [searchText, setSearchText] = useState('')
   const [selectedWorker, setSelectedWorker] = useState('')
   const [openDeleteWorkerModal, setOpenDeleteWorkerModal] = useState(false)
-  const {isLoading, data: requests, error} = useQuery<IAssociationRequest[], Error>(
+  
+  const {isLoading: isLoadingWorkers, data: workers, error: workersError} = useQuery<IWorker[], Error>(
+    'workers',
+    fetchWorkers 
+  )
+  const {isLoading: isLoadingRequests, data: requests, error: requestsError} = useQuery<IAssociationRequest[], Error>(
     'requests',
     fetchAssociationRequests
   )
-
-  const workers = [
-    {
-      id: '1',
-      state: 3,
-      provider: 'aws',
-      region: 'us-east-1',
-      instance_type: 't1.micro',
-      address: '3.83.229.121',
-      syft_address: '',
-      created_at: '2021-03-22 06:47:57.062541',
-      destroyed_at: '2021-03-22 06:49:16.509098'
-    },
-    {
-      id: '2',
-      state: 2,
-      provider: 'aws',
-      region: 'us-east-1',
-      instance_type: 't1.micro',
-      address: '34.228.44.188',
-      syft_address: '',
-      created_at: '2021-03-22 06:50:35.063700',
-      destroyed_at: '2021-03-22 06:41:56.395537'
-    },
-    {
-      id: '3',
-      state: 2,
-      provider: 'aws',
-      region: 'us-east-1',
-      instance_type: 't1.micro',
-      address: '34.228.44.188',
-      syft_address: '',
-      created_at: '2021-03-24 05:50:35.061690',
-      destroyed_at: '2021-03-24 07:41:56.392547'
-    }
-  ]
 
   const TableHead = () => {
     const headers = ['ID', 'State', 'Provider', 'Region', 'Instance Type', 'Created At', 'Deleted At', '']
@@ -140,17 +109,17 @@ const Infrastructure: FunctionComponent = () => {
                   <table className="table-auto border-collapse w-full">
                     <TableHead />
                     <tbody className="text-sm font-normal text-gray-700">
-                      {workers
+                      {!isLoadingWorkers && !workersError && (workers !== undefined) && workers
                         .filter(w => w.state === 2)
-                        .map(worker => (
+                        .map(worker => (  
                           <tr key={`worker-${worker.id}`} className="hover:bg-gray-50 border-b border-gray-200 py-10">
                             <td className="px-4 py-4">{worker.id}</td>
                             <td className="px-4 py-4">{STATES[worker.state]}</td>
                             <td className="px-4 py-4">{worker.provider}</td>
                             <td className="px-4 py-4">{worker.region}</td>
-                            <td className="px-4 py-4">{worker.instance_type}</td>
-                            <td className="px-4 py-4">{worker.created_at}</td>
-                            <td className="px-4 py-4">{worker.destroyed_at}</td>
+                            <td className="px-4 py-4">{worker.instanceType}</td>
+                            <td className="px-4 py-4">{worker.createdAt}</td>
+                            <td className="px-4 py-4">{worker.destroyedAt}</td>
                             <td />
                           </tr>
                         ))}
@@ -160,7 +129,7 @@ const Infrastructure: FunctionComponent = () => {
                 <section className="space-y-6">
                   <h3 className="font-semibold tracking-wide pt-4 text-xl">Association Requests</h3>
                   <div className="space-y-6">
-                    {!isLoading && !error && requests.filter(r => r.pending === true).length > 0 ? (
+                    {!isLoadingRequests && !requestsError && requests.filter(r => r.pending === true).length > 0 ? (
                       requests
                         .filter(r => r.pending === true)
                         .sort((a, b) => {
@@ -192,7 +161,7 @@ const Infrastructure: FunctionComponent = () => {
               <table className="table-auto border-collapse w-full">
                 <TableHead />
                 <tbody className="text-sm font-normal text-gray-700">
-                  {workers
+                  {!isLoadingWorkers && !workersError && (workers !== undefined) && workers
                     .filter(w => Object.entries(w).some(entry => String(entry[1]).toLowerCase().includes(searchText)))
                     .map(worker => (
                       <tr key={`worker-${worker.id}`} className="hover:bg-gray-50 border-b border-gray-200 py-10">
@@ -200,9 +169,9 @@ const Infrastructure: FunctionComponent = () => {
                         <td className="px-4 py-4">{STATES[worker.state]}</td>
                         <td className="px-4 py-4">{worker.provider}</td>
                         <td className="px-4 py-4">{worker.region}</td>
-                        <td className="px-4 py-4">{worker.instance_type}</td>
-                        <td className="px-4 py-4">{worker.created_at}</td>
-                        <td className="px-4 py-4">{worker.destroyed_at}</td>
+                        <td className="px-4 py-4">{worker.instanceType}</td>
+                        <td className="px-4 py-4">{worker.createdAt}</td>
+                        <td className="px-4 py-4">{worker.destroyedAt}</td>
                         <td className="px-4 py-4">
                           <button
                             onClick={() => {

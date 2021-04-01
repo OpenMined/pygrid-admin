@@ -42,7 +42,9 @@ module.exports = {
   plugins: [
     require('@tailwindcss/forms'),
     require('@tailwindcss/line-clamp'),
-    require('@tailwindcss/aspect-ratio'),
+    require('@tailwindcss/aspect-ratio')
+  ]
+
     plugin(function ({addVariant, e}) {
       addVariant('invalid', ({modifySelectors, separator}) => {
         modifySelectors(({className}) => {

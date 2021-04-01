@@ -1,5 +1,9 @@
+const plugin = require('tailwindcss/plugin')
+
 module.exports = {
-  purge: ['./src/pages/**/*.{ts,tsx}', './src/components/**/*.{ts,tsx}'],
+  purge: {
+    content: ['./src/**/*.{ts,tsx}']
+  },
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
@@ -8,6 +12,9 @@ module.exports = {
       },
       lineHeight: {
         12: '3rem'
+      },
+      maxWidth: {
+        112: '28rem'
       },
       container: theme => ({
         padding: theme('padding.4')
@@ -20,27 +27,28 @@ module.exports = {
       },
       animation: {
         punch: 'punch 250ms ease-in-out'
-      },
-      typography: {
-        DEFAULT: {
-          css: {
-            h1: {
-              fontWeight: 'normal'
-            }
-          }
-        }
       }
     }
   },
   variants: {
     extend: {
-      animation: ['hover', 'focus', 'active'],
-      transitionProperty: ['hover']
-    }
+      animation: ['responsive', 'focus', 'hover', 'active'],
+      transitionProperty: ['hover'],
+      backgroundColor: ['active', 'disabled'],
+      cursor: ['disabled']
+    },
+    textColor: ({after}) => after(['invalid'])
   },
   plugins: [
+    require('@tailwindcss/forms'),
     require('@tailwindcss/line-clamp'),
     require('@tailwindcss/aspect-ratio'),
-    require('@tailwindcss/typography')
+    plugin(function ({addVariant, e}) {
+      addVariant('invalid', ({modifySelectors, separator}) => {
+        modifySelectors(({className}) => {
+          return `.${e(`invalid${separator}${className}`)}:invalid`
+        })
+      })
+    })
   ]
 }

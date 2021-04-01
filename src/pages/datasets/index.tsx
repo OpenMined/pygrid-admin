@@ -1,16 +1,80 @@
 import {useState} from 'react'
 import Link from 'next/link'
+import {useDisclosure} from 'react-use-disclosure'
+import {SidePanel} from '@/components/side-panel'
+import {useForm} from 'react-hook-form'
 import {DatasetCard} from '@/components/pages/datasets/cards/datasets'
 import {ArrowForward} from '@/components/icons/arrows'
 import {Plus} from '@/components/icons/marks'
-import {SearchBar} from '@/components/lib'
+import {Alert, Input, SearchBar} from '@/components/lib'
 import {useFetch} from '@/utils/query-builder'
+import {useMutation} from 'react-query'
 import type {FunctionComponent} from 'react'
+import {Spinner} from '@/components/icons/spinner'
+import {IDataset} from '@/types/datasets'
+import axios from 'axios'
+import {getToken} from '@/lib/auth'
 
 const Datasets: FunctionComponent = () => {
-  const {data: datasets} = useFetch('/datasets')
-  const {data: requests} = useFetch('/requests')
+  const {open, close, isOpen} = useDisclosure()
+  const {data: datasets} = useFetch('/dcfl/datasets')
+  const {data: requests} = useFetch('/dcfl/requests')
   const [searchText, setSearchText] = useState('')
+  const {register, handleSubmit, setValue} = useForm()
+
+  const [indexes, setIndexes] = useState([])
+  const [counter, setCounter] = useState(0)
+
+  const createDataset = useMutation<Partial<IDataset>, IDataset>(data =>
+    axios.post('/dcfl/datasets', data, {
+      baseURL: process.env.NEXT_PUBLIC_API_URL,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        token: getToken()
+      }
+    })
+  )
+
+  const addTensor = () => {
+    setIndexes(prevIndexes => [...prevIndexes, counter])
+    setCounter(prevCounter => prevCounter + 1)
+  }
+
+  const removeTensor = index => () => {
+    setIndexes(prevIndexes => [...prevIndexes.filter(item => item !== index)])
+    setCounter(prevCounter => prevCounter - 1)
+  }
+
+  const toBase64 = file =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.readAsDataURL(file)
+      reader.onload = () => resolve(reader.result)
+      reader.onerror = error => reject(error)
+    })
+
+  const submit = (values: Omit<IDataset, 'id' | 'createdAt'>) => {
+    console.log({values})
+    const formData = new FormData()
+    formData.append('name', values.name)
+    formData.append('description', values.description)
+    formData.append('manifest', values.manifest)
+    formData.append(
+      'tags',
+      values.tags?.split(',').map(t => t.trim())
+    )
+    values.tensors?.forEach(async tensor => {
+      const b64 = await handleTensorUpload(tensor.content)
+      formData.append(`${tensor.name}[]`, tensor.content[0], tensor.content[0].filename)
+      formData.append(`${tensor.name}[]`, tensor.manifest)
+    })
+    createDataset.mutate(formData, {onSuccess: close})
+  }
+
+  const closePanel = () => {
+    close()
+    createDataset.reset()
+  }
 
   const sections = [
     {
@@ -21,6 +85,11 @@ const Datasets: FunctionComponent = () => {
     },
     {title: 'Tensors pending deletion', value: 3, text: 'tensors', link: '/datasets/tensors'}
   ]
+
+  const handleTensorUpload = async files => {
+    const base = await toBase64(files[0])
+    return base
+  }
 
   const DatasetsList = ({datasets}) => {
     if (datasets.length > 0) {
@@ -67,9 +136,7 @@ const Datasets: FunctionComponent = () => {
     <main className="space-y-4">
       <div className="flex flex-col-reverse items-start space-y-4 space-y-reverse md:space-y-0 md:flex-row md:justify-between">
         <h1 className="pr-4 text-4xl leading-12">Datasets</h1>
-        <button
-          className="btn hover:bg-blue-600 hover:shadow-sm inline-flex items-center space-x-6"
-          onClick={() => alert('Create new dataset')}>
+        <button className="inline-flex items-center btn hover:bg-blue-600 hover:shadow-sm space-x-6" onClick={open}>
           <Plus className="w-4 h-4" />
           <span>New dataset</span>
         </button>
@@ -86,6 +153,57 @@ const Datasets: FunctionComponent = () => {
           </section>
         </>
       )}
+      <SidePanel isOpen={isOpen} close={closePanel}>
+        <article className="p-4 pr-8 space-y-6">
+          <section>
+            <header>
+              <h3 className="text-2xl font-medium text-gray-900 leading-6">Create a new Dataset</h3>
+              <p className="mt-2 text-sm text-gray-500">Upload a new dataset to this PyGrid Domain.</p>
+            </header>
+          </section>
+          <form onSubmit={handleSubmit(submit)}>
+            <section className="flex flex-col space-y-4">
+              <Input name="name" label="Dataset Name" ref={register} placeholder="Name" />
+              <Input name="description" label="Description" ref={register} placeholder="Description" type="text" />
+              <Input name="manifest" label="Manifest" ref={register} placeholder="Manifest" type="text" />
+              <Input name="tags" label="Tags" ref={register} placeholder="Tags" type="text" />
+              {indexes.map(index => {
+                const fieldName = `tensors[${index}]`
+                return (
+                  <fieldset
+                    className="p-4 bg-gray-100 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 md:text-md"
+                    name={fieldName}
+                    key={fieldName}>
+                    <p className="block pb-2 font-medium text-gray-700 text-md">Tensor #{index}:</p>
+                    <Input label="Name:" type="text" name={`${fieldName}.name`} ref={register} />
+                    <Input label="Manifest" type="text" name={`${fieldName}.manifest`} ref={register} />
+                    <Input label="Content:" type="file" name={`${fieldName}.content`} ref={register} />
+                    <button className="mt-2 btn" type="button" onClick={removeTensor(index)}>
+                      Remove
+                    </button>
+                  </fieldset>
+                )
+              })}
+
+              <button type="button" onClick={addTensor}>
+                Add Tensor
+              </button>
+              <div className="w-full sm:text-right">
+                <button
+                  className="w-full btn lg:w-auto transition-all ease-in-out duration-700"
+                  disabled={createDataset.isLoading}>
+                  {createDataset.isLoading ? <Spinner className="w-4 text-white" /> : 'Create a new Dataset'}
+                </button>
+              </div>
+              {createDataset.isError && (
+                <div>
+                  <Alert error="There was an error creating the dataset" description={createDataset.error.message} />
+                </div>
+              )}
+            </section>
+          </form>
+        </article>
+      </SidePanel>
     </main>
   )
 }

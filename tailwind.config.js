@@ -35,7 +35,8 @@ module.exports = {
       animation: ['responsive', 'focus', 'hover', 'active'],
       transitionProperty: ['hover'],
       backgroundColor: ['active', 'disabled'],
-      cursor: ['disabled']
+      cursor: ['disabled'],
+      textColor: ['active']
     },
     textColor: ({after}) => after(['invalid'])
   },

@@ -12,6 +12,7 @@ const Datasets: FunctionComponent = () => {
   const {isLoading, data: datasetsData, error} = useQuery<IDataset[], Error>('datasets', fetchDatasets)
   const {data: requests} = useQuery<IRequest[], Error>('requests', fetchRequests)
   const [searchText, setSearchText] = useState('')
+
   const sections = [
     {
       title: 'Permissions changes',

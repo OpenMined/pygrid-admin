@@ -1,10 +1,9 @@
 import type {FunctionComponent} from 'react'
 import {useState} from 'react'
-import take from 'lodash.take'
 import {useForm} from 'react-hook-form'
 import VisuallyHidden from '@reach/visually-hidden'
 import {useDisclosure} from 'react-use-disclosure'
-import {Alert, Select, Input} from '@/components/lib'
+import {Alert, Input} from '@/components/lib'
 import {Spinner} from '@/components/icons/spinner'
 import {GroupListItem} from '@/components/pages/users/group-list-item'
 import {SidePanel} from '@/components/side-panel'
@@ -130,21 +129,21 @@ const UserRoles: FunctionComponent = () => {
               <div className="flex flex-col text-right lg:flex-row-reverse">
                 <button
                   className="lg:ml-4 btn transition-all ease-in-out duration-700"
-                  disabled={create.isLoading}
+                  disabled={editRole.isLoading}
                   onClick={edit}>
-                  {create.isLoading ? <Spinner className="w-4 text-white" /> : 'Edit'}
+                  {editRole.isLoading ? <Spinner className="w-4 text-white" /> : 'Edit'}
                 </button>
                 <button
                   className="mt-4 font-normal text-red-600 bg-white shadow-none lg:mt-0 btn transition-all ease-in-out duration-700 hover:bg-red-400 hover:text-white active:bg-red-700"
                   disabled={create.isLoading}
                   type="button"
                   onClick={remove}>
-                  {create.isLoading ? <Spinner className="w-4 text-white" /> : 'Delete'}
+                  {editRole.isLoading ? <Spinner className="w-4 text-white" /> : 'Delete'}
                 </button>
               </div>
-              {create.isError && (
+              {editRole.isError && (
                 <div>
-                  <Alert error="There was an error creating the user" description={create.error.message} />
+                  <Alert error="There was an error creating the user" description={editRole.error.message} />
                 </div>
               )}
             </section>

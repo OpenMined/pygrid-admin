@@ -51,6 +51,6 @@ export interface PyGridUser {
   id: number
   email: string
   groups: PyGridUserGroup[]
-  role: Pick<PyGridUserRole, 'id'>
+  role: number
   createdAt?: string
 }

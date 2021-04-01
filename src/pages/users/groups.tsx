@@ -4,13 +4,14 @@ import take from 'lodash.take'
 import {useForm} from 'react-hook-form'
 import VisuallyHidden from '@reach/visually-hidden'
 import {useDisclosure} from 'react-use-disclosure'
-import {Alert, Select, Input} from '@/components/lib'
+import {Alert, Input} from '@/components/lib'
 import {Spinner} from '@/components/icons/spinner'
 import {GroupListItem} from '@/components/pages/users/group-list-item'
 import {SidePanel} from '@/components/side-panel'
 import {Notification} from '@/components/notifications'
 import {useFetch, useMutate} from '@/utils/query-builder'
 import type {PyGridUserGroup} from '@/types/users'
+import {Ban} from '@/components/icons/marks'
 
 const UserGroups: FunctionComponent = () => {
   const [group, setGroup] = useState(null)
@@ -28,6 +29,8 @@ const UserGroups: FunctionComponent = () => {
   const closePanel = () => {
     close()
     create.reset()
+    editGroup.reset()
+    deleteGroup.reset()
   }
 
   const submit = values => {
@@ -137,21 +140,21 @@ const UserGroups: FunctionComponent = () => {
               <div className="flex flex-col text-right lg:flex-row-reverse">
                 <button
                   className="lg:ml-4 btn transition-all ease-in-out duration-700"
-                  disabled={create.isLoading}
+                  disabled={editGroup.isLoading}
                   onClick={edit}>
                   {create.isLoading ? <Spinner className="w-4 text-white" /> : 'Edit'}
                 </button>
                 <button
                   className="mt-4 font-normal text-red-600 bg-white shadow-none lg:mt-0 btn transition-all ease-in-out duration-700 hover:bg-red-400 hover:text-white active:bg-red-700"
-                  disabled={create.isLoading}
+                  disabled={deleteGroup.isLoading}
                   type="button"
                   onClick={remove}>
                   {create.isLoading ? <Spinner className="w-4 text-white" /> : 'Delete'}
                 </button>
               </div>
-              {create.isError && (
+              {editGroup.isError && (
                 <div>
-                  <Alert error="There was an error creating the user" description={create.error.message} />
+                  <Alert error="There was an error creating the user" description={editGroup.error.message} />
                 </div>
               )}
             </section>
@@ -159,8 +162,18 @@ const UserGroups: FunctionComponent = () => {
         </article>
       </SidePanel>
       {create.isSuccess && (
-        <Notification type="success">
+        <Notification>
           <p>Group successfully {group ? 'created' : 'modified'}</p>
+        </Notification>
+      )}{' '}
+      {editGroup.isSuccess && (
+        <Notification title="Successfully saved!">
+          <p>Role successfully edited</p>
+        </Notification>
+      )}
+      {deleteGroup.isSuccess && (
+        <Notification title="Successfully removed!" Icon={<Ban className="text-red-700 w-5" />}>
+          <p>Role successfully delete</p>
         </Notification>
       )}
     </article>

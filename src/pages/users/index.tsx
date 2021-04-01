@@ -10,6 +10,7 @@ import {UserListItem} from '@/components/pages/users/user-list-item'
 import {SidePanel} from '@/components/side-panel'
 import {Notification} from '@/components/notifications'
 import {useFetch, useMutate} from '@/utils/query-builder'
+import {Ban} from '@/components/icons/marks'
 import type {PyGridUser, PyGridUserRole, PyGridUserGroup} from '@/types/users'
 import type {FunctionComponent} from 'react'
 
@@ -20,15 +21,31 @@ const Users: FunctionComponent = () => {
   const {isLoading, error, isError, data: users} = useFetch<Array<PyGridUser>>('/users')
   const {isLoading: rolesLoading, error: rolesError, data: roles} = useFetch<Array<PyGridUserRole>>('/roles')
   const {isLoading: groupsLoading, error: groupsError, data: groups} = useFetch<Array<PyGridUserGroup>>('/groups')
-  const mutation = useMutate<Partial<PyGridUser>, PyGridUser>({url: `/users`, invalidate: '/users'})
+  const createUser = useMutate<Partial<PyGridUser>, PyGridUser>({url: `/users`, invalidate: '/users'})
+  const deleteUser = useMutate({url: `/users/${user?.id}`, method: 'delete', invalidate: '/users'})
+  const editUser = useMutate<Partial<PyGridUser>, PyGridUser>({
+    url: `users/${user?.id}`,
+    method: 'put',
+    invalidate: '/users'
+  })
 
   const submit = (values: Omit<PyGridUser, 'id' | 'createdAt'>) => {
-    mutation.mutate({...values}, {onSuccess: close})
+    createUser.mutate({...values, role: Number(values.role)}, {onSuccess: close})
+  }
+  const edit = values => {
+    editUser.mutate(values as Partial<PyGridUser>, {onSuccess: () => setUser(null)})
+  }
+
+  const remove = () => {
+    deleteUser.mutate(null, {onSuccess: () => setUser(null)})
   }
 
   const closePanel = () => {
+    setUser(null)
     close()
-    mutation.reset()
+    createUser.reset()
+    editUser.reset()
+    deleteUser.reset()
   }
 
   return (
@@ -145,13 +162,13 @@ const Users: FunctionComponent = () => {
               <div className="w-full sm:text-right">
                 <button
                   className="w-full btn lg:w-auto transition-all ease-in-out duration-700"
-                  disabled={mutation.isLoading}>
-                  {mutation.isLoading ? <Spinner className="w-4 text-white" /> : 'Create a new user'}
+                  disabled={createUser.isLoading}>
+                  {createUser.isLoading ? <Spinner className="w-4 text-white" /> : 'Create a new user'}
                 </button>
               </div>
-              {mutation.isError && (
+              {createUser.isError && (
                 <div>
-                  <Alert error="There was an error creating the user" description={mutation.error.message} />
+                  <Alert error="There was an error creating the user" description={createUser.error.message} />
                 </div>
               )}
             </section>
@@ -186,36 +203,50 @@ const Users: FunctionComponent = () => {
                 defaultValue={`${user?.role}`}
                 options={roles?.map(role => ({value: role.id, label: role.name}))}
               />
-              <p className="text-sm text-gray-400">
-                User groups are used to easily manage permissions and access control
-              </p>
-              <Select
-                name="groups"
-                label="User groups (optional)"
-                ref={register}
-                placeholder="Select a group"
-                options={groups?.map(group => ({value: group.id, label: group.name}))}
-              />
+              {/* <p className="text-sm text-gray-400"> */}
+              {/*   User groups are used to easily manage permissions and access control */}
+              {/* </p> */}
+              {/* <Select */}
+              {/*   name="groups" */}
+              {/*   label="User groups (optional)" */}
+              {/*   ref={register} */}
+              {/*   placeholder="Select a group" */}
+              {/*   options={groups?.map(group => ({value: group.id, label: group.name}))} */}
+              {/* /> */}
               <div className="flex flex-col text-right lg:flex-row-reverse">
-                <button className="lg:ml-4 btn transition-all ease-in-out duration-700" disabled={mutation.isLoading}>
-                  {mutation.isLoading ? <Spinner className="w-4 text-white" /> : 'Edit'}
+                <button
+                  className="lg:ml-4 btn transition-all ease-in-out duration-700"
+                  disabled={editUser.isLoading}
+                  onClick={edit}>
+                  {editUser.isLoading || deleteUser.isLoading ? <Spinner className="w-4 text-white" /> : 'Edit'}
                 </button>
                 <button
                   className="mt-4 font-normal text-red-600 bg-white shadow-none lg:mt-0 btn transition-all ease-in-out duration-700 hover:bg-red-400 hover:text-white active:bg-red-700"
-                  disabled={mutation.isLoading}>
-                  {mutation.isLoading ? <Spinner className="w-4 text-white" /> : 'Delete'}
+                  disabled={deleteUser.isLoading}>
+                  onClick={remove}
+                  {editUser.isLoading || deleteUser.isLoading ? <Spinner className="w-4 text-white" /> : 'Delete'}
                 </button>
               </div>
-              {mutation.isError && (
+              {editUser.isError && (
                 <div>
-                  <Alert error="There was an error creating the user" description={mutation.error.message} />
+                  <Alert error="There was an error editing the user" description={editUser.error.message} />
                 </div>
               )}
             </section>
           </form>
         </article>
       </SidePanel>
-      {mutation.isSuccess && <Notification>User successfully {user ? 'created' : 'modified'}</Notification>}
+      {createUser.isSuccess && <Notification>User successfully {user ? 'created' : 'modified'}</Notification>}
+      {editUser.isSuccess && (
+        <Notification title="Successfully saved!">
+          <p>User successfully edited</p>
+        </Notification>
+      )}
+      {deleteUser.isSuccess && (
+        <Notification title="Successfully removed!" Icon={<Ban className="text-red-700 w-5" />}>
+          <p>User successfully delete</p>
+        </Notification>
+      )}
     </article>
   )
 }

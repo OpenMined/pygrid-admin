@@ -5,6 +5,7 @@ import {AppProviders} from '@/context'
 import {getLayout as getAppLayout} from '@/layouts/app'
 import {CheckAuthRoute} from '@/components/auth-route'
 
+import '@reach/dialog/styles.css'
 import '@/styles/globals.css'
 
 type AppPropsWithLayout = {

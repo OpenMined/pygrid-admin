@@ -4,7 +4,7 @@ import Portal from '@reach/portal'
 import {Transition} from '@headlessui/react'
 import {CheckCircle} from './icons/marks'
 
-export const Notification: FunctionComponent<{title: string; Icon?: JSX.Element}> = ({title, Icon, children}) => {
+export const Notification: FunctionComponent<{title?: string; Icon?: JSX.Element}> = ({title, Icon, children}) => {
   const [isShowing, show] = useState(true)
 
   useEffect(() => {

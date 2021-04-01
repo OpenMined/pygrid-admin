@@ -4,7 +4,8 @@ import {Header} from '@/components/header'
 export const Layout: FunctionComponent = ({children}) => (
   <>
     <Header />
-    <div className="container mx-auto mt-8 mb-12">{children}</div>
+    <main className="container mx-auto mt-8 mb-12">{children}</main>
+    <footer />
   </>
 )
 

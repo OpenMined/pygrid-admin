@@ -48,7 +48,9 @@ const Header: FunctionComponent = () => {
             )}
             {links.map(({name, link}: {name: string; link: string}) =>
               router.pathname === link ? (
-                <span className="text-sm font-medium text-blue-500 cursor-default">{name}</span>
+                <span key={`${router.pathname}/${link}`} className="text-sm font-medium text-blue-500 cursor-default">
+                  {name}
+                </span>
               ) : (
                 <Link href={link} key={`${router.pathname}/${link}`}>
                   <a className="text-sm text-gray-600 hover:text-gray-400 active:text-gray-800">{name}</a>

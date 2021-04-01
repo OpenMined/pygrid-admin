@@ -7,10 +7,13 @@ import {DatasetCard} from '@/components/pages/datasets/cards/datasets'
 import {ArrowForward} from '@/components/icons/arrows'
 import {Plus} from '@/components/icons/marks'
 import {Alert, Input, SearchBar} from '@/components/lib'
-import {useFetch, useMutate} from '@/utils/query-builder'
+import {useFetch} from '@/utils/query-builder'
+import {useMutation} from 'react-query'
 import type {FunctionComponent} from 'react'
 import {Spinner} from '@/components/icons/spinner'
 import {IDataset} from '@/types/datasets'
+import axios from 'axios'
+import {getToken} from '@/lib/auth'
 
 const Datasets: FunctionComponent = () => {
   const {open, close, isOpen} = useDisclosure()
@@ -22,10 +25,15 @@ const Datasets: FunctionComponent = () => {
   const [indexes, setIndexes] = useState([])
   const [counter, setCounter] = useState(0)
 
-  const createDataset = useMutate<Partial<IDataset>, IDataset>({
-    url: `/dcfl/datasets`,
-    invalidate: '/dcfl/datasets'
-  })
+  const createDataset = useMutation<Partial<IDataset>, IDataset>(data =>
+    axios.post('/dcfl/datasets', data, {
+      baseURL: process.env.NEXT_PUBLIC_API_URL,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        token: getToken()
+      }
+    })
+  )
 
   const addTensor = () => {
     setIndexes(prevIndexes => [...prevIndexes, counter])
@@ -46,9 +54,21 @@ const Datasets: FunctionComponent = () => {
     })
 
   const submit = (values: Omit<IDataset, 'id' | 'createdAt'>) => {
-    const newTensors = {}
-    values.tensors.map(tensor => (newTensors[tensor.name] = {manifest: tensor.manifest, content: tensor.content}))
-    createDataset.mutate({...values, tags: values.tags.trim().split(','), tensors: newTensors}, {onSuccess: close})
+    console.log({values})
+    const formData = new FormData()
+    formData.append('name', values.name)
+    formData.append('description', values.description)
+    formData.append('manifest', values.manifest)
+    formData.append(
+      'tags',
+      values.tags?.split(',').map(t => t.trim())
+    )
+    values.tensors?.forEach(async tensor => {
+      const b64 = await handleTensorUpload(tensor.content)
+      formData.append(`${tensor.name}[]`, tensor.content[0], tensor.content[0].filename)
+      formData.append(`${tensor.name}[]`, tensor.manifest)
+    })
+    createDataset.mutate(formData, {onSuccess: close})
   }
 
   const closePanel = () => {
@@ -66,11 +86,9 @@ const Datasets: FunctionComponent = () => {
     {title: 'Tensors pending deletion', value: 3, text: 'tensors', link: '/datasets/tensors'}
   ]
 
-  const handleTensorUpload = async event => {
-    const name = event.currentTarget.name
-    const file = event.currentTarget.files[0]
-    const base64Content = await toBase64(file)
-    setValue(name, base64Content)
+  const handleTensorUpload = async files => {
+    const base = await toBase64(files[0])
+    return base
   }
 
   const DatasetsList = ({datasets}) => {
@@ -118,7 +136,7 @@ const Datasets: FunctionComponent = () => {
     <main className="space-y-4">
       <div className="flex flex-col-reverse items-start space-y-4 space-y-reverse md:space-y-0 md:flex-row md:justify-between">
         <h1 className="pr-4 text-4xl leading-12">Datasets</h1>
-        <button className="btn hover:bg-blue-600 hover:shadow-sm inline-flex items-center space-x-6" onClick={open}>
+        <button className="inline-flex items-center btn hover:bg-blue-600 hover:shadow-sm space-x-6" onClick={open}>
           <Plus className="w-4 h-4" />
           <span>New dataset</span>
         </button>
@@ -156,17 +174,11 @@ const Datasets: FunctionComponent = () => {
                     className="p-4 bg-gray-100 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 md:text-md"
                     name={fieldName}
                     key={fieldName}>
-                    <p className="block text-md font-medium text-gray-700 pb-2">Tensor #{index}:</p>
+                    <p className="block pb-2 font-medium text-gray-700 text-md">Tensor #{index}:</p>
                     <Input label="Name:" type="text" name={`${fieldName}.name`} ref={register} />
                     <Input label="Manifest" type="text" name={`${fieldName}.manifest`} ref={register} />
-                    <Input
-                      onChange={e => handleTensorUpload(e)}
-                      label="Content:"
-                      type="file"
-                      name={`${fieldName}.content`}
-                      ref={register}
-                    />
-                    <button className="btn mt-2" type="button" onClick={removeTensor(index)}>
+                    <Input label="Content:" type="file" name={`${fieldName}.content`} ref={register} />
+                    <button className="mt-2 btn" type="button" onClick={removeTensor(index)}>
                       Remove
                     </button>
                   </fieldset>

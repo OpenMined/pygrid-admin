@@ -1,8 +1,6 @@
 import {FunctionComponent, MouseEventHandler, useState} from 'react'
-import Link from 'next/link'
 import {Card, ButtonAsLink, ButtonAsIcon} from '@/components/lib'
 import {CheckMark, XMark} from '@/components/icons/marks'
-import {User} from '@/components/icons/user'
 import {IAssociationRequest} from '@/types/infrastructure'
 import Dialog from '@reach/dialog'
 
@@ -33,9 +31,9 @@ const ExpandRequestModal = ({isOpen, onClose, request, onClickAccept, onClickRej
       <h3 className="text-3xl font-semibold">Association Request</h3>
 
       <button
-        className="p-1 ml-auto bg-transparent border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+        className="float-right p-1 ml-auto text-3xl font-semibold leading-none text-black bg-transparent border-0 outline-none focus:outline-none"
         onClick={onClose}>
-        <span className="bg-transparent text-black h-6 w-6 text-2xl block outline-none focus:outline-none">×</span>
+        <span className="block w-6 h-6 text-2xl text-black bg-transparent outline-none focus:outline-none">×</span>
       </button>
     </div>
     <span className="max-w-lg font-light text-gray-400 xl:max-w-5xl">
@@ -58,10 +56,10 @@ const ExpandRequestModal = ({isOpen, onClose, request, onClickAccept, onClickRej
         <strong>Pending</strong>: <span className="text-gray-400">{request.pending.toString()}</span>
       </div>
     </div>
-    <div className="flex items-center justify-end pt-6 border-t border-solid border-gray-300 rounded-b">
+    <div className="flex items-center justify-end pt-6 border-t border-gray-300 border-solid rounded-b">
       <button
         type="button"
-        className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm rounded-md outline-none focus:outline-none mr-3 mb-1"
+        className="px-6 py-2 mb-1 mr-3 text-sm font-bold text-red-500 uppercase outline-none background-transparent rounded-md focus:outline-none"
         onClick={() => {
           onClickReject()
           onClose()
@@ -70,7 +68,7 @@ const ExpandRequestModal = ({isOpen, onClose, request, onClickAccept, onClickRej
       </button>
       <button
         type="button"
-        className="bg-green-500 text-white active:bg-green-600 disabled:opacity-50 font-bold uppercase text-sm px-6 py-3 rounded-md shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
+        className="px-6 py-3 mb-1 mr-1 text-sm font-bold text-white uppercase bg-green-500 shadow outline-none active:bg-green-600 disabled:opacity-50 rounded-md hover:shadow-lg focus:outline-none"
         onClick={() => {
           onClickAccept()
           onClose()
@@ -86,7 +84,8 @@ export const AssociationRequestCard: FunctionComponent<AssociationRequestPropert
   onClickReject,
   ...request
 }) => {
-  const {id, date, name, address, sender_address, accepted, pending, handshake_value} = request
+  // sender_address, accepted, pending, handshake_value
+  const {id, date, name, address} = request
 
   const [openRequestModal, setOpenRequestModal] = useState(false)
 
@@ -111,7 +110,7 @@ export const AssociationRequestCard: FunctionComponent<AssociationRequestPropert
           </span>
         </div>
       </div>
-      <div className="self-end flex-shrink-0 text-gray-400 self-center flex-row flex space-x-6">
+      <div className="flex flex-row self-center self-end flex-shrink-0 text-gray-400 space-x-6">
         <div className="flex flex-col m-auto">
           <ButtonAsIcon onClick={onClickAccept}>
             <CheckMark className="w-6 h-6 text-green-500" />

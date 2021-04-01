@@ -37,7 +37,7 @@ const Datasets: FunctionComponent = () => {
     setCounter(prevCounter => prevCounter - 1)
   }
 
-   const toBase64 = file =>
+  const toBase64 = file =>
     new Promise((resolve, reject) => {
       const reader = new FileReader()
       reader.readAsDataURL(file)
@@ -66,11 +66,11 @@ const Datasets: FunctionComponent = () => {
     {title: 'Tensors pending deletion', value: 3, text: 'tensors', link: '/datasets/tensors'}
   ]
 
-  const handleTensorUpload = async (event) => {
+  const handleTensorUpload = async event => {
     const name = event.currentTarget.name
-    const file = event.currentTarget.files[0];
+    const file = event.currentTarget.files[0]
     const base64Content = await toBase64(file)
-    setValue(name, base64Content);
+    setValue(name, base64Content)
   }
 
   const DatasetsList = ({datasets}) => {
@@ -159,7 +159,13 @@ const Datasets: FunctionComponent = () => {
                     <p className="block text-md font-medium text-gray-700 pb-2">Tensor #{index}:</p>
                     <Input label="Name:" type="text" name={`${fieldName}.name`} ref={register} />
                     <Input label="Manifest" type="text" name={`${fieldName}.manifest`} ref={register} />
-                    <Input onChange={e => handleTensorUpload(e)} label="Content:" type="file" name={`${fieldName}.content`} ref={register} />
+                    <Input
+                      onChange={e => handleTensorUpload(e)}
+                      label="Content:"
+                      type="file"
+                      name={`${fieldName}.content`}
+                      ref={register}
+                    />
                     <button className="btn mt-2" type="button" onClick={removeTensor(index)}>
                       Remove
                     </button>

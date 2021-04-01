@@ -1,7 +1,12 @@
 import {FunctionComponent, useState} from 'react'
 import {Tabs, TabList, Tab, TabPanels, TabPanel} from '@reach/tabs'
 import Dialog from '@reach/dialog'
-import {deleteWorker, fetchAssociationRequests, fetchWorkers, respondAssociationRequest} from '@/pages/api/infrastructure'
+import {
+  deleteWorker,
+  fetchAssociationRequests,
+  fetchWorkers,
+  respondAssociationRequest
+} from '@/pages/api/infrastructure'
 import {XMark} from '@/components/icons/marks'
 import {SearchBar} from '@/components/lib'
 import {AssociationRequestCard} from '@/components/pages/infrastructure/cards/requests'
@@ -53,10 +58,10 @@ const Infrastructure: FunctionComponent = () => {
   const [searchText, setSearchText] = useState('')
   const [selectedWorker, setSelectedWorker] = useState('')
   const [openDeleteWorkerModal, setOpenDeleteWorkerModal] = useState(false)
-  
+
   const {isLoading: isLoadingWorkers, data: workers, error: workersError} = useQuery<IWorker[], Error>(
     'workers',
-    fetchWorkers 
+    fetchWorkers
   )
   const {isLoading: isLoadingRequests, data: requests, error: requestsError} = useQuery<IAssociationRequest[], Error>(
     'requests',
@@ -109,20 +114,23 @@ const Infrastructure: FunctionComponent = () => {
                   <table className="table-auto border-collapse w-full">
                     <TableHead />
                     <tbody className="text-sm font-normal text-gray-700">
-                      {!isLoadingWorkers && !workersError && (workers !== undefined) && workers
-                        .filter(w => w.state === 2)
-                        .map(worker => (  
-                          <tr key={`worker-${worker.id}`} className="hover:bg-gray-50 border-b border-gray-200 py-10">
-                            <td className="px-4 py-4">{worker.id}</td>
-                            <td className="px-4 py-4">{STATES[worker.state]}</td>
-                            <td className="px-4 py-4">{worker.provider}</td>
-                            <td className="px-4 py-4">{worker.region}</td>
-                            <td className="px-4 py-4">{worker.instanceType}</td>
-                            <td className="px-4 py-4">{worker.createdAt}</td>
-                            <td className="px-4 py-4">{worker.destroyedAt}</td>
-                            <td />
-                          </tr>
-                        ))}
+                      {!isLoadingWorkers &&
+                        !workersError &&
+                        workers !== undefined &&
+                        workers
+                          .filter(w => w.state === 2)
+                          .map(worker => (
+                            <tr key={`worker-${worker.id}`} className="hover:bg-gray-50 border-b border-gray-200 py-10">
+                              <td className="px-4 py-4">{worker.id}</td>
+                              <td className="px-4 py-4">{STATES[worker.state]}</td>
+                              <td className="px-4 py-4">{worker.provider}</td>
+                              <td className="px-4 py-4">{worker.region}</td>
+                              <td className="px-4 py-4">{worker.instanceType}</td>
+                              <td className="px-4 py-4">{worker.createdAt}</td>
+                              <td className="px-4 py-4">{worker.destroyedAt}</td>
+                              <td />
+                            </tr>
+                          ))}
                     </tbody>
                   </table>
                 </section>
@@ -161,28 +169,31 @@ const Infrastructure: FunctionComponent = () => {
               <table className="table-auto border-collapse w-full">
                 <TableHead />
                 <tbody className="text-sm font-normal text-gray-700">
-                  {!isLoadingWorkers && !workersError && (workers !== undefined) && workers
-                    .filter(w => Object.entries(w).some(entry => String(entry[1]).toLowerCase().includes(searchText)))
-                    .map(worker => (
-                      <tr key={`worker-${worker.id}`} className="hover:bg-gray-50 border-b border-gray-200 py-10">
-                        <td className="px-4 py-4">{worker.id}</td>
-                        <td className="px-4 py-4">{STATES[worker.state]}</td>
-                        <td className="px-4 py-4">{worker.provider}</td>
-                        <td className="px-4 py-4">{worker.region}</td>
-                        <td className="px-4 py-4">{worker.instanceType}</td>
-                        <td className="px-4 py-4">{worker.createdAt}</td>
-                        <td className="px-4 py-4">{worker.destroyedAt}</td>
-                        <td className="px-4 py-4">
-                          <button
-                            onClick={() => {
-                              setSelectedWorker(worker.id)
-                              setOpenDeleteWorkerModal(true)
-                            }}>
-                            <XMark className="w-4 h-4 text-red-600" />
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
+                  {!isLoadingWorkers &&
+                    !workersError &&
+                    workers !== undefined &&
+                    workers
+                      .filter(w => Object.entries(w).some(entry => String(entry[1]).toLowerCase().includes(searchText)))
+                      .map(worker => (
+                        <tr key={`worker-${worker.id}`} className="hover:bg-gray-50 border-b border-gray-200 py-10">
+                          <td className="px-4 py-4">{worker.id}</td>
+                          <td className="px-4 py-4">{STATES[worker.state]}</td>
+                          <td className="px-4 py-4">{worker.provider}</td>
+                          <td className="px-4 py-4">{worker.region}</td>
+                          <td className="px-4 py-4">{worker.instanceType}</td>
+                          <td className="px-4 py-4">{worker.createdAt}</td>
+                          <td className="px-4 py-4">{worker.destroyedAt}</td>
+                          <td className="px-4 py-4">
+                            <button
+                              onClick={() => {
+                                setSelectedWorker(worker.id)
+                                setOpenDeleteWorkerModal(true)
+                              }}>
+                              <XMark className="w-4 h-4 text-red-600" />
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
                 </tbody>
               </table>
             </section>

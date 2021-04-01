@@ -1,34 +1,62 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+![PyGrid logo](https://raw.githubusercontent.com/OpenMined/design-assets/master/logos/PyGrid/horizontal-primary-trans.png)
 
-## Getting Started
+# PyGrid Admin
 
-First, run the development server:
+PyGrid Admin is the user interface that allows data owners to manage their **deployed** PyGrid Domain or Network. This
+project provides a way to visualize privacy budgets, configure many infrastucture settings for your Domain or Network
+and manage users and datasets.
+
+## Screenshots
+
+<div>
+  <img alt="Login" width="30%" src="./screenshots/login.png" />
+  <img alt="Users" width="30%" src="./screenshots/users.png" />
+  <img alt="Datasets" width="30%" src="./screenshots/datasets.png" />
+  <img alt="Tensors" width="30%" src="./screenshots/tensors.png" />
+  <img alt="Requests" width="30%" src="./screenshots/requests.png" />
+  <img alt="Dashboard" width="30%" src="./screenshots/dashboard.png" />
+</diV>
+
+## Deployment
+
+The Admin UI can be hosted in static file services such as Amazon S3, Netlify, Google Cloud, Vercel or Heroku, and can
+be easily deployed to your own network. It was deliberately built separately from PyGrid to allow for the a very simple
+deployment.
 
 ```bash
-npm run dev
-# or
+yarn install
+yarn build
+yarn next export
+```
+
+## Development
+
+Yes! We want your help. Head over to [issues](/../../issues) and help us improve the look and feel of the project or the
+provide the functionality that seems to be missing.
+
+Run the development server:
+
+```bash
+git clone git@github.com:OpenMined/PyGrid.git
+cd pygrid-admin
+yarn install
 yarn dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The PyGrid Admin should be available at [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+## Disclaimer
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+We are reaching full support for the latest PyGrid Domain API version. And we know that the interface is not ideal.
+Please report to us any issues you have and keep in mind that we are working diligently to provide a better support in
+the upcoming versions.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## Contributing & Support
 
-## Learn More
+If you're interested in contributing, please join the **#support** Slack channel.
+[Click here to join our Slack community!](https://slack.openmined.org)
 
-To learn more about Next.js, take a look at the following resources:
+## License
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+[Apache License 2.0](https://github.com/OpenMined/PySyft/blob/master/LICENSE)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FOpenMined%2FPySyft.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FOpenMined%2FPySyft?ref=badge_large)

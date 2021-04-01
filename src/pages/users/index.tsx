@@ -183,7 +183,7 @@ const Users: FunctionComponent = () => {
               <p className="mt-2 text-sm text-gray-500">Change email, user role or group association.</p>
             </header>
           </section>
-          <form onSubmit={handleSubmit(submit)}>
+          <form onSubmit={handleSubmit(edit)}>
             <section className="flex flex-col space-y-4">
               <Input
                 name="email"
@@ -214,16 +214,14 @@ const Users: FunctionComponent = () => {
               {/*   options={groups?.map(group => ({value: group.id, label: group.name}))} */}
               {/* /> */}
               <div className="flex flex-col text-right lg:flex-row-reverse">
-                <button
-                  className="lg:ml-4 btn transition-all ease-in-out duration-700"
-                  disabled={editUser.isLoading}
-                  onClick={edit}>
+                <button className="lg:ml-4 btn transition-all ease-in-out duration-700" disabled={editUser.isLoading}>
                   {editUser.isLoading || deleteUser.isLoading ? <Spinner className="w-4 text-white" /> : 'Edit'}
                 </button>
                 <button
+                  type="button"
                   className="mt-4 font-normal text-red-600 bg-white shadow-none lg:mt-0 btn transition-all ease-in-out duration-700 hover:bg-red-400 hover:text-white active:bg-red-700"
-                  disabled={deleteUser.isLoading}>
-                  onClick={remove}
+                  disabled={deleteUser.isLoading}
+                  onClick={remove}>
                   {editUser.isLoading || deleteUser.isLoading ? <Spinner className="w-4 text-white" /> : 'Delete'}
                 </button>
               </div>

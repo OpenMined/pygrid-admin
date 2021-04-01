@@ -2,17 +2,17 @@ import axios from '@/utils/api-axios'
 import {IAssociationRequest, IWorker} from '@/types/infrastructure'
 
 export const fetchWorkers = async () => {
-  const {data} = await axios.get<IWorker[]>('/dcfl/workers')
+  const {data} = await axios.get<IWorker[]>('/data-centric/workers')
   return data
 }
 
 export const fetchWorker = async (id: string) => {
-  const {data} = await axios.get<IWorker>(`/dcfl/workers/${id}`)
+  const {data} = await axios.get<IWorker>(`/data-centric/workers/${id}`)
   return data
 }
 
 export const deleteWorker = async (id: string) => {
-  const {data} = await axios.delete<IWorker>(`/dcfl/workers/${id}`)
+  const {data} = await axios.delete<IWorker>(`/data-centric/workers/${id}`)
   return data
 }
 

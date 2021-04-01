@@ -17,7 +17,7 @@ export default function PyGridAdmin({Component, pageProps}: AppPropsWithLayout) 
   return (
     <AppProviders>
       <CheckAuthRoute>{getLayout(<Component {...pageProps} />)}</CheckAuthRoute>
-      <ReactQueryDevtools initialIsOpen={false} />
+      {process.env.ENVIRONMENT === 'development' && <ReactQueryDevtools initialIsOpen={false} />}
     </AppProviders>
   )
 }

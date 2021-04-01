@@ -9,11 +9,12 @@ and manage users and datasets.
 ## Screenshots
 
 <div>
-  <img alt="Login" src="./screenshots/login.png" />
-  <img alt="Users" src="./screenshots/users.png" />
-  <img alt="Datasets" src="./screenshots/datasets.png" />
-  <img alt="Tensors" src="./screenshots/tensors.png" />
-  <img alt="Requests" src="./screenshots/requests.png" />
+  <img alt="Login" width="30%" src="./screenshots/login.png" />
+  <img alt="Users" width="30%" src="./screenshots/users.png" />
+  <img alt="Datasets" width="30%" src="./screenshots/datasets.png" />
+  <img alt="Tensors" width="30%" src="./screenshots/tensors.png" />
+  <img alt="Requests" width="30%" src="./screenshots/requests.png" />
+  <img alt="Dashboard" width="30%" src="./screenshots/dashboard.png" />
 </diV>
 
 ## Deployment

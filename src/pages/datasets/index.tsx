@@ -14,17 +14,17 @@ import {IDataset} from '@/types/datasets'
 
 const Datasets: FunctionComponent = () => {
   const {open, close, isOpen} = useDisclosure()
-  const {data: datasets} = useFetch('/datasets')
-  const {data: requests} = useFetch('/requests')
+  const {data: datasets} = useFetch('/dcfl/datasets')
+  const {data: requests} = useFetch('/dcfl/requests')
   const [searchText, setSearchText] = useState('')
-  const {register, handleSubmit} = useForm()
+  const {register, handleSubmit, setValue} = useForm()
 
   const [indexes, setIndexes] = useState([])
   const [counter, setCounter] = useState(0)
 
   const createDataset = useMutate<Partial<IDataset>, IDataset>({
-    url: `/data-centric/datasets`,
-    invalidate: '/data-centric/datasets'
+    url: `/dcfl/datasets`,
+    invalidate: '/dcfl/datasets'
   })
 
   const addTensor = () => {
@@ -37,8 +37,18 @@ const Datasets: FunctionComponent = () => {
     setCounter(prevCounter => prevCounter - 1)
   }
 
+   const toBase64 = file =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.readAsDataURL(file)
+      reader.onload = () => resolve(reader.result)
+      reader.onerror = error => reject(error)
+    })
+
   const submit = (values: Omit<IDataset, 'id' | 'createdAt'>) => {
-    createDataset.mutate({...values, tags: values.tags.trim().split(',')}, {onSuccess: close})
+    const newTensors = {}
+    values.tensors.map(tensor => (newTensors[tensor.name] = {manifest: tensor.manifest, content: tensor.content}))
+    createDataset.mutate({...values, tags: values.tags.trim().split(','), tensors: newTensors}, {onSuccess: close})
   }
 
   const closePanel = () => {
@@ -55,6 +65,13 @@ const Datasets: FunctionComponent = () => {
     },
     {title: 'Tensors pending deletion', value: 3, text: 'tensors', link: '/datasets/tensors'}
   ]
+
+  const handleTensorUpload = async (event) => {
+    const name = event.currentTarget.name
+    const file = event.currentTarget.files[0];
+    const base64Content = await toBase64(file)
+    setValue(name, base64Content);
+  }
 
   const DatasetsList = ({datasets}) => {
     if (datasets.length > 0) {
@@ -142,7 +159,7 @@ const Datasets: FunctionComponent = () => {
                     <p className="block text-md font-medium text-gray-700 pb-2">Tensor #{index}:</p>
                     <Input label="Name:" type="text" name={`${fieldName}.name`} ref={register} />
                     <Input label="Manifest" type="text" name={`${fieldName}.manifest`} ref={register} />
-                    <Input label="Content:" type="file" name={`${fieldName}.content`} ref={register} />
+                    <Input onChange={e => handleTensorUpload(e)} label="Content:" type="file" name={`${fieldName}.content`} ref={register} />
                     <button className="btn mt-2" type="button" onClick={removeTensor(index)}>
                       Remove
                     </button>

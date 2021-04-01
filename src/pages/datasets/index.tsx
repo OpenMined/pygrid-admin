@@ -1,16 +1,50 @@
 import {useState} from 'react'
 import Link from 'next/link'
+import {useDisclosure} from 'react-use-disclosure'
+import {SidePanel} from '@/components/side-panel'
+import {useForm} from 'react-hook-form'
 import {DatasetCard} from '@/components/pages/datasets/cards/datasets'
 import {ArrowForward} from '@/components/icons/arrows'
 import {Plus} from '@/components/icons/marks'
-import {SearchBar} from '@/components/lib'
-import {useFetch} from '@/utils/query-builder'
+import {Alert, Input, SearchBar} from '@/components/lib'
+import {useFetch, useMutate} from '@/utils/query-builder'
 import type {FunctionComponent} from 'react'
+import {Spinner} from '@/components/icons/spinner'
+import {IDataset} from '@/types/datasets'
 
 const Datasets: FunctionComponent = () => {
+  const {open, close, isOpen} = useDisclosure()
   const {data: datasets} = useFetch('/datasets')
   const {data: requests} = useFetch('/requests')
   const [searchText, setSearchText] = useState('')
+  const {register, handleSubmit} = useForm()
+
+  const [indexes, setIndexes] = useState([])
+  const [counter, setCounter] = useState(0)
+
+  const createDataset = useMutate<Partial<IDataset>, IDataset>({
+    url: `/data-centric/datasets`,
+    invalidate: '/data-centric/datasets'
+  })
+
+  const addTensor = () => {
+    setIndexes(prevIndexes => [...prevIndexes, counter])
+    setCounter(prevCounter => prevCounter + 1)
+  }
+
+  const removeTensor = index => () => {
+    setIndexes(prevIndexes => [...prevIndexes.filter(item => item !== index)])
+    setCounter(prevCounter => prevCounter - 1)
+  }
+
+  const submit = (values: Omit<IDataset, 'id' | 'createdAt'>) => {
+    createDataset.mutate({...values, tags: values.tags.trim().split(',')}, {onSuccess: close})
+  }
+
+  const closePanel = () => {
+    close()
+    createDataset.reset()
+  }
 
   const sections = [
     {
@@ -67,9 +101,7 @@ const Datasets: FunctionComponent = () => {
     <main className="space-y-4">
       <div className="flex flex-col-reverse items-start space-y-4 space-y-reverse md:space-y-0 md:flex-row md:justify-between">
         <h1 className="pr-4 text-4xl leading-12">Datasets</h1>
-        <button
-          className="btn hover:bg-blue-600 hover:shadow-sm inline-flex items-center space-x-6"
-          onClick={() => alert('Create new dataset')}>
+        <button className="btn hover:bg-blue-600 hover:shadow-sm inline-flex items-center space-x-6" onClick={open}>
           <Plus className="w-4 h-4" />
           <span>New dataset</span>
         </button>
@@ -86,6 +118,57 @@ const Datasets: FunctionComponent = () => {
           </section>
         </>
       )}
+      <SidePanel isOpen={isOpen} close={closePanel}>
+        <article className="p-4 pr-8 space-y-6">
+          <section>
+            <header>
+              <h3 className="text-2xl font-medium text-gray-900 leading-6">Create a new Dataset</h3>
+              <p className="mt-2 text-sm text-gray-500">Upload a new dataset to this PyGrid Domain.</p>
+            </header>
+          </section>
+          <form onSubmit={handleSubmit(submit)}>
+            <section className="flex flex-col space-y-4">
+              <Input name="name" label="Dataset Name" ref={register} placeholder="Name" />
+              <Input name="description" label="Description" ref={register} placeholder="Description" type="text" />
+              <Input name="manifest" label="Manifest" ref={register} placeholder="Manifest" type="text" />
+              <Input name="tags" label="Tags" ref={register} placeholder="Tags" type="text" />
+              {indexes.map(index => {
+                const fieldName = `tensors[${index}]`
+                return (
+                  <fieldset
+                    className="p-4 bg-gray-100 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 md:text-md"
+                    name={fieldName}
+                    key={fieldName}>
+                    <p className="block text-md font-medium text-gray-700 pb-2">Tensor #{index}:</p>
+                    <Input label="Name:" type="text" name={`${fieldName}.name`} ref={register} />
+                    <Input label="Manifest" type="text" name={`${fieldName}.manifest`} ref={register} />
+                    <Input label="Content:" type="file" name={`${fieldName}.content`} ref={register} />
+                    <button className="btn mt-2" type="button" onClick={removeTensor(index)}>
+                      Remove
+                    </button>
+                  </fieldset>
+                )
+              })}
+
+              <button type="button" onClick={addTensor}>
+                Add Tensor
+              </button>
+              <div className="w-full sm:text-right">
+                <button
+                  className="w-full btn lg:w-auto transition-all ease-in-out duration-700"
+                  disabled={createDataset.isLoading}>
+                  {createDataset.isLoading ? <Spinner className="w-4 text-white" /> : 'Create a new Dataset'}
+                </button>
+              </div>
+              {createDataset.isError && (
+                <div>
+                  <Alert error="There was an error creating the dataset" description={createDataset.error.message} />
+                </div>
+              )}
+            </section>
+          </form>
+        </article>
+      </SidePanel>
     </main>
   )
 }

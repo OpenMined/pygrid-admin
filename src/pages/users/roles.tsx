@@ -123,7 +123,7 @@ const UserRoles: FunctionComponent = () => {
               <p className="mt-2 text-sm text-gray-500">Change its name and purge users from the role.</p>
             </header>
           </section>
-          <form onSubmit={handleSubmit(submit)}>
+          <form onSubmit={handleSubmit(edit)}>
             <section className="flex flex-col space-y-4">
               <Input name="name" label="User Role" ref={register} defaultValue={role?.name} />
               <div className="flex flex-col text-right lg:flex-row-reverse">

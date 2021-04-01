@@ -35,7 +35,8 @@ module.exports = {
       animation: ['responsive', 'focus', 'hover', 'active'],
       transitionProperty: ['hover'],
       backgroundColor: ['active', 'disabled'],
-      cursor: ['disabled']
+      cursor: ['disabled'],
+      textColor: ['active']
     },
     textColor: ({after}) => after(['invalid'])
   },
@@ -43,6 +44,7 @@ module.exports = {
     require('@tailwindcss/forms'),
     require('@tailwindcss/line-clamp'),
     require('@tailwindcss/aspect-ratio'),
+
     plugin(function ({addVariant, e}) {
       addVariant('invalid', ({modifySelectors, separator}) => {
         modifySelectors(({className}) => {

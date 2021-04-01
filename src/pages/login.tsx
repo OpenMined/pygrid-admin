@@ -78,9 +78,9 @@ const Login: FunctionComponent & {getLayout: FunctionComponent} = () => {
               {loading ? <Spinner className="w-4 h-4 animate-spin" /> : 'Login'}
             </button>
           </div>
-          <div className="my-2 text-sm">
-            No credentials? <a>Request access</a>
-          </div>
+          {/* <div className="my-2 text-sm"> */}
+          {/*   No credentials? <a>Request access</a> */}
+          {/* </div> */}
         </form>
       </div>
     </main>

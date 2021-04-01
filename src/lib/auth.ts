@@ -1,5 +1,5 @@
-import domainAPI, {handleAxiosErrors, ErrorMessage} from '@/utils/api-axios'
 import jwtDecode from 'jwt-decode'
+import domainAPI, {ErrorMessage} from '@/utils/api-axios'
 
 const AUTH_KEY = '__pygrid_admin_auth'
 
@@ -29,8 +29,5 @@ export function logout() {
 }
 
 export function login(credentials: {email: string; password: string}): Promise<string | ErrorMessage> {
-  return domainAPI
-    .post<{token: string}>('/users/login', credentials)
-    .then(response => setToken(response.data.token))
-    .catch(handleAxiosErrors)
+  return domainAPI.post<{token: string}>('/users/login', credentials).then(response => setToken(response.data.token))
 }

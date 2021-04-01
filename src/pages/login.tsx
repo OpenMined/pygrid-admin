@@ -48,10 +48,13 @@ const Login: FunctionComponent & {getLayout: FunctionComponent} = () => {
         <form className="w-4/5" onSubmit={handleSubmit(onSubmit)}>
           <div className="flex flex-col space-y-6 text-left">
             <div className="flex flex-col">
-              <label htmlFor="email">Email or username</label>
+              <label className="text-gray-600" htmlFor="email">
+                Email or username
+              </label>
               <input
                 className="base-input"
                 name="email"
+                type="email"
                 ref={register({required: true})}
                 placeholder="Your email or username"
                 onChange={() => setSpin(true)}
@@ -59,7 +62,9 @@ const Login: FunctionComponent & {getLayout: FunctionComponent} = () => {
               {error && <span className="px-4 py-1 mt-0.5 text-sm text-gray-800 bg-red-200">{error}</span>}
             </div>
             <div className="flex flex-col">
-              <label htmlFor="password">Password</label>
+              <label className="text-gray-600" htmlFor="password">
+                Password
+              </label>
               <input
                 className="base-input"
                 type="password"

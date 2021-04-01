@@ -1,52 +1,60 @@
 import {FunctionComponent, MouseEventHandler, useState} from 'react'
-import Dialog from '@reach/dialog'
-import Link from 'next/link'
 import {Card, ButtonAsLink, ButtonAsIcon} from '@/components/lib'
 import {CheckMark, XMark} from '@/components/icons/marks'
-import {MissingUserAvatar} from '@/components/icons/user'
-import '@reach/dialog/styles.css'
+import {IAssociationRequest} from '@/types/infrastructure'
+import Dialog from '@reach/dialog'
 
-// TODO: check permissions with Ionesio
-// TODO: check budget logic with Ionesio
-
-interface PermissionRequestProperties {
-  userName: string
-  userId: string | number
-  retrieving: string
-  tensors: string
-  dataset: string
-  reason: string
+interface AssociationRequestProperties extends IAssociationRequest {
   onClickAccept: MouseEventHandler<HTMLButtonElement>
   onClickReject: MouseEventHandler<HTMLButtonElement>
 }
 
-interface UserRequestingProps {
-  userName: string
-  userId: string | number
-  retrieving: string
-}
+const dateFormat = date =>
+  date.getUTCFullYear() +
+  '/' +
+  (date.getUTCMonth() + 1) +
+  '/' +
+  date.getUTCDate() +
+  ' ' +
+  date.getUTCHours() +
+  ':' +
+  date.getUTCMinutes() +
+  ':' +
+  date.getUTCSeconds()
 
-interface UserRequestingProps {
-  userName: string
-  userId: string | number
-  retrieving: string
-}
-
-const RequestReasonModal = ({isOpen, onClose, reason, onClickAccept, onClickReject}) => (
+const ExpandRequestModal = ({isOpen, onClose, request, onClickAccept, onClickReject}) => (
   <Dialog
     isOpen={isOpen}
     onDismiss={onClose}
     className="relative w-auto my-6 mx-auto max-w-md border-b border-solid border-gray-300 rounded-t shadow-lg">
     <div className="flex items-start justify-between">
-      <h3 className="text-3xl font-semibold">Request reason</h3>
+      <h3 className="text-3xl font-semibold">Association Request</h3>
+
       <button
         className="float-right p-1 ml-auto text-3xl font-semibold leading-none text-black bg-transparent border-0 outline-none focus:outline-none"
         onClick={onClose}>
         <span className="block w-6 h-6 text-2xl text-black bg-transparent outline-none focus:outline-none">×</span>
       </button>
     </div>
-    <div>
-      <p className="py-4 text-lg">{reason}</p>
+    <span className="max-w-lg font-light text-gray-400 xl:max-w-5xl">
+      Request #{request.id} - {dateFormat(new Date(request.date))}
+    </span>
+    <div className="my-4">
+      <div>
+        <strong>Name</strong>: <span className="text-gray-400">{request.name}</span>
+      </div>
+      <div>
+        <strong>Address</strong>: <span className="text-gray-400">{request.address}</span>
+      </div>
+      <div>
+        <strong>Sender Address</strong>: <span className="text-gray-400">{request.senderAddress}</span>
+      </div>
+      <div>
+        <strong>Accepted</strong>: <span className="text-gray-400">{request.accepted.toString()}</span>
+      </div>
+      <div>
+        <strong>Pending</strong>: <span className="text-gray-400">{request.pending.toString()}</span>
+      </div>
     </div>
     <div className="flex items-center justify-end pt-6 border-t border-gray-300 border-solid rounded-b">
       <button
@@ -56,7 +64,7 @@ const RequestReasonModal = ({isOpen, onClose, reason, onClickAccept, onClickReje
           onClickReject()
           onClose()
         }}>
-        Reject
+        Deny
       </button>
       <button
         type="button"
@@ -71,44 +79,33 @@ const RequestReasonModal = ({isOpen, onClose, reason, onClickAccept, onClickReje
   </Dialog>
 )
 
-const UserRequestingUI: FunctionComponent<UserRequestingProps> = ({userId, userName, retrieving}) => (
-  <div className="flex flex-row items-center">
-    <MissingUserAvatar className="inline w-6 h-6 mr-2 rounded-full" />
-    <span>
-      {/* TODO: Change to a modal view here instead of linking to the profile in full */}
-      <Link href={`/users/u/${userId}`}>{userName}</Link> wants to retrieve{' '}
-      <Link href={`/datasets/tensors/t/${retrieving}`}>{retrieving}</Link>
-    </span>
-  </div>
-)
-
-export const PermissionRequestCard: FunctionComponent<PermissionRequestProperties> = ({
-  userName,
-  userId,
-  retrieving,
-  reason,
-  tensors,
-  dataset,
+export const AssociationRequestCard: FunctionComponent<AssociationRequestProperties> = ({
   onClickAccept,
-  onClickReject
+  onClickReject,
+  ...request
 }) => {
-  const [openReasonModal, setOpenReasonModal] = useState(false)
+  // sender_address, accepted, pending, handshake_value
+  const {id, date, name, address} = request
+
+  const [openRequestModal, setOpenRequestModal] = useState(false)
 
   return (
     <Card className="flex flex-col font-light md:flex-row md:space-x-2 flex-nowrap">
       <div className="w-full">
-        <UserRequestingUI userName={userName} userId={userId} retrieving={retrieving} />
-        <div className="flex flex-col my-2 text-gray-800">
+        {/* <UserRequestingUI userEmail={userEmail} userId={userId} retrieving={retrieving} /> */}
+        <div className="flex flex-col text-gray-800">
+          <span className="max-w-lg font-light text-gray-400 xl:max-w-5xl">
+            Request #{id} - {dateFormat(new Date(date))}
+          </span>
           <div>
-            <strong>Tensors</strong>: <span className="text-gray-400">{tensors}</span>
+            <strong>Name</strong>: <span className="text-gray-400">{name}</span>
           </div>
           <div>
-            <strong>Dataset</strong>: <span className="text-gray-400">{dataset}</span>
+            <strong>Address</strong>: <span className="text-gray-400">{address}</span>
           </div>
           <span>
-            <strong>Reason</strong>:{' '}
-            <ButtonAsLink aria-label="View permission request reason" onClick={() => setOpenReasonModal(true)}>
-              Click to view
+            <ButtonAsLink aria-label="View request details" onClick={() => setOpenRequestModal(true)}>
+              Details...
             </ButtonAsLink>
           </span>
         </div>
@@ -125,12 +122,12 @@ export const PermissionRequestCard: FunctionComponent<PermissionRequestPropertie
           </ButtonAsIcon>
         </div>
       </div>
-      <RequestReasonModal
-        isOpen={openReasonModal}
-        reason={reason}
+      <ExpandRequestModal
+        isOpen={openRequestModal}
+        request={request}
         onClickAccept={onClickAccept}
         onClickReject={onClickReject}
-        onClose={() => setOpenReasonModal(false)}
+        onClose={() => setOpenRequestModal(false)}
       />
     </Card>
   )

@@ -17,4 +17,21 @@ const ArrowForward: FunctionComponent<{className?: string}> = ({className}) => {
   )
 }
 
-export {ArrowForward}
+const Right: FunctionComponent<{className?: string}> = ({className}) => {
+  return (
+    <svg
+      aria-hidden="true"
+      focusable="false"
+      role="img"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 20 20"
+      className={cn('inline', className)}>
+      <path
+        fill="currentColor"
+        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+      />
+    </svg>
+  )
+}
+
+export {ArrowForward, Right}

@@ -5,6 +5,7 @@ import {AppProviders} from '@/context'
 import {getLayout as getAppLayout} from '@/layouts/app'
 import {CheckAuthRoute} from '@/components/auth-route'
 
+import '@reach/dialog/styles.css'
 import '@/styles/globals.css'
 
 type AppPropsWithLayout = {
@@ -16,7 +17,7 @@ export default function PyGridAdmin({Component, pageProps}: AppPropsWithLayout) 
   return (
     <AppProviders>
       <CheckAuthRoute>{getLayout(<Component {...pageProps} />)}</CheckAuthRoute>
-      <ReactQueryDevtools initialIsOpen={false} />
+      {process.env.ENVIRONMENT === 'development' && <ReactQueryDevtools initialIsOpen={false} />}
     </AppProviders>
   )
 }

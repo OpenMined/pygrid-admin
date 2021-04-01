@@ -12,65 +12,15 @@
   }
 
   a {
-    @apply text-blue-400 cursor-pointer;
+    @apply cursor-pointer;
   }
 
-  button :focus:not(.focus-visible) {
-    outline: none;
-  }
-
-  thead tr th:first-child {
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
-  }
-  thead tr th:last-child {
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
-  }
-
-  tbody tr td:first-child {
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 0px;
-  }
-  tbody tr td:last-child {
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 0px;
+  h1 {
+    @apply text-4xl font-medium text-gray-700 leading-12 md:text-6xl;
   }
 }
 
 @layer components {
-  .btn {
-    @apply h-12 px-6 leading-6 tracking-widest text-center text-white uppercase bg-blue-500 rounded-md whitespace-nowrap;
-  }
-
-  .base-input {
-    @apply h-8 p-4 border border-gray-200;
-  }
-
-  .btn[disabled] {
-    @apply cursor-not-allowed opacity-30;
-  }
-
-  ul.list-horizontal {
-    @apply inline;
-  }
-
-  ul.list-horizontal > li {
-    @apply inline-block;
-  }
-
-  ul.list-horizontal :not(:last-child) {
-    @apply px-3 border-r-2;
-  }
-
-  ul.list-horizontal :first-child {
-    @apply px-0 pr-2;
-  }
-
-  ul.list-horizontal :last-child {
-    @apply px-0 pl-2;
-  }
-
   /* tabs */
   [data-reach-tab-list] {
     @apply my-2;
@@ -83,6 +33,7 @@
   [data-reach-tab-list] :not(:first-child) {
     @apply pl-6;
   }
+
   [data-reach-tab] {
     @apply text-gray-400;
   }
@@ -93,6 +44,59 @@
 
   [data-reach-tab][data-selected] {
     @apply text-gray-800;
+  }
+
+  /* dialog */
+  [data-reach-dialog-content] {
+    @apply w-full sm:w-1/2 sm:max-w-md sm:rounded-lg;
+  }
+
+  .btn {
+    @apply px-4 py-2 text-sm font-bold text-center text-white uppercase bg-indigo-500 leading-6 rounded-md shadow-sm whitespace-nowrap;
+  }
+
+  .btn:hover {
+    @apply bg-indigo-600 shadow-sm;
+  }
+
+  .btn:focus {
+    @apply outline-none ring;
+  }
+
+  .btn:active {
+    @apply bg-indigo-800;
+  }
+
+  .btn:disabled {
+    @apply bg-gray-300 cursor-not-allowed;
+  }
+
+  .btn[variant='ghost'] {
+    @apply bg-transparent shadow-none;
+  }
+
+  .btn[variant='ghost']:hover {
+    @apply bg-gray-50;
+  }
+
+  .tag {
+    @apply inline-flex items-center shadow-sm mt-1 px-2.5 py-0.5 border border-gray-300 leading-5 font-medium rounded-full text-gray-700 text-xs;
+  }
+
+  .subtitle {
+    @apply mt-4 font-light text-gray-400 sm:text-xl;
+  }
+
+  .base-input {
+    @apply block w-full mt-1 text-gray-800 border-gray-300 rounded-md shadow-sm;
+  }
+
+  .base-input:focus {
+    @apply border-indigo-300 ring ring-indigo-200 ring-opacity-50;
+  }
+
+  .base-input::placeholder {
+    @apply text-sm text-gray-500;
   }
 
   .toggle-dot {

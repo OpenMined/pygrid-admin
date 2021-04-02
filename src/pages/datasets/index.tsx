@@ -54,7 +54,6 @@ const Datasets: FunctionComponent = () => {
     })
 
   const submit = (values: Omit<IDataset, 'id' | 'createdAt'>) => {
-    console.log({values})
     const formData = new FormData()
     formData.append('name', values.name)
     formData.append('description', values.description)

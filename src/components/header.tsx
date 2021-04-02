@@ -6,8 +6,6 @@ import type {FunctionComponent} from 'react'
 const Header: FunctionComponent = () => {
   const router = useRouter()
 
-  console.log(router)
-
   let links
 
   if (router.pathname.startsWith('/users')) {

@@ -1,4 +1,4 @@
-import {FunctionComponent, LegacyRef, RefObject, useState} from 'react'
+import {FunctionComponent, useState} from 'react'
 import cn from 'classnames'
 
 interface InputProps {

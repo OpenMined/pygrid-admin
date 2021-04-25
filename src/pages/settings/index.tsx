@@ -1,25 +1,24 @@
-import {Input} from '@/components/forms/input'
-import {Toggle} from '@/components/forms/toggle'
+import {Alert, Input, Select} from '@/components/lib'
 import {ButtonRound} from '@/components/lib'
 import React, {FunctionComponent, useEffect, useState} from 'react'
 import {fetchSettings, updateSettings} from '../api/settings'
+import {useForm} from 'react-hook-form'
+import {useFetch, useMutate} from '@/utils/query-builder'
+import {Notification} from '@/components/notifications'
+import {Spinner} from '@/components/icons/spinner'
 
 const Settings: FunctionComponent = () => {
-  const [settingsData, setSettingsData] = useState(null)
+  const {isLoading, error, isError, data: settings} = useFetch<Array<any>>('/setup')
+  const editSettings = useMutate<Partial<any>, any>({url: `/setup`, method: 'post', invalidate: '/setup'})
+  const {register, handleSubmit} = useForm()
 
   const isValid = true
 
-  useEffect(() => {
-    fetchSettings().then(data => {
-      setSettingsData(data)
-    })
-  }, [])
-
-  const submit = () => {
-    updateSettings(settingsData)
+  const submit = values => {
+    editSettings.mutate(values as Partial<any>, {onSuccess: close})
   }
 
-  if (settingsData != null) {
+  if (settings != null) {
     return (
       <main className="space-y-4">
         <h1 className="text-4xl text-gray-800">Settings</h1>
@@ -29,84 +28,92 @@ const Settings: FunctionComponent = () => {
             <h3 className="text-2xl text-gray-800">General Domain Settings</h3>
             <hr className="mt-3" />
           </div>
-          <div className="grid grid-flow-row md:grid-rows-1 md:grid-cols-3 md:grid-flow-col gap-4">
+          <form onSubmit={handleSubmit(submit)} className="space-y-6">
+            <div className="grid grid-flow-row md:grid-rows-1 md:grid-cols-3 md:grid-flow-col gap-4 ">
+              <Input
+                name="domainName"
+                label="Domain Name"
+                ref={register({required: 'This is required'})}
+                placeholder="OpenMined Domain"
+                defaultValue={settings?.domainName}
+                required
+              />
+              <Input
+                name="awsCredentials"
+                label="Cloud Provider API Credentials"
+                ref={register}
+                placeholder="nilcwjicwiweije90391nmos"
+                defaultValue={settings?.awsCredentials}
+                required
+              />
+              <Input
+                name="cacheStrategy"
+                label="Cache Strategy"
+                ref={register}
+                placeholder="nilcwjicwiweije90391nmos"
+                required
+              />
+            </div>
+            <div>
+              <h3 className="text-2xl text-gray-800">Advanced Settings</h3>
+              <hr className="mt-3" />
+            </div>
             <Input
-              value={settingsData.domainName}
-              required={true}
-              label="Domain Name"
-              placeholder="My Domain"
-              hint="Set your domain name"
-              onChange={value => {
-                setSettingsData({...settingsData, domainName: value})
-              }}
+              name="tensorExpirationPolicy"
+              label="Tensor Expiration Policy"
+              ref={register}
+              placeholder="30"
+              required
             />
-            <Input
-              value={settingsData.awsCredentials}
-              required={true}
-              label="Cloud Provider API Credentials"
-              placeholder="nilcwjicwiweije90391nmos"
-              hint="Set your cloud provider access keys"
-              onChange={value => {
-                setSettingsData({...settingsData, awsCredentials: value})
-              }}
-            />
-            <Input
-              value={settingsData.cacheStrategy}
-              required={true}
-              label="Cache Strategy"
-              placeholder="nilcwjicwiweije90391nmos"
-              hint="Configure the domain's cache strategy"
-              onChange={value => {
-                setSettingsData({...settingsData, cacheStrategy: value})
-              }}
-            />
-          </div>
-          <div>
-            <h3 className="text-2xl text-gray-800">Advanced Settings</h3>
-            <hr className="mt-3" />
-          </div>
-          <Input
-            value={settingsData.tensorExpirationPolicy}
-            required={true}
-            label="Tensor Expiration Policy"
-            placeholder="nilcwjicwiweije90391nmos"
-            hint="Set your tensor expiration policy in days"
-            onChange={value => {
-              setSettingsData({...settingsData, tensorExpirationPolicy: value})
-            }}
-          />
-          <div className="grid grid-flow-row md:grid-rows-1 md:grid-cols-3 md:grid-flow-col gap-4">
-            <Toggle
-              value={settingsData.replicateDb}
-              label="Replicate Database"
-              hint="Set whether you want to replicate db"
-              onChange={value => {
-                setSettingsData({...settingsData, replicateDb: value})
-              }}
-            />
-            <Toggle
-              value={settingsData.autoScale}
-              label="Infraestructure Auto Scale"
-              hint="Allow infraestructure auto scaling"
-              onChange={value => {
-                setSettingsData({...settingsData, autoScale: value})
-              }}
-            />
-            <Toggle
-              value={settingsData.allowUserSignup}
-              label="Allow User Signup"
-              hint="Allow users to signup in your domain"
-              onChange={value => {
-                setSettingsData({...settingsData, allowUserSignup: value})
-              }}
-            />
-          </div>
-          <ButtonRound
-            className="absolute right-0 disabled:opacity-50"
-            {...{disabled: !isValid}}
-            onClick={() => submit()}>
-            Save
-          </ButtonRound>
+
+            <div className="grid grid-flow-row md:grid-rows-1 md:grid-cols-3 md:grid-flow-col gap-4">
+              <Select
+                name="replicateDb"
+                ref={register}
+                label="Replicate Database"
+                defaultValue={settings?.replicateDb}
+                options={[
+                  {value: 1, label: 'Yes'},
+                  {value: 0, label: 'No'}
+                ]}
+              />
+              <Select
+                name="autoScale"
+                ref={register}
+                label="Infraestructure Auto Scale"
+                defaultValue={settings?.autoScale}
+                options={[
+                  {value: 1, label: 'Yes'},
+                  {value: 0, label: 'No'}
+                ]}
+              />
+              <Select
+                name="allowUserSignup"
+                ref={register}
+                label="Allow User Signup"
+                defaultValue={settings?.allowUserSignup}
+                options={[
+                  {value: 1, label: 'Yes'},
+                  {value: 0, label: 'No'}
+                ]}
+              />
+            </div>
+            <div className="flex flex-col text-right lg:flex-row-reverse">
+              <button className="lg:ml-4 btn transition-all ease-in-out duration-700" disabled={editSettings.isLoading}>
+                {editSettings.isLoading ? <Spinner className="w-4 text-white" /> : 'Edit'}
+              </button>
+            </div>
+            {editSettings.isError && (
+              <div>
+                <Alert error="There was an error editing the user" description={editSettings.error.message} />
+              </div>
+            )}
+          </form>
+          {editSettings.isSuccess && (
+            <Notification title="Successfully saved!">
+              <p>User successfully edited</p>
+            </Notification>
+          )}
         </div>
       </main>
     )

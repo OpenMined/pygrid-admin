@@ -1,4 +1,4 @@
-export interface IWorker {
+export interface PyGridWorker {
   id: string
   state: number
   provider: string
@@ -10,7 +10,7 @@ export interface IWorker {
   destroyedAt: Date
 }
 
-export interface IAssociationRequest {
+export interface PyGridAssociationRequest {
   id: string
   date: Date
   name: string

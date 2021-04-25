@@ -1,30 +1,21 @@
-export interface ITensor {
+export interface PygridTensor {
+  name: string
   id: string
-  tags: string[]
-  description: string
-  shape: []
-  type: string
-  manifest: string
-  entities: number
-  permissions: {
-    users: []
-    groups: []
-  }
+  dtype: string
+  shape: string
 }
 
-export interface IDataset {
+export interface PyGridDataset {
   id: string
   name: string
   description: string
   manifest: string
   tags: string[]
   createdAt: Date
-  tensors: {
-    [key: string]: ITensor
-  }
+  data: PygridTensor[]
 }
 
-export interface IRequest {
+export interface PyGridRequest {
   id: number
   userId: number
   userName: string

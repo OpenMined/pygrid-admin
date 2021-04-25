@@ -10,7 +10,7 @@ import {SidePanel} from '@/components/side-panel'
 import {Notification} from '@/components/notifications'
 import {useFetch, useMutate} from '@/utils/query-builder'
 import {Ban} from '@/components/icons/marks'
-import type {PyGridUserRole} from '@/types/users'
+import type {PyGridUserRole} from '@/types'
 
 const UserRoles: FunctionComponent = () => {
   const [role, setRole] = useState<PyGridUserRole>(null)

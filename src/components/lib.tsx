@@ -2,7 +2,7 @@ import type {FunctionComponent, PropsWithChildren, HTMLAttributes, ComponentProp
 import {forwardRef} from 'react'
 import cn from 'classnames'
 import {Search} from '@/components/icons/search'
-import {CloseCircle} from './icons/marks'
+import {CloseCircle, CheckMark, XMark} from './icons/marks'
 
 export const Tag: FunctionComponent<PropsWithChildren<{className?: string}>> = ({className, children}) => (
   <div className={cn('px-2 font-light text-xs text-white bg-blue-500 rounded-sm whitespace-nowrap', className)}>
@@ -80,15 +80,16 @@ export const Alert: FunctionComponent<{
   </div>
 )
 
-export const Input = forwardRef<HTMLInputElement, ComponentProps<'input'> & {label: string}>(function InputField(
-  props,
-  ref
-) {
-  const {name, label} = props
+export const Input = forwardRef<
+  HTMLInputElement,
+  ComponentProps<'input'> & {label: string; hint?: string; error?: string}
+>(function InputField(props, ref) {
+  const {name, label, hint, error} = props
+  console.log(error)
   return (
     <div>
       {label && (
-        <label htmlFor={name} className="block text-sm font-medium text-gray-700">
+        <label htmlFor={name} className="block  ml-1 text-sm font-medium text-gray-700">
           {label}
         </label>
       )}
@@ -97,9 +98,14 @@ export const Input = forwardRef<HTMLInputElement, ComponentProps<'input'> & {lab
         type="text"
         name={name}
         id={name}
-        className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm placeholder-gray-400"
+        className={cn(
+          'block w-full border-gray-300 rounded-md shadow-sm sm:text-sm placeholder-gray-400',
+          error ? 'focus:ring-red-500 focus:border-red-500' : 'focus:ring-indigo-500 focus:border-indigo-500'
+        )}
         {...props}
       />
+      {hint && <p className="text-xs ml-1 mt-1 text-gray-500">{hint}</p>}
+      {error && <p className="text-xs ml-1 mt-1 text-red-500">{error}</p>}
     </div>
   )
 })

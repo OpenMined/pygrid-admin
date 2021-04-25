@@ -1,12 +1,12 @@
 import {FunctionComponent} from 'react'
 import {useQuery} from 'react-query'
-import {IDataset, IRequest} from '@/types/datasets'
+import {PyGridDataset, PyGridRequest} from '@/types'
 import {PermissionRequestCard} from '@/components/pages/datasets/cards/requests'
 import {fetchRequests, fetchDatasets, denyRequest, acceptRequest} from '@/pages/api/datasets'
 
 const Requests: FunctionComponent = () => {
-  const {isLoading, data: requests, error} = useQuery<IRequest[], Error>('requests', fetchRequests)
-  const {data: datasetsData} = useQuery<IDataset[], Error>('datasets', fetchDatasets)
+  const {isLoading, data: requests, error} = useQuery<PyGridRequest[], Error>('requests', fetchRequests)
+  const {data: datasetsData} = useQuery<PyGridDataset[], Error>('datasets', fetchDatasets)
 
   if (!datasetsData) return null
 

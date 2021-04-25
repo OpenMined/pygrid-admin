@@ -1,10 +1,10 @@
 import axios from '@/utils/api-axios'
 
 import {IFetchDataset, IAcceptRequest, IMessageResponse, IFetchTensors} from '@/types/api-responses'
-import {IDataset, IRequest} from '@/types/datasets'
+import {PyGridDataset, PyGridRequest} from '@/types'
 
 export const fetchDatasets = async () => {
-  const {data} = await axios.get<IDataset[]>('/data-centric/datasets')
+  const {data} = await axios.get<PyGridDataset[]>('/data-centric/datasets')
   return data
 }
 
@@ -14,7 +14,7 @@ export const fetchDataset = async (id: string) => {
 }
 
 export const fetchRequests = async () => {
-  const {data} = await axios.get<IRequest[]>('/data-centric/requests')
+  const {data} = await axios.get<PyGridRequest[]>('/data-centric/requests')
   return data
 }
 

@@ -1,5 +1,5 @@
 export interface PyGridSettings {
-  nodeName: string
+  domainName: string
   awsCredentials: string
   gcpCredentials: string
   azureCredentials: string

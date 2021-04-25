@@ -31,13 +31,13 @@ const Settings: FunctionComponent = () => {
           </div>
           <div className="grid grid-flow-row md:grid-rows-1 md:grid-cols-3 md:grid-flow-col gap-4">
             <Input
-              value={settingsData.nodeName}
+              value={settingsData.domainName}
               required={true}
               label="Domain Name"
               placeholder="My Domain"
               hint="Set your domain name"
               onChange={value => {
-                setSettingsData({...settingsData, nodeName: value})
+                setSettingsData({...settingsData, domainName: value})
               }}
             />
             <Input

@@ -1,25 +1,26 @@
 import {Alert, Input, Select} from '@/components/lib'
-import {ButtonRound} from '@/components/lib'
-import React, {FunctionComponent, useEffect, useState} from 'react'
-import {fetchSettings, updateSettings} from '../api/settings'
+import React, {FunctionComponent} from 'react'
 import {useForm} from 'react-hook-form'
 import {useFetch, useMutate} from '@/utils/query-builder'
 import {Notification} from '@/components/notifications'
 import {Spinner} from '@/components/icons/spinner'
+import {PyGridSettings} from '@/types'
 
 const Settings: FunctionComponent = () => {
-  const {isLoading, error, isError, data: settings} = useFetch<Array<any>>('/setup')
-  const editSettings = useMutate<Partial<any>, any>({url: `/setup`, method: 'post', invalidate: '/setup'})
+  const {isLoading, error, isError, data: settings} = useFetch<PyGridSettings>('/setup')
+  const editSettings = useMutate<Partial<PyGridSettings>, PyGridSettings>({
+    url: `/setup`,
+    method: 'post',
+    invalidate: '/setup'
+  })
   const {
     register,
     formState: {errors},
     handleSubmit
   } = useForm()
 
-  const isValid = true
-
   const submit = values => {
-    editSettings.mutate(values as Partial<any>, {onSuccess: close})
+    editSettings.mutate(values as Partial<PyGridSettings>, {onSuccess: close})
   }
 
   return (

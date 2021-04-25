@@ -12,6 +12,7 @@ export const createUser = async ({email, password, role}) => {
     password: password,
     role: role
   }
+  console.log(payload)
 
   const {data} = await axios.post<ICreateUserResponse>('/users', payload)
 

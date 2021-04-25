@@ -10,7 +10,7 @@ import {GroupListItem} from '@/components/pages/users/group-list-item'
 import {SidePanel} from '@/components/side-panel'
 import {Notification} from '@/components/notifications'
 import {useFetch, useMutate} from '@/utils/query-builder'
-import type {PyGridUserGroup} from '@/types/users'
+import type {PyGridUserGroup} from '@/types'
 import {Ban} from '@/components/icons/marks'
 
 const UserGroups: FunctionComponent = () => {

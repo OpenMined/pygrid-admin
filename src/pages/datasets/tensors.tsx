@@ -2,12 +2,12 @@ import type {FunctionComponent} from 'react'
 import {TensorsCard} from '@/components/pages/datasets/cards/tensors'
 import {ArrowForward} from '@/components/icons/arrows'
 import {useQuery} from 'react-query'
-import {IRequest, ITensor} from '@/types/datasets'
+import {PyGridRequest, PygridTensor} from '@/types'
 import {deleteTensor, fetchRequests, fetchTensors} from '@/pages/api/datasets'
 
 const Tensors: FunctionComponent = () => {
-  const {isLoading, data: tensorsData, error} = useQuery<ITensor[], Error>('tensors', fetchTensors)
-  const {isLoading: isLoadingRequests, data: requests} = useQuery<IRequest[], Error>('requests', fetchRequests)
+  const {isLoading, data: tensorsData, error} = useQuery<PygridTensor[], Error>('tensors', fetchTensors)
+  const {isLoading: isLoadingRequests, data: requests} = useQuery<PyGridRequest[], Error>('requests', fetchRequests)
 
   // TODO: Make settings available through context
   const settings = {

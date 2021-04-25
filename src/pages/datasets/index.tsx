@@ -11,28 +11,37 @@ import {useFetch} from '@/utils/query-builder'
 import {useMutation} from 'react-query'
 import type {FunctionComponent} from 'react'
 import {Spinner} from '@/components/icons/spinner'
-import {IDataset} from '@/types/datasets'
+import {PyGridDataset, PyGridRequest} from '@/types'
 import axios from 'axios'
 import {getToken} from '@/lib/auth'
 
 const Datasets: FunctionComponent = () => {
   const {open, close, isOpen} = useDisclosure()
-  const {data: datasets} = useFetch('/dcfl/datasets')
-  const {data: requests} = useFetch('/dcfl/requests')
+  const {isLoading: datasetsLoading, error: datasetsError, data: datasets} = useFetch<Array<PyGridDataset>>(
+    '/data-centric/datasets'
+  )
+  const {isLoading: requestsLoading, error: requestsError, data: requests} = useFetch<Array<PyGridRequest>>(
+    '/data-centric/requests'
+  )
   const [searchText, setSearchText] = useState('')
   const {register, handleSubmit, setValue} = useForm()
 
   const [indexes, setIndexes] = useState([])
   const [counter, setCounter] = useState(0)
 
-  const createDataset = useMutation<Partial<IDataset>, IDataset>(data =>
-    axios.post('/dcfl/datasets', data, {
-      baseURL: process.env.NEXT_PUBLIC_API_URL,
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        token: getToken()
+  const createDataset = useMutation<Partial<PyGridDataset>, PyGridDataset>(data =>
+    axios.post(
+      '/data-centric/datasets',
+      {file: data},
+      {
+        baseURL: process.env.NEXT_PUBLIC_API_URL,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Content-Encoding': 'gzip',
+          token: getToken()
+        }
       }
-    })
+    )
   )
 
   const addTensor = () => {
@@ -45,15 +54,7 @@ const Datasets: FunctionComponent = () => {
     setCounter(prevCounter => prevCounter - 1)
   }
 
-  const toBase64 = file =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader()
-      reader.readAsDataURL(file)
-      reader.onload = () => resolve(reader.result)
-      reader.onerror = error => reject(error)
-    })
-
-  const submit = (values: Omit<IDataset, 'id' | 'createdAt'>) => {
+  const submit = (values: Omit<PyGridDataset, 'id' | 'createdAt'>) => {
     console.log({values})
     const formData = new FormData()
     formData.append('name', values.name)
@@ -64,10 +65,9 @@ const Datasets: FunctionComponent = () => {
       values.tags?.split(',').map(t => t.trim())
     )
     values.tensors?.forEach(async tensor => {
-      const b64 = await handleTensorUpload(tensor.content)
-      formData.append(`${tensor.name}[]`, tensor.content[0], tensor.content[0].filename)
-      formData.append(`${tensor.name}[]`, tensor.manifest)
+      formData.append(tensor.content[0].filename, tensor.content[0], tensor.content[0].filename)
     })
+    console.log(formData)
     createDataset.mutate(formData, {onSuccess: close})
   }
 
@@ -86,11 +86,6 @@ const Datasets: FunctionComponent = () => {
     {title: 'Tensors pending deletion', value: 3, text: 'tensors', link: '/datasets/tensors'}
   ]
 
-  const handleTensorUpload = async files => {
-    const base = await toBase64(files[0])
-    return base
-  }
-
   const DatasetsList = ({datasets}) => {
     if (datasets.length > 0) {
       return (
@@ -98,7 +93,7 @@ const Datasets: FunctionComponent = () => {
           {datasets.map(dataset => (
             <div key={`dataset-${dataset.name}`}>
               <a href={`/datasets/${dataset.name}`}>
-                <DatasetCard {...dataset} numberTensors={Object.keys(dataset.tensors).length} />
+                <DatasetCard {...dataset} numberTensors={2} />
               </a>
             </div>
           ))}
@@ -148,7 +143,7 @@ const Datasets: FunctionComponent = () => {
           <SearchBar placeholder={'Search Datasets'} search={searchText} onChange={text => setSearchText(text)} />
           <section className="space-y-6">
             <DatasetsList
-              datasets={datasets.filter(item => item.name.toLowerCase().includes(searchText.toLowerCase()))}
+              datasets={datasets.filter(item => item.manifest.toLowerCase().includes(searchText.toLowerCase()))}
             />
           </section>
         </>
@@ -175,8 +170,6 @@ const Datasets: FunctionComponent = () => {
                     name={fieldName}
                     key={fieldName}>
                     <p className="block pb-2 font-medium text-gray-700 text-md">Tensor #{index}:</p>
-                    <Input label="Name:" type="text" name={`${fieldName}.name`} ref={register} />
-                    <Input label="Manifest" type="text" name={`${fieldName}.manifest`} ref={register} />
                     <Input label="Content:" type="file" name={`${fieldName}.content`} ref={register} />
                     <button className="mt-2 btn" type="button" onClick={removeTensor(index)}>
                       Remove

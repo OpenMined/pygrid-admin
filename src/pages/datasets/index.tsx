@@ -11,14 +11,14 @@ import {useFetch} from '@/utils/query-builder'
 import {useMutation} from 'react-query'
 import type {FunctionComponent} from 'react'
 import {Spinner} from '@/components/icons/spinner'
-import {IDataset} from '@/types/datasets'
+import {IDataset, IRequest} from '@/types/datasets'
 import axios from 'axios'
 import {getToken} from '@/lib/auth'
 
 const Datasets: FunctionComponent = () => {
   const {open, close, isOpen} = useDisclosure()
-  const {data: datasets} = useFetch('/dcfl/datasets')
-  const {data: requests} = useFetch('/dcfl/requests')
+  const {isLoading: datasetsLoading, error: datasetsError, data: datasets} = useFetch<Array<IDataset>>('/data-centric/datasets')
+  const {isLoading: requestsLoading, error: requestsError, data: requests} = useFetch<Array<IRequest>>('/data-centric/requests')
   const [searchText, setSearchText] = useState('')
   const {register, handleSubmit, setValue} = useForm()
 
@@ -26,7 +26,7 @@ const Datasets: FunctionComponent = () => {
   const [counter, setCounter] = useState(0)
 
   const createDataset = useMutation<Partial<IDataset>, IDataset>(data =>
-    axios.post('/dcfl/datasets', data, {
+    axios.post('/data-centric/datasets', data, {
       baseURL: process.env.NEXT_PUBLIC_API_URL,
       headers: {
         'Content-Type': 'multipart/form-data',

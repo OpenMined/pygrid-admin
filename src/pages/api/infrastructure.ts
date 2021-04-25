@@ -1,23 +1,23 @@
 import axios from '@/utils/api-axios'
-import {IAssociationRequest, IWorker} from '@/types/infrastructure'
+import {PyGridAssociationRequest, PyGridWorker} from '@/types'
 
 export const fetchWorkers = async () => {
-  const {data} = await axios.get<IWorker[]>('/data-centric/workers')
+  const {data} = await axios.get<PyGridWorker[]>('/data-centric/workers')
   return data
 }
 
 export const fetchWorker = async (id: string) => {
-  const {data} = await axios.get<IWorker>(`/data-centric/workers/${id}`)
+  const {data} = await axios.get<PyGridWorker>(`/data-centric/workers/${id}`)
   return data
 }
 
 export const deleteWorker = async (id: string) => {
-  const {data} = await axios.delete<IWorker>(`/data-centric/workers/${id}`)
+  const {data} = await axios.delete<PyGridWorker>(`/data-centric/workers/${id}`)
   return data
 }
 
 export const fetchAssociationRequests = async () => {
-  const {data} = await axios.get<IAssociationRequest[]>('/association-requests/')
+  const {data} = await axios.get<PyGridAssociationRequest[]>('/association-requests/')
   return data
 }
 

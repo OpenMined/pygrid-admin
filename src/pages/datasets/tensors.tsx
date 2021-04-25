@@ -9,18 +9,6 @@ const Tensors: FunctionComponent = () => {
   const {isLoading, data: tensorsData, error} = useQuery<PygridTensor[], Error>('tensors', fetchTensors)
   const {isLoading: isLoadingRequests, data: requests} = useQuery<PyGridRequest[], Error>('requests', fetchRequests)
 
-  // TODO: Make settings available through context
-  const settings = {
-    tensorsExpiry: '30 days'
-  }
-
-  const fakeProps = {
-    userAvatarURL: 'https://ca.slack-edge.com/T6963A864-UP9PYUFJT-614414739a77-512',
-    userName: 'Hericles Emanuel',
-    userId: 'asdasd19212312392',
-    downloadedAt: '22 days'
-  }
-
   if (isLoading || isLoadingRequests || error) return null
 
   return (
@@ -45,7 +33,7 @@ const Tensors: FunctionComponent = () => {
         <a href="/settings" target="blank">
           your settings
         </a>
-        , tensors are automatically deleted <strong>{settings.tensorsExpiry}</strong> after being downloaded.
+        , tensors are automatically deleted <strong>{settings?.tensorsExpiry}</strong> after being downloaded.
       </p>
       <section className="grid grid-cols-1 gap-4 xl:gap-4">
         <div className="space-y-6 xl:space-y-8">
@@ -54,7 +42,6 @@ const Tensors: FunctionComponent = () => {
             tensorsData.map(tensor => (
               <TensorsCard
                 {...tensor}
-                {...fakeProps}
                 key={`tensor-${tensor.id}`}
                 onDelete={() => deleteTensor(tensor.id).then(msg => alert(msg))}
               />

@@ -20,7 +20,7 @@ const Datasets: FunctionComponent = () => {
   const {data: datasets} = useFetch('/dcfl/datasets')
   const {data: requests} = useFetch('/dcfl/requests')
   const [searchText, setSearchText] = useState('')
-  const {register, handleSubmit, setValue} = useForm()
+  const {register, handleSubmit} = useForm()
 
   const [indexes, setIndexes] = useState([])
   const [counter, setCounter] = useState(0)
@@ -45,13 +45,13 @@ const Datasets: FunctionComponent = () => {
     setCounter(prevCounter => prevCounter - 1)
   }
 
-  const toBase64 = file =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader()
-      reader.readAsDataURL(file)
-      reader.onload = () => resolve(reader.result)
-      reader.onerror = error => reject(error)
-    })
+  // const toBase64 = file =>
+  //   new Promise((resolve, reject) => {
+  //     const reader = new FileReader()
+  //     reader.readAsDataURL(file)
+  //     reader.onload = () => resolve(reader.result)
+  //     reader.onerror = error => reject(error)
+  //   })
 
   const submit = (values: Omit<IDataset, 'id' | 'createdAt'>) => {
     console.log({values})
@@ -64,7 +64,7 @@ const Datasets: FunctionComponent = () => {
       values.tags?.split(',').map(t => t.trim())
     )
     values.tensors?.forEach(async tensor => {
-      const b64 = await handleTensorUpload(tensor.content)
+      // const b64 = await handleTensorUpload(tensor.content)
       formData.append(`${tensor.name}[]`, tensor.content[0], tensor.content[0].filename)
       formData.append(`${tensor.name}[]`, tensor.manifest)
     })
@@ -86,10 +86,10 @@ const Datasets: FunctionComponent = () => {
     {title: 'Tensors pending deletion', value: 3, text: 'tensors', link: '/datasets/tensors'}
   ]
 
-  const handleTensorUpload = async files => {
-    const base = await toBase64(files[0])
-    return base
-  }
+  // const handleTensorUpload = async files => {
+  //   const base = await toBase64(files[0])
+  //   return base
+  // }
 
   const DatasetsList = ({datasets}) => {
     if (datasets.length > 0) {

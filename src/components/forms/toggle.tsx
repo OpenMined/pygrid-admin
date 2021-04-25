@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import {FunctionComponent, useState} from 'react'
+import {FunctionComponent} from 'react'
 import {CheckMark, XMark} from '../icons/marks'
 
 interface InputProps {

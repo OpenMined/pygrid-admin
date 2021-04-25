@@ -1,5 +1,5 @@
-export interface ISettings {
-  nodeName: string
+export interface PyGridSettings {
+  domainName: string
   awsCredentials: string
   gcpCredentials: string
   azureCredentials: string

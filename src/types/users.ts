@@ -1,29 +1,4 @@
-export interface IUser {
-  id: number
-  email: string
-  privateKey: string
-  role: number
-}
-
-export interface IRole {
-  id: string
-  name: string
-  canTriageRequests: boolean
-  canEditSettings: boolean
-  canCreateUsers: boolean
-  canCreateGroups: boolean
-  canEditRoles: boolean
-  canManageInfrastructure: boolean
-  canUploadData: boolean
-}
-
-export interface IGroup {
-  id: string
-  name: string
-  users: string[]
-}
-
-export type UserPermissions =
+export type PyGridUserPermissions =
   | 'canTriageRequests'
   | 'canEditSettings'
   | 'canCreateUsers'
@@ -33,7 +8,7 @@ export type UserPermissions =
   | 'canUploadData'
 
 type SetUserPermissions = {
-  [K in UserPermissions]: boolean
+  [K in PyGridUserPermissions]: boolean
 }
 
 export type PyGridUserRole = {

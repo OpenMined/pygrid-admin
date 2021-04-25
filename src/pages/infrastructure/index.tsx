@@ -12,7 +12,7 @@ import {SearchBar} from '@/components/lib'
 import {AssociationRequestCard} from '@/components/pages/infrastructure/cards/requests'
 
 import '@reach/dialog/styles.css'
-import {IAssociationRequest, IWorker} from '@/types/infrastructure'
+import {PyGridAssociationRequest, PyGridWorker} from '@/types'
 import {useQuery} from 'react-query'
 
 const DeleteWorkerModal = ({isOpen, onClose, onClickAccept}) => (
@@ -59,14 +59,14 @@ const Infrastructure: FunctionComponent = () => {
   const [selectedWorker, setSelectedWorker] = useState('')
   const [openDeleteWorkerModal, setOpenDeleteWorkerModal] = useState(false)
 
-  const {isLoading: isLoadingWorkers, data: workers, error: workersError} = useQuery<IWorker[], Error>(
+  const {isLoading: isLoadingWorkers, data: workers, error: workersError} = useQuery<PyGridWorker[], Error>(
     'workers',
     fetchWorkers
   )
-  const {isLoading: isLoadingRequests, data: requests, error: requestsError} = useQuery<IAssociationRequest[], Error>(
-    'requests',
-    fetchAssociationRequests
-  )
+  const {isLoading: isLoadingRequests, data: requests, error: requestsError} = useQuery<
+    PyGridAssociationRequest[],
+    Error
+  >('requests', fetchAssociationRequests)
 
   const TableHead = () => {
     const headers = ['ID', 'State', 'Provider', 'Region', 'Instance Type', 'Created At', 'Deleted At', '']

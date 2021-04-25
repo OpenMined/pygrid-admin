@@ -1,64 +1,62 @@
-import {Input} from '@/components/forms/input'
-import {Toggle} from '@/components/forms/toggle'
-import {ButtonRound} from '@/components/lib'
-import React, {FunctionComponent, useEffect, useState} from 'react'
-import {fetchSettings, updateSettings} from '../api/settings'
+import {Alert, Input, Select} from '@/components/lib'
+import React, {FunctionComponent} from 'react'
+import {useForm} from 'react-hook-form'
+import {useFetch, useMutate} from '@/utils/query-builder'
+import {Notification} from '@/components/notifications'
+import {Spinner} from '@/components/icons/spinner'
+import {PyGridSettings} from '@/types'
 
 const Settings: FunctionComponent = () => {
-  const [settingsData, setSettingsData] = useState(null)
+  const {isLoading, error, isError, data: settings} = useFetch<PyGridSettings>('/setup')
+  const editSettings = useMutate<Partial<PyGridSettings>, PyGridSettings>({
+    url: `/setup`,
+    method: 'post',
+    invalidate: '/setup'
+  })
+  const {
+    register,
+    formState: {errors},
+    handleSubmit
+  } = useForm()
 
-  const isValid = true
-
-  useEffect(() => {
-    fetchSettings().then(data => {
-      setSettingsData(data)
-    })
-  }, [])
-
-  const submit = () => {
-    updateSettings(settingsData)
+  const submit = values => {
+    editSettings.mutate(values as Partial<PyGridSettings>, {onSuccess: close})
   }
 
-  if (settingsData != null) {
-    return (
-      <main className="space-y-4">
-        <h1 className="text-4xl text-gray-800">Settings</h1>
-        <p className="text-xl font-light text-gray-400 pb-8">Configure your domain</p>
-        <div className="relative space-y-6">
-          <div>
-            <h3 className="text-2xl text-gray-800">General Domain Settings</h3>
-            <hr className="mt-3" />
-          </div>
-          <div className="grid grid-flow-row md:grid-rows-1 md:grid-cols-3 md:grid-flow-col gap-4">
+  return (
+    <main className="space-y-4">
+      <h1 className="text-4xl text-gray-800">Settings</h1>
+      <p className="text-xl font-light text-gray-400 pb-8">Configure your domain</p>
+      <div className="relative space-y-6">
+        <div>
+          <h3 className="text-2xl text-gray-800">General Domain Settings</h3>
+          <hr className="mt-3" />
+        </div>
+        <form onSubmit={handleSubmit(submit)} className="space-y-6">
+          <div className="grid grid-flow-row md:grid-rows-1 md:grid-cols-3 md:grid-flow-col gap-4 ">
             <Input
-              value={settingsData.nodeName}
-              required={true}
+              name="domainName"
               label="Domain Name"
-              placeholder="My Domain"
-              hint="Set your domain name"
-              onChange={value => {
-                setSettingsData({...settingsData, nodeName: value})
-              }}
+              ref={register({required: 'This is required'})}
+              placeholder="OpenMined Domain"
+              defaultValue={settings?.domainName}
+              hint="The public name for your domain"
+              error={errors.domainName?.message}
             />
             <Input
-              value={settingsData.awsCredentials}
-              required={true}
+              name="awsCredentials"
               label="Cloud Provider API Credentials"
+              ref={register({required: 'This is required'})}
               placeholder="nilcwjicwiweije90391nmos"
-              hint="Set your cloud provider access keys"
-              onChange={value => {
-                setSettingsData({...settingsData, awsCredentials: value})
-              }}
+              defaultValue={settings?.awsCredentials}
+              error={errors.awsCredentials?.message}
             />
             <Input
-              value={settingsData.cacheStrategy}
-              required={true}
+              name="cacheStrategy"
               label="Cache Strategy"
+              ref={register({required: 'This is required'})}
               placeholder="nilcwjicwiweije90391nmos"
-              hint="Configure the domain's cache strategy"
-              onChange={value => {
-                setSettingsData({...settingsData, cacheStrategy: value})
-              }}
+              error={errors.tensorExpirationPolicy?.message}
             />
           </div>
           <div>
@@ -66,53 +64,65 @@ const Settings: FunctionComponent = () => {
             <hr className="mt-3" />
           </div>
           <Input
-            value={settingsData.tensorExpirationPolicy}
-            required={true}
+            name="tensorExpirationPolicy"
             label="Tensor Expiration Policy"
-            placeholder="nilcwjicwiweije90391nmos"
-            hint="Set your tensor expiration policy in days"
-            onChange={value => {
-              setSettingsData({...settingsData, tensorExpirationPolicy: value})
-            }}
+            ref={register({required: 'This is required'})}
+            placeholder="30"
+            hint="Expiration time in seconds for Tensors"
+            error={errors.tensorExpirationPolicy?.message}
           />
+
           <div className="grid grid-flow-row md:grid-rows-1 md:grid-cols-3 md:grid-flow-col gap-4">
-            <Toggle
-              value={settingsData.replicateDb}
+            <Select
+              name="replicateDb"
+              ref={register}
               label="Replicate Database"
-              hint="Set whether you want to replicate db"
-              onChange={value => {
-                setSettingsData({...settingsData, replicateDb: value})
-              }}
+              defaultValue={settings?.replicateDb}
+              options={[
+                {value: 1, label: 'Yes'},
+                {value: 0, label: 'No'}
+              ]}
             />
-            <Toggle
-              value={settingsData.autoScale}
+            <Select
+              name="autoScale"
+              ref={register}
               label="Infraestructure Auto Scale"
-              hint="Allow infraestructure auto scaling"
-              onChange={value => {
-                setSettingsData({...settingsData, autoScale: value})
-              }}
+              defaultValue={settings?.autoScale}
+              options={[
+                {value: 1, label: 'Yes'},
+                {value: 0, label: 'No'}
+              ]}
             />
-            <Toggle
-              value={settingsData.allowUserSignup}
+            <Select
+              name="allowUserSignup"
+              ref={register}
               label="Allow User Signup"
-              hint="Allow users to signup in your domain"
-              onChange={value => {
-                setSettingsData({...settingsData, allowUserSignup: value})
-              }}
+              defaultValue={settings?.allowUserSignup}
+              options={[
+                {value: 1, label: 'Yes'},
+                {value: 0, label: 'No'}
+              ]}
             />
           </div>
-          <ButtonRound
-            className="absolute right-0 disabled:opacity-50"
-            {...{disabled: !isValid}}
-            onClick={() => submit()}>
-            Save
-          </ButtonRound>
-        </div>
-      </main>
-    )
-  } else {
-    return null
-  }
+          <div className="flex flex-col text-right lg:flex-row-reverse">
+            <button className="lg:ml-4 btn transition-all ease-in-out duration-700" disabled={editSettings.isLoading}>
+              {editSettings.isLoading ? <Spinner className="w-4 text-white" /> : 'Edit'}
+            </button>
+          </div>
+          {editSettings.isError && (
+            <div>
+              <Alert error="There was an error editing the user" description={editSettings.error.message} />
+            </div>
+          )}
+        </form>
+        {editSettings.isSuccess && (
+          <Notification title="Successfully saved!">
+            <p>Settings successfully edited</p>
+          </Notification>
+        )}
+      </div>
+    </main>
+  )
 }
 
 export default Settings

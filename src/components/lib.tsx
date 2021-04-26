@@ -2,7 +2,7 @@ import type {FunctionComponent, PropsWithChildren, HTMLAttributes, ComponentProp
 import React, {forwardRef} from 'react'
 import cn from 'classnames'
 import {Search} from '@/components/icons/search'
-import {CloseCircle, CheckMark, XMark} from './icons/marks'
+import {CloseCircle} from './icons/marks'
 
 export const Tag: FunctionComponent<PropsWithChildren<{className?: string}>> = ({className, children}) => (
   <div className={cn('px-2 font-light text-xs text-white bg-blue-500 rounded-sm whitespace-nowrap', className)}>

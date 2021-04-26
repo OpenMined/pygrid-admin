@@ -22,24 +22,11 @@ const Datasets = () => {
   const {isLoading: tensorsLoading, data: tensors, error: tensorsError} = useFetch('/data-centric/tensors')
   const [searchText, setSearchText] = useState('')
   const {register, handleSubmit, watch} = useForm({mode: 'onBlur'})
+  const [loading, setLoading] = useState(false)
+  const [createError, setCreateError] = useState(null)
   const queryClient = useQueryClient()
 
-  const createDataset = useMutation(data =>
-    api.post('/data-centric/datasets', data, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        token: getToken()
-      }
-    })
-  )
-
-  const closePanel = () => {
-    close()
-    createDataset.reset()
-  }
-
   const datafile = watch('file')
-  console.log(datafile)
 
   const DatasetsList = ({datasets}) => {
     if (datasets.length > 0) {
@@ -61,12 +48,17 @@ const Datasets = () => {
 
   function submit(values) {
     const {file} = values
-    console.log(file)
     const formData = new FormData()
     formData.append('file', file[0])
+    setLoading(true)
     api
       .post('/data-centric/datasets', formData, {headers: {'Content-Type': 'multipart/form-data'}})
-      .then(() => queryClient.invalidateQueries('/data-centric/datasets'))
+      .then(() => {
+        queryClient.invalidateQueries('/data-centric/datasets')
+        close()
+      })
+      .catch(err => setCreateError(err))
+      .finally(() => setLoading(false))
   }
 
   return (
@@ -144,7 +136,7 @@ const Datasets = () => {
           </section>
         </>
       )}
-      <SidePanel isOpen={isOpen} close={closePanel}>
+      <SidePanel isOpen={isOpen} close={close}>
         <article className="p-4 pr-8 space-y-6">
           <section>
             <header>
@@ -195,15 +187,13 @@ const Datasets = () => {
                 hint="One tag per line"
               />
               <div className="w-full sm:text-right">
-                <button
-                  className="w-full btn lg:w-auto transition-all ease-in-out duration-700"
-                  disabled={createDataset.isLoading}>
-                  {createDataset.isLoading ? <Spinner className="w-4 text-white" /> : 'Create a new Dataset'}
+                <button className="w-full btn lg:w-auto transition-all ease-in-out duration-700" disabled={loading}>
+                  {loading ? <Spinner className="w-4 text-white" /> : 'Create a new Dataset'}
                 </button>
               </div>
-              {createDataset.isError && (
+              {createError && (
                 <div>
-                  <Alert error="There was an error creating the dataset" description={createDataset.error.message} />
+                  <Alert error="There was an error creating the dataset" description={createError.error?.message} />
                 </div>
               )}
             </section>

@@ -50,9 +50,9 @@ const Datasets = () => {
       return (
         <>
           {datasets.map(dataset => (
-            <div key={`dataset-${dataset.name}`}>
-              <a href={`/datasets/${dataset.name}`}>
-                <DatasetCard {...dataset} numberTensors={Object.keys(dataset.tensors).length} />
+            <div key={`dataset-${dataset.id}`}>
+              <a href={`/datasets/${dataset.id}`}>
+                <DatasetCard {...dataset} numberTensors={Object.keys(dataset?.data).length} />
               </a>
             </div>
           ))}
@@ -102,7 +102,7 @@ const Datasets = () => {
           <SearchBar placeholder={'Search Datasets'} search={searchText} onChange={text => setSearchText(text)} />
           <section className="space-y-6">
             <DatasetsList
-              datasets={datasets.filter(item => item.name?.toLowerCase().includes(searchText.toLowerCase()))}
+              datasets={datasets.filter(item => item.id?.toLowerCase().includes(searchText.toLowerCase()))}
             />
           </section>
         </>
@@ -117,7 +117,6 @@ const Datasets = () => {
           </section>
           <form onSubmit={handleSubmit(() => {})}>
             <section className="flex flex-col space-y-4">
-              <Input name="name" label="Dataset Name" ref={register} placeholder="Name" />
               <Input name="description" label="Description" ref={register} placeholder="Description" type="text" />
               <Input name="manifest" label="Manifest" ref={register} placeholder="Manifest" type="text" />
               <Input name="tags" label="Tags" ref={register} placeholder="Tags" type="text" />

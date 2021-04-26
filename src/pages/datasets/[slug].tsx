@@ -2,8 +2,8 @@ import {useFetch} from '@/utils/query-builder'
 import {Tag, ButtonGhost} from '@/components/lib'
 import {Tabs, TabList, Tab, TabPanels, TabPanel} from '@reach/tabs'
 
-function Dataset({slug = '064552b5-13bd-4ad7-b521-9f79e3e92ba3'}: {slug?: string}) {
-  const {isLoading, data: dataset, error} = useFetch(`/data-centric/datasets/${slug}`)
+function Dataset({slug}: {slug?: string}) {
+  const {isLoading, data: dataset, error} = useFetch(`/data-centric/datasets/b61fd19c-92d1-4fbf-a5d8-3418e8711227`)
   const {id, description, tags, manifest, data} = dataset ?? {}
 
   return (

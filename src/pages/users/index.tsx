@@ -11,13 +11,16 @@ import {SidePanel} from '@/components/side-panel'
 import {Notification} from '@/components/notifications'
 import {useFetch, useMutate} from '@/utils/query-builder'
 import {Ban} from '@/components/icons/marks'
+import api from '@/utils/api-axios'
 import type {PyGridUser, PyGridUserRole, PyGridUserGroup} from '@/types'
 import type {FunctionComponent} from 'react'
+import {useQueryClient} from 'react-query'
 
 const Users: FunctionComponent = () => {
   const [user, setUser] = useState<PyGridUser>(null)
   const {open, close, isOpen} = useDisclosure()
   const {register, handleSubmit} = useForm()
+  const queryClient = useQueryClient()
   const {isLoading, error, isError, data: users} = useFetch<Array<PyGridUser>>('/users')
   const {isLoading: rolesLoading, error: rolesError, data: roles} = useFetch<Array<PyGridUserRole>>('/roles')
   const {isLoading: groupsLoading, error: groupsError, data: groups} = useFetch<Array<PyGridUserGroup>>('/groups')
@@ -29,9 +32,23 @@ const Users: FunctionComponent = () => {
     invalidate: '/users'
   })
 
-  const submit = (values: Omit<PyGridUser, 'id' | 'createdAt'>) => {
-    createUser.mutate({...values, role: Number(values.role)}, {onSuccess: close})
+  const submit = (values: Partial<PyGridUser>) => {
+    console.log({values})
+    const {email, password, role} = values
+    api.post('/users', {email, password}).then(res =>
+      api('/users').then(us => {
+        console.log(us)
+        const usr = us?.data?.find(user => user.email === email)
+        if (usr) {
+          return api.put(`/users/${usr.id}/role`, {role: Number(role)}).then(() => {
+            queryClient.invalidateQueries('/users')
+            close()
+          })
+        }
+      })
+    )
   }
+
   const edit = values => {
     editUser.mutate(values as Partial<PyGridUser>, {onSuccess: () => setUser(null)})
   }
@@ -148,17 +165,17 @@ const Users: FunctionComponent = () => {
                 required
                 options={roles?.map(role => ({value: role.id, label: role.name}))}
               />
-              <p className="text-sm text-gray-400">
-                User groups are used to easily manage permissions and access control
-              </p>
-              <Select
-                name="groups"
-                label="User group (optional)"
-                ref={register}
-                placeholder="No group selected"
-                defaultValue=""
-                options={groups?.map(group => ({value: group.id, label: group.name}))}
-              />
+              {/* <p className="text-sm text-gray-400"> */}
+              {/*   User groups are used to easily manage permissions and access control */}
+              {/* </p> */}
+              {/* <Select */}
+              {/*   name="groups" */}
+              {/*   label="User group (optional)" */}
+              {/*   ref={register} */}
+              {/*   placeholder="No group selected" */}
+              {/*   defaultValue="" */}
+              {/*   options={groups?.map(group => ({value: group.id, label: group.name}))} */}
+              {/* /> */}
               <div className="w-full sm:text-right">
                 <button
                   className="w-full btn lg:w-auto transition-all ease-in-out duration-700"

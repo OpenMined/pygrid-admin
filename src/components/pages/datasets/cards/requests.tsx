@@ -4,7 +4,7 @@ import {CheckMark, XMark} from '@/components/icons/marks'
 import {MissingUserAvatar} from '@/components/icons/user'
 import {useDisclosure} from 'react-use-disclosure'
 
-function RequestDialog({open, onClose, request}) {
+function RequestDialog({open, onClose, request, accept, deny}) {
   return (
     <Transition
       show={open}
@@ -30,7 +30,7 @@ function RequestDialog({open, onClose, request}) {
               <h3 className="font-medium text-gray-600">Object metadata</h3>
               <div className="text-gray-400">
                 <p>
-                  <span className="text-gray-600">id:</span> {request.objectId}
+                  <span className="text-gray-600">id:</span> f2e43c1def6c417f9030901c79598703
                 </p>
                 <p>
                   <span className="text-gray-600">type:</span> {request.objectType}
@@ -47,11 +47,14 @@ function RequestDialog({open, onClose, request}) {
               <h3 className="font-medium text-gray-600">Request reason</h3>
               <p className="text-gray-400">{request.reason}</p>
             </div>
-            <div className="flex justify-end space-x-4">
-              <button className="bg-green-700 hover:bg-green-500 focus:ring-green-700 btn" onClick={onClose}>
+            <button className="sr-only">kk</button>
+            <div className="hidden flex justify-end space-x-4">
+              <button className="bg-green-700 hover:bg-green-500 focus:ring-green-700 btn" onClick={accept}>
                 Accept
               </button>
-              <button className="bg-gray-700 hover:bg-gray-500 focus:ring-gray-500 btn" onClick={onClose}>
+              <button
+                className="text-red-700 bg-white shadow-none hover:text-red-500 hover:bg-white active:bg-white focus:ring-red-500 btn"
+                onClick={deny}>
                 Reject
               </button>
             </div>
@@ -66,7 +69,7 @@ export const PermissionRequestCard = ({request, dataset, accept, deny}) => {
   const {isOpen, open, close} = useDisclosure(false)
 
   return (
-    <Card className="flex font-light flex-row space-x-2 flex-nowrap">
+    <Card className="flex flex-row font-light space-x-2 flex-nowrap">
       <div className="w-full">
         <div className="flex flex-row items-center">
           <MissingUserAvatar className="inline w-6 h-6 mr-2 rounded-full" />
@@ -77,7 +80,7 @@ export const PermissionRequestCard = ({request, dataset, accept, deny}) => {
         </div>
         <div className="flex flex-col my-4 text-gray-800">
           <div>
-            <strong>Tensor</strong>: <span className="text-gray-500">{request.objectId}</span>
+            <strong>Tensor</strong>: <span className="text-gray-500">f2e43c1def6c417f9030901c79598703</span>
           </div>
           <div>
             <strong>Dataset</strong>: <span className="text-gray-500">{dataset}</span>
@@ -105,7 +108,7 @@ export const PermissionRequestCard = ({request, dataset, accept, deny}) => {
           </button>
         </div>
       )}
-      <RequestDialog open={isOpen} onClose={close} request={request} />
+      <RequestDialog open={isOpen} onClose={close} request={request} accept={accept} deny={deny} />
     </Card>
   )
 }

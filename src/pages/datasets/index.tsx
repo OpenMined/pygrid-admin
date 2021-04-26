@@ -73,8 +73,13 @@ const Datasets = () => {
         <div className="flex flex-row justify-between max-w-xs text-sm text-gray-600 uppercase leading-6 hover:text-gray-800 focus:text-gray-800 active:text-gray-800">
           <Link href="/datasets/requests">
             <a>
-              {requestsLoading ? <Spinner className="h-3 mr-4" /> : requests?.length} Request
-              {requests?.length !== 1 && 's'}
+              {requestsLoading ? (
+                <Spinner className="h-3 mr-4" />
+              ) : (
+                requests?.filter(r => r.status === 'pending').length
+              )}{' '}
+              Request
+              {requests?.filter(r => r.status === 'pending').length !== 1 && 's'}
               <Right className="w-4 h-4" />
             </a>
           </Link>

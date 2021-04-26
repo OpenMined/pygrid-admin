@@ -1,5 +1,5 @@
 import type {FunctionComponent, PropsWithChildren, HTMLAttributes, ComponentProps} from 'react'
-import {forwardRef} from 'react'
+import React, {forwardRef} from 'react'
 import cn from 'classnames'
 import {Search} from '@/components/icons/search'
 import {CloseCircle, CheckMark, XMark} from './icons/marks'
@@ -80,8 +80,6 @@ export const Alert: FunctionComponent<{
   </div>
 )
 
-const Comp = forwardRef((props, ref) => (props.type === 'textarea' ? <textarea {...props} /> : <input {...props} />))
-
 export const Input = forwardRef<
   HTMLInputElement,
   ComponentProps<'textarea'> & ComponentProps<'input'> & {label?: string; hint?: string; error?: string}
@@ -95,17 +93,31 @@ export const Input = forwardRef<
           {label}
         </label>
       )}
-      <Comp
-        ref={ref}
-        type={type}
-        name={name}
-        id={name}
-        className={cn(
-          'block w-full border-gray-300 rounded-md shadow-sm sm:text-sm placeholder-gray-400',
-          error ? 'focus:ring-red-500 focus:border-red-500' : 'focus:ring-indigo-500 focus:border-indigo-500'
-        )}
-        {...props}
-      />
+      {type === 'textarea' ? (
+        <textarea
+          ref={ref}
+          type={type}
+          name={name}
+          id={name}
+          className={cn(
+            'block w-full border-gray-300 rounded-md shadow-sm sm:text-sm placeholder-gray-400',
+            error ? 'focus:ring-red-500 focus:border-red-500' : 'focus:ring-indigo-500 focus:border-indigo-500'
+          )}
+          {...props}
+        />
+      ) : (
+        <input
+          ref={ref}
+          type={type}
+          name={name}
+          id={name}
+          className={cn(
+            'block w-full border-gray-300 rounded-md shadow-sm sm:text-sm placeholder-gray-400',
+            error ? 'focus:ring-red-500 focus:border-red-500' : 'focus:ring-indigo-500 focus:border-indigo-500'
+          )}
+          {...props}
+        />
+      )}
       {hint && <p className="mt-1 ml-1 text-xs text-gray-400">{hint}</p>}
       {error && <p className="mt-1 ml-1 text-xs text-red-800">{error}</p>}
     </div>

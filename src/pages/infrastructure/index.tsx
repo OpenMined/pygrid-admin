@@ -1,19 +1,15 @@
-import {FunctionComponent, useState} from 'react'
+import {useCallback, useState} from 'react'
 import {Tabs, TabList, Tab, TabPanels, TabPanel} from '@reach/tabs'
 import Dialog from '@reach/dialog'
-import {
-  deleteWorker,
-  fetchAssociationRequests,
-  fetchWorkers,
-  respondAssociationRequest
-} from '@/pages/api/infrastructure'
 import {XMark} from '@/components/icons/marks'
 import {SearchBar} from '@/components/lib'
 import {AssociationRequestCard} from '@/components/pages/infrastructure/cards/requests'
+import {useFetch} from '@/utils/query-builder'
+import api from '@/utils/api-axios'
+import type {PyGridAssociationRequest, PyGridWorker} from '@/types'
 
 import '@reach/dialog/styles.css'
-import {PyGridAssociationRequest, PyGridWorker} from '@/types'
-import {useQuery} from 'react-query'
+import {useQueryClient} from 'react-query'
 
 const DeleteWorkerModal = ({isOpen, onClose, onClickAccept}) => (
   <Dialog
@@ -24,18 +20,18 @@ const DeleteWorkerModal = ({isOpen, onClose, onClickAccept}) => (
     <div className="flex items-start justify-between">
       <h3 className="text-3xl font-semibold">Delete Worker</h3>
       <button
-        className="p-1 ml-auto bg-transparent border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+        className="float-right p-1 ml-auto text-3xl font-semibold leading-none text-black bg-transparent border-0 outline-none focus:outline-none"
         onClick={onClose}>
-        <span className="bg-transparent text-black h-6 w-6 text-2xl block outline-none focus:outline-none">×</span>
+        <span className="block w-6 h-6 text-2xl text-black bg-transparent outline-none focus:outline-none">×</span>
       </button>
     </div>
     <div>
       <p className="py-4 text-lg">Are you sure you want to delete this worker? </p>
     </div>
-    <div className="flex items-center justify-end pt-6 border-t border-solid border-gray-300 rounded-b">
+    <div className="flex items-center justify-end pt-6 border-t border-gray-300 border-solid rounded-b">
       <button
         type="button"
-        className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm rounded-md outline-none focus:outline-none mr-3 mb-1"
+        className="px-6 py-2 mb-1 mr-3 text-sm font-bold text-red-500 uppercase outline-none background-transparent rounded-md focus:outline-none"
         onClick={() => {
           onClose()
         }}>
@@ -43,7 +39,7 @@ const DeleteWorkerModal = ({isOpen, onClose, onClickAccept}) => (
       </button>
       <button
         type="button"
-        className="bg-green-500 text-white active:bg-green-600 disabled:opacity-50 font-bold uppercase text-sm px-6 py-3 rounded-md shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
+        className="px-6 py-3 mb-1 mr-1 text-sm font-bold text-white uppercase bg-green-500 shadow outline-none active:bg-green-600 disabled:opacity-50 rounded-md hover:shadow-lg focus:outline-none"
         onClick={() => {
           onClickAccept()
           onClose()
@@ -54,27 +50,26 @@ const DeleteWorkerModal = ({isOpen, onClose, onClickAccept}) => (
   </Dialog>
 )
 
-const Infrastructure: FunctionComponent = () => {
+const Infrastructure = () => {
+  const queryClient = useQueryClient()
   const [searchText, setSearchText] = useState('')
   const [selectedWorker, setSelectedWorker] = useState('')
   const [openDeleteWorkerModal, setOpenDeleteWorkerModal] = useState(false)
 
-  const {isLoading: isLoadingWorkers, data: workers, error: workersError} = useQuery<PyGridWorker[], Error>(
-    'workers',
-    fetchWorkers
+  const {isLoading: isLoadingWorkers, data: workers, error: workersError} = useFetch<PyGridWorker>(
+    '/data-centric/workers'
   )
-  const {isLoading: isLoadingRequests, data: requests, error: requestsError} = useQuery<
-    PyGridAssociationRequest[],
-    Error
-  >('requests', fetchAssociationRequests)
+  const {isLoading: isLoadingRequests, data: requests, error: requestsError} = useFetch<PyGridAssociationRequest>(
+    '/association-requests'
+  )
 
   const TableHead = () => {
     const headers = ['ID', 'State', 'Provider', 'Region', 'Instance Type', 'Created At', 'Deleted At', '']
     return (
       <thead>
-        <tr className="bg-gray-100 rounded-lg text-sm font-medium text-gray-700 text-left">
+        <tr className="text-sm font-medium text-left text-gray-700 bg-gray-100 rounded-lg">
           {headers.map(header => (
-            <th key={`worker-h -${header}`} className="my-4 px-4 py-2">
+            <th key={`worker-h -${header}`} className="px-4 py-2 my-4">
               {header}
             </th>
           ))}
@@ -90,6 +85,29 @@ const Infrastructure: FunctionComponent = () => {
     3: 'Destroyed'
   }
 
+  const deleteWorker = useCallback(
+    id => {
+      api.delete(`/data-centric/workers/${id}`).then(() => {
+        queryClient.invalidateQueries('/data-centric/workers')
+      })
+    },
+    [queryClient]
+  )
+
+  const handleAssocRequest = useCallback(
+    (request, isAccepted) => {
+      api
+        .post('/association-requests/respond', {
+          address: request.senderAddress,
+          value: isAccepted ? 'accept' : 'deny',
+          handshake: request.handshakeValue
+        })
+        .then(() => {
+          queryClient.invalidateQueries('/association-requests')
+        })
+    },
+    [queryClient]
+  )
   return (
     <main className="space-y-4">
       <div className="flex flex-col-reverse items-start space-y-4 space-y-reverse md:space-y-0 md:flex-row md:justify-between">
@@ -110,8 +128,8 @@ const Infrastructure: FunctionComponent = () => {
             {true && (
               <>
                 <section className="space-y-6">
-                  <h3 className="font-semibold tracking-wide pt-4 text-xl">Active Workers</h3>
-                  <table className="table-auto border-collapse w-full">
+                  <h3 className="pt-4 text-xl font-semibold tracking-wide">Active Workers</h3>
+                  <table className="w-full border-collapse table-auto">
                     <TableHead />
                     <tbody className="text-sm font-normal text-gray-700">
                       {!isLoadingWorkers &&
@@ -120,7 +138,7 @@ const Infrastructure: FunctionComponent = () => {
                         workers
                           .filter(w => w.state === 2)
                           .map(worker => (
-                            <tr key={`worker-${worker.id}`} className="hover:bg-gray-50 border-b border-gray-200 py-10">
+                            <tr key={`worker-${worker.id}`} className="py-10 border-b border-gray-200 hover:bg-gray-50">
                               <td className="px-4 py-4">{worker.id}</td>
                               <td className="px-4 py-4">{STATES[worker.state]}</td>
                               <td className="px-4 py-4">{worker.provider}</td>
@@ -135,7 +153,7 @@ const Infrastructure: FunctionComponent = () => {
                   </table>
                 </section>
                 <section className="space-y-6">
-                  <h3 className="font-semibold tracking-wide pt-4 text-xl">Association Requests</h3>
+                  <h3 className="pt-4 text-xl font-semibold tracking-wide">Association Requests</h3>
                   <div className="space-y-6">
                     {!isLoadingRequests && !requestsError && requests.filter(r => r.pending === true).length > 0 ? (
                       requests
@@ -147,12 +165,8 @@ const Infrastructure: FunctionComponent = () => {
                           <AssociationRequestCard
                             {...request}
                             key={`request-card-${request.id}`}
-                            onClickAccept={() =>
-                              respondAssociationRequest(request, 'accept').then(res => console.log(res))
-                            }
-                            onClickReject={() =>
-                              respondAssociationRequest(request, 'deny').then(res => console.log(res))
-                            }
+                            onClickAccept={() => handleAssocRequest(request, true)}
+                            onClickReject={() => handleAssocRequest(request, false)}
                           />
                         ))
                     ) : (
@@ -166,7 +180,7 @@ const Infrastructure: FunctionComponent = () => {
           <TabPanel>
             <section className="flex flex-col mt-4 space-y-1">
               <SearchBar placeholder={'Search Workers'} search={searchText} onChange={text => setSearchText(text)} />
-              <table className="table-auto border-collapse w-full">
+              <table className="w-full border-collapse table-auto">
                 <TableHead />
                 <tbody className="text-sm font-normal text-gray-700">
                   {!isLoadingWorkers &&
@@ -175,7 +189,7 @@ const Infrastructure: FunctionComponent = () => {
                     workers
                       .filter(w => Object.entries(w).some(entry => String(entry[1]).toLowerCase().includes(searchText)))
                       .map(worker => (
-                        <tr key={`worker-${worker.id}`} className="hover:bg-gray-50 border-b border-gray-200 py-10">
+                        <tr key={`worker-${worker.id}`} className="py-10 border-b border-gray-200 hover:bg-gray-50">
                           <td className="px-4 py-4">{worker.id}</td>
                           <td className="px-4 py-4">{STATES[worker.state]}</td>
                           <td className="px-4 py-4">{worker.provider}</td>

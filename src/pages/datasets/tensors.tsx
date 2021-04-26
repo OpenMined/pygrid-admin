@@ -1,13 +1,24 @@
-import type {FunctionComponent} from 'react'
+import {useCallback} from 'react'
+import {useQueryClient} from 'react-query'
 import {TensorsCard} from '@/components/pages/datasets/cards/tensors'
 import {ArrowForward} from '@/components/icons/arrows'
-import {useQuery} from 'react-query'
-import {PyGridRequest, PygridTensor} from '@/types'
-import {deleteTensor, fetchRequests, fetchTensors} from '@/pages/api/datasets'
+import {useFetch} from '@/utils/query-builder'
+import api from '@/utils/api-axios'
+import type {PyGridRequest, PyGridTensor} from '@/types'
 
-const Tensors: FunctionComponent = () => {
-  const {isLoading, data: tensorsData, error} = useQuery<PygridTensor[], Error>('tensors', fetchTensors)
-  const {isLoading: isLoadingRequests, data: requests} = useQuery<PyGridRequest[], Error>('requests', fetchRequests)
+const Tensors = () => {
+  const queryClient = useQueryClient()
+  const {isLoading, data: tensorsData, error} = useFetch<PyGridTensor[]>('/data-centric/tensors')
+  const {isLoading: isLoadingRequests, data: requests} = useFetch<PyGridRequest[]>('/data-centric/requests')
+
+  const deleteTensor = useCallback(
+    id =>
+      api.delete(`/data-centric/tensors/${id}`).then(res => {
+        queryClient.invalidateQueries('/data-centric/tensors')
+        return res
+      }),
+    [queryClient]
+  )
 
   if (isLoading || isLoadingRequests || error) return null
 

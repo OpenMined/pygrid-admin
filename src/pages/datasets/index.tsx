@@ -3,10 +3,11 @@ import Link from 'next/link'
 import {useForm} from 'react-hook-form'
 import {useDisclosure} from 'react-use-disclosure'
 import {useMutation} from 'react-query'
+import {VisuallyHidden} from '@reach/visually-hidden'
 import api from '@/utils/api-axios'
 import {SidePanel} from '@/components/side-panel'
 import {DatasetCard} from '@/components/pages/datasets/cards/datasets'
-import {ArrowForward} from '@/components/icons/arrows'
+import {Right, ArrowForward} from '@/components/icons/arrows'
 import {Plus} from '@/components/icons/marks'
 import {Alert, Input, SearchBar} from '@/components/lib'
 import {useFetch} from '@/utils/query-builder'
@@ -15,9 +16,9 @@ import {getToken} from '@/lib/auth'
 
 const Datasets = () => {
   const {open, close, isOpen} = useDisclosure()
-  const {data: datasets} = useFetch('/data-centric/datasets')
-  const {data: requests} = useFetch('/data-centric/requests')
-  const {data: tensors} = useFetch('/data-centric/tensors')
+  const {isLoading, data: datasets, error} = useFetch('/data-centric/datasets')
+  const {isLoading: requestsLoading, data: requests, error: requestsError} = useFetch('/data-centric/requests')
+  const {isLoading: tensorsLoading, data: tensors, error: tensorsError} = useFetch('/data-centric/tensors')
   const [searchText, setSearchText] = useState('')
   const {register, handleSubmit} = useForm()
 
@@ -87,19 +88,84 @@ const Datasets = () => {
   // TODO : Support pagination.
   // TODO : Filter datasets by tags
   return (
-    <main className="space-y-4">
-      <div className="flex flex-col-reverse items-start space-y-4 space-y-reverse md:space-y-0 md:flex-row md:justify-between">
-        <h1 className="pr-4 text-4xl leading-12">Datasets</h1>
-        <button className="inline-flex items-center btn hover:bg-blue-600 hover:shadow-sm space-x-6" onClick={open}>
-          <Plus className="w-4 h-4" />
-          <span>New dataset</span>
-        </button>
+    <article>
+      <div className="flex flex-col sm:flex-row sm:justify-between">
+        <header>
+          <h1>Datasets</h1>
+          <p className="subtitle">Manage all private data hosted in your node</p>
+        </header>
       </div>
-      <p className="pb-4 mb-6 text-xl font-light text-gray-400">Manage all private data hosted in your node</p>
+      <section className="mt-6">
+        <div className="flex flex-row justify-between max-w-xs text-sm text-gray-600 uppercase leading-6 hover:text-gray-800 focus:text-gray-800 active:text-gray-800">
+          <Link href="/datasets/requests">
+            <a>
+              {requestsLoading ? <Spinner className="h-3 mr-4" /> : requests?.length} Request
+              {requests?.length !== 1 && 's'}
+              <Right className="w-4 h-4" />
+            </a>
+          </Link>
+          <Link href="/datasets/tensors">
+            <a>
+              {tensorsLoading ? <Spinner className="h-3 mr-4" /> : tensors?.tensors.length} Tensor
+              {tensors?.tensors.length !== 1 && 's'}
+              <Right className="w-4 h-4" />
+            </a>
+          </Link>
+        </div>
+        {(!requestsLoading || !tensorsLoading) && (requestsError || tensorsError) && (
+          <Alert
+            className="mt-4"
+            error="Unable to fetch groups or roles data"
+            description={(requestsError?.message || tensorsError?.message) ?? 'Check your connection status'}
+          />
+        )}
+      </section>
+      <section className="mt-6 overflow-hidden bg-white shadow sm:rounded-md">
+        <header>
+          <div className="flex items-center justify-between px-4 py-4 text-xs font-medium tracking-wider text-gray-500 uppercase bg-gray-100 border-b border-gray-200 sm:px-6">
+            <div className="flex flex-col sm:flex-row">
+              <h2 className="flex-shrink-0 mr-2">Available datasets</h2>
+              <div className="flex-shrink-0">
+                {datasets?.length > 0 && (
+                  <p>
+                    ({datasets.length} user{datasets.length !== 1 && 's'})
+                  </p>
+                )}
+                {isLoading && <Spinner className="w-4" />}
+              </div>
+            </div>
+            <div className="text-right">
+              <button className="btn" onClick={open}>
+                <span className="hidden sm:inline-block">Create Dataset</span>
+                <span className="sm:hidden">Create</span>
+              </button>
+            </div>
+          </div>
+        </header>
+        <ul className="divide-y divide-gray-200">
+          {datasets?.map(dataset => (
+            // <UserListItem
+            //   key={user.email}
+            //   email={user.email}
+            //   userRole={roles?.find(role => role.id === user.role)?.name}
+            //   onClick={() => setUser(user)}
+            // />
+            <div />
+          ))}
+        </ul>
+      </section>
+      {!isLoading && error && (
+        <div className="mt-4">
+          <VisuallyHidden>An error occurred.</VisuallyHidden>
+          <Alert
+            error="It was not possible to get the user list. Please check if the Domain API is reachable."
+            description={error.message ?? 'Check your connection status'}
+          />
+        </div>
+      )}
+      <p className="pb-4 mb-6 text-xl font-light text-gray-400"></p>
       {datasets?.length > 0 && (
         <>
-          <Stats />
-          <SearchBar placeholder={'Search Datasets'} search={searchText} onChange={text => setSearchText(text)} />
           <section className="space-y-6">
             <DatasetsList
               datasets={datasets.filter(item => item.id?.toLowerCase().includes(searchText.toLowerCase()))}
@@ -136,7 +202,7 @@ const Datasets = () => {
           </form>
         </article>
       </SidePanel>
-    </main>
+    </article>
   )
 }
 

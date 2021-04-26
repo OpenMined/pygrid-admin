@@ -49,12 +49,12 @@ export const SearchBar: FunctionComponent<SearchBarProperties> = ({search, place
   return (
     <div className="flex text-gray-800 bg-gray-50 container mx-auto border border-gray-200 rounded-md">
       <div className="flex">
-        <Search className="m-auto h-4 w-4 fill-current" />
+        <Search className="w-4 h-4 m-auto fill-current" />
       </div>
       <input
         name="search"
         placeholder={placeholder}
-        className="text-xl flex-1 bg-transparent h-12 px-5 rounded-full focus:outline-none"
+        className="flex-1 h-12 px-5 text-xl bg-transparent rounded-full focus:outline-none"
         onChange={e => onChange(e.target.value)}
         value={search}
       />
@@ -84,18 +84,17 @@ export const Input = forwardRef<
   HTMLInputElement,
   ComponentProps<'input'> & {label: string; hint?: string; error?: string}
 >(function InputField(props, ref) {
-  const {name, label, hint, error} = props
-  console.log(error)
+  const {name, label, hint, error, type = 'text'} = props
   return (
     <div>
       {label && (
-        <label htmlFor={name} className="block  ml-1 text-sm font-medium text-gray-700">
+        <label htmlFor={name} className="block ml-1 text-sm font-medium text-gray-700">
           {label}
         </label>
       )}
       <input
         ref={ref}
-        type="text"
+        type={type}
         name={name}
         id={name}
         className={cn(
@@ -104,8 +103,8 @@ export const Input = forwardRef<
         )}
         {...props}
       />
-      {hint && <p className="text-xs ml-1 mt-1 text-gray-500">{hint}</p>}
-      {error && <p className="text-xs ml-1 mt-1 text-red-500">{error}</p>}
+      {hint && <p className="mt-1 ml-1 text-xs text-gray-400">{hint}</p>}
+      {error && <p className="mt-1 ml-1 text-xs text-red-800">{error}</p>}
     </div>
   )
 })

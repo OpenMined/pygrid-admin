@@ -9,31 +9,23 @@ import {Plus} from '@/components/icons/marks'
 import {Alert, Input, SearchBar} from '@/components/lib'
 import {useFetch} from '@/utils/query-builder'
 import {useMutation} from 'react-query'
-import type {FunctionComponent} from 'react'
 import {Spinner} from '@/components/icons/spinner'
-import {IDataset, IRequest} from '@/types/datasets'
 import axios from 'axios'
 import {getToken} from '@/lib/auth'
 
-const Datasets: FunctionComponent = () => {
+const Datasets = () => {
   const {open, close, isOpen} = useDisclosure()
-  const {isLoading: datasetsLoading, error: datasetsError, data: datasets} = useFetch<Array<IDataset>>(
-    '/data-centric/datasets'
-  )
-  const {isLoading: requestsLoading, error: requestsError, data: requests} = useFetch<Array<IRequest>>(
-    '/data-centric/requests'
-  )
-  const {isLoading: tensorsLoading, error: tensorsError, data: tensors} = useFetch<Array<IRequest>>(
-    '/data-centric/tensors'
-  )
+  const {data: datasets} = useFetch('/data-centric/datasets')
+  const {data: requests} = useFetch('/data-centric/requests')
+  const {data: tensors} = useFetch('/data-centric/tensors')
 
   const [searchText, setSearchText] = useState('')
-  const {register, handleSubmit, setValue} = useForm()
+  const {register, handleSubmit} = useForm()
 
   const [indexes, setIndexes] = useState([])
   const [counter, setCounter] = useState(0)
 
-  const createDataset = useMutation<Partial<IDataset>, IDataset>(data =>
+  const createDataset = useMutation(data =>
     axios.post('/data-centric/datasets', data, {
       baseURL: process.env.NEXT_PUBLIC_API_URL,
       headers: {

@@ -1,16 +1,16 @@
 import {useState} from 'react'
 import Link from 'next/link'
-import {useDisclosure} from 'react-use-disclosure'
-import {SidePanel} from '@/components/side-panel'
 import {useForm} from 'react-hook-form'
+import {useDisclosure} from 'react-use-disclosure'
+import {useMutation} from 'react-query'
+import api from '@/utils/api-axios'
+import {SidePanel} from '@/components/side-panel'
 import {DatasetCard} from '@/components/pages/datasets/cards/datasets'
 import {ArrowForward} from '@/components/icons/arrows'
 import {Plus} from '@/components/icons/marks'
 import {Alert, Input, SearchBar} from '@/components/lib'
 import {useFetch} from '@/utils/query-builder'
-import {useMutation} from 'react-query'
 import {Spinner} from '@/components/icons/spinner'
-import axios from 'axios'
 import {getToken} from '@/lib/auth'
 
 const Datasets = () => {
@@ -22,8 +22,7 @@ const Datasets = () => {
   const {register, handleSubmit} = useForm()
 
   const createDataset = useMutation(data =>
-    axios.post('/data-centric/datasets', data, {
-      baseURL: process.env.NEXT_PUBLIC_API_URL,
+    api.post('/data-centric/datasets', data, {
       headers: {
         'Content-Type': 'multipart/form-data',
         token: getToken()

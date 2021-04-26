@@ -17,8 +17,16 @@ import {getToken} from '@/lib/auth'
 
 const Datasets: FunctionComponent = () => {
   const {open, close, isOpen} = useDisclosure()
-  const {isLoading: datasetsLoading, error: datasetsError, data: datasets} = useFetch<Array<IDataset>>('/data-centric/datasets')
-  const {isLoading: requestsLoading, error: requestsError, data: requests} = useFetch<Array<IRequest>>('/data-centric/requests')
+  const {isLoading: datasetsLoading, error: datasetsError, data: datasets} = useFetch<Array<IDataset>>(
+    '/data-centric/datasets'
+  )
+  const {isLoading: requestsLoading, error: requestsError, data: requests} = useFetch<Array<IRequest>>(
+    '/data-centric/requests'
+  )
+  const {isLoading: tensorsLoading, error: tensorsError, data: tensors} = useFetch<Array<IRequest>>(
+    '/data-centric/tensors'
+  )
+
   const [searchText, setSearchText] = useState('')
   const {register, handleSubmit, setValue} = useForm()
 
@@ -82,7 +90,7 @@ const Datasets: FunctionComponent = () => {
       text: 'requests',
       link: '/datasets/requests'
     },
-    {title: 'Tensors pending deletion', value: 3, text: 'tensors', link: '/datasets/tensors'}
+    {title: 'Tensors pending deletion', value: tensors?.tensors.length, text: 'tensors', link: '/datasets/tensors'}
   ]
 
   const handleTensorUpload = async files => {
@@ -147,7 +155,7 @@ const Datasets: FunctionComponent = () => {
           <SearchBar placeholder={'Search Datasets'} search={searchText} onChange={text => setSearchText(text)} />
           <section className="space-y-6">
             <DatasetsList
-              datasets={datasets.filter(item => item.name.toLowerCase().includes(searchText.toLowerCase()))}
+              datasets={datasets.filter(item => item.name?.toLowerCase().includes(searchText.toLowerCase()))}
             />
           </section>
         </>

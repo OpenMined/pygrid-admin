@@ -1,8 +1,9 @@
 import {useState} from 'react'
+import cn from 'classNames'
 import Link from 'next/link'
 import {useForm} from 'react-hook-form'
 import {useDisclosure} from 'react-use-disclosure'
-import {useMutation} from 'react-query'
+import {useQueryClient, useMutation} from 'react-query'
 import {VisuallyHidden} from '@reach/visually-hidden'
 import api from '@/utils/api-axios'
 import {SidePanel} from '@/components/side-panel'
@@ -10,6 +11,7 @@ import {DatasetCard} from '@/components/pages/datasets/cards/datasets'
 import {Right, ArrowForward} from '@/components/icons/arrows'
 import {Alert, Input, SearchBar} from '@/components/lib'
 import {useFetch} from '@/utils/query-builder'
+import {formatBytes} from '@/utils/common'
 import {Spinner} from '@/components/icons/spinner'
 import {getToken} from '@/lib/auth'
 
@@ -19,7 +21,8 @@ const Datasets = () => {
   const {isLoading: requestsLoading, data: requests, error: requestsError} = useFetch('/data-centric/requests')
   const {isLoading: tensorsLoading, data: tensors, error: tensorsError} = useFetch('/data-centric/tensors')
   const [searchText, setSearchText] = useState('')
-  const {register, handleSubmit} = useForm()
+  const {register, handleSubmit, watch} = useForm({mode: 'onBlur'})
+  const queryClient = useQueryClient()
 
   const createDataset = useMutation(data =>
     api.post('/data-centric/datasets', data, {
@@ -35,15 +38,8 @@ const Datasets = () => {
     createDataset.reset()
   }
 
-  const sections = [
-    {
-      title: 'Permissions changes',
-      value: requests ? requests.filter(x => x.requestType === 'permissions' && x.status === 'pending').length : 0,
-      text: 'requests',
-      link: '/datasets/requests'
-    },
-    {title: 'Tensors pending deletion', value: tensors?.tensors.length, text: 'tensors', link: '/datasets/tensors'}
-  ]
+  const datafile = watch('file')
+  console.log(datafile)
 
   const DatasetsList = ({datasets}) => {
     if (datasets.length > 0) {
@@ -63,29 +59,16 @@ const Datasets = () => {
     }
   }
 
-  const Stats = () => {
-    return (
-      <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-        {sections.map(({title, value, text, link}) => (
-          <div key={`section-${title}`}>
-            <small className="font-semibold tracking-wide text-gray-800 uppercase">{title}</small>
-            <p className="my-3">
-              <span className="text-xl font-semibold text-gray-800">{value}</span>{' '}
-              <span className="text-gray-400">{text}</span>
-              <Link href={link}>
-                <a>
-                  <ArrowForward className="w-4 h-4 text-blue-600" />
-                </a>
-              </Link>
-            </p>
-          </div>
-        ))}
-      </section>
-    )
+  function submit(values) {
+    const {file} = values
+    console.log(file)
+    const formData = new FormData()
+    formData.append('file', file[0])
+    api
+      .post('/data-centric/datasets', formData, {headers: {'Content-Type': 'multipart/form-data'}})
+      .then(() => queryClient.invalidateQueries('/data-centric/datasets'))
   }
 
-  // TODO : Support pagination.
-  // TODO : Filter datasets by tags
   return (
     <article>
       <div className="flex flex-col sm:flex-row sm:justify-between">
@@ -127,7 +110,7 @@ const Datasets = () => {
               <div className="flex-shrink-0">
                 {datasets?.length > 0 && (
                   <p>
-                    ({datasets.length} user{datasets.length !== 1 && 's'})
+                    ({datasets.length} Dataset{datasets.length !== 1 && 's'})
                   </p>
                 )}
                 {isLoading && <Spinner className="w-4" />}
@@ -141,23 +124,12 @@ const Datasets = () => {
             </div>
           </div>
         </header>
-        <ul className="divide-y divide-gray-200">
-          {datasets?.map(dataset => (
-            // <UserListItem
-            //   key={user.email}
-            //   email={user.email}
-            //   userRole={roles?.find(role => role.id === user.role)?.name}
-            //   onClick={() => setUser(user)}
-            // />
-            <div />
-          ))}
-        </ul>
       </section>
       {!isLoading && error && (
         <div className="mt-4">
           <VisuallyHidden>An error occurred.</VisuallyHidden>
           <Alert
-            error="It was not possible to get the user list. Please check if the Domain API is reachable."
+            error="It was not possible to get the dataset list. Please check if the Domain API is reachable."
             description={error.message ?? 'Check your connection status'}
           />
         </div>
@@ -178,17 +150,50 @@ const Datasets = () => {
             <header>
               <h3 className="text-2xl font-medium text-gray-900 leading-6">Create a new Dataset</h3>
               <p className="mt-2 text-sm text-gray-500">Upload a new dataset to this PyGrid Domain.</p>
-              <p>
-                If your compressed file already contains a description, manifest and tags file, you can ignore the
-                inputs below.
-              </p>
             </header>
           </section>
-          <form onSubmit={handleSubmit(() => {})}>
+          <form onSubmit={handleSubmit(submit)}>
             <section className="flex flex-col space-y-4">
-              <Input name="description" label="Description" ref={register} placeholder="Description" type="text" />
-              <Input name="manifest" label="Manifest" ref={register} placeholder="Manifest" type="text" />
-              <Input name="tags" label="Tags" ref={register} placeholder="Tags" type="text" />
+              {datafile?.[0]?.name && (
+                <div className="flex flex-col space-y-1 text-sm text-gray-600">
+                  <span>Name: {datafile[0].name}</span>
+                  <span>Size: {formatBytes(datafile[0].size, 0)}</span>
+                  <span>Last modified: {datafile[0].lastModifiedDate?.toString()}</span>
+                </div>
+              )}
+              <label
+                htmlFor="file"
+                className="relative font-medium text-indigo-600 bg-white cursor-pointer rounded-md hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
+                <input name="file" id="file" type="file" className="sr-only" ref={register} />
+                <div
+                  className={cn(
+                    'w-full btn lg:w-auto transition-all ease-in-out duration-700',
+                    datafile?.[0] && 'bg-gray-700'
+                  )}>
+                  {datafile?.[0] ? 'Change file' : 'Select dataset'}
+                </div>
+              </label>
+              <p className="text-gray-500">
+                If your compressed file already contains files named description, manifest and/or tags, you can ignore
+                the fields below. Otherwise, we strongly suggest you add them.
+              </p>
+              <Input
+                type="textarea"
+                name="description"
+                label="Description"
+                ref={register}
+                rows={3}
+                placeholder="Description"
+              />
+              <Input type="textarea" name="manifest" label="Manifest" rows={3} ref={register} placeholder="Manifest" />
+              <Input
+                type="textarea"
+                name="tags"
+                label="Tags"
+                ref={register}
+                placeholder="Tags"
+                hint="One tag per line"
+              />
               <div className="w-full sm:text-right">
                 <button
                   className="w-full btn lg:w-auto transition-all ease-in-out duration-700"

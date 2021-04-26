@@ -80,11 +80,14 @@ export const Alert: FunctionComponent<{
   </div>
 )
 
+const Comp = forwardRef((props, ref) => (props.type === 'textarea' ? <textarea {...props} /> : <input {...props} />))
+
 export const Input = forwardRef<
   HTMLInputElement,
-  ComponentProps<'input'> & {label: string; hint?: string; error?: string}
+  ComponentProps<'textarea'> & ComponentProps<'input'> & {label?: string; hint?: string; error?: string}
 >(function InputField(props, ref) {
   const {name, label, hint, error, type = 'text'} = props
+
   return (
     <div>
       {label && (
@@ -92,7 +95,7 @@ export const Input = forwardRef<
           {label}
         </label>
       )}
-      <input
+      <Comp
         ref={ref}
         type={type}
         name={name}

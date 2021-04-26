@@ -1,13 +1,28 @@
-import type {FunctionComponent} from 'react'
+import {useCallback} from 'react'
+import {useQueryClient} from 'react-query'
 import {TensorsCard} from '@/components/pages/datasets/cards/tensors'
 import {ArrowForward} from '@/components/icons/arrows'
-import {useQuery} from 'react-query'
-import {PyGridRequest, PygridTensor} from '@/types'
-import {deleteTensor, fetchRequests, fetchTensors} from '@/pages/api/datasets'
+import {useFetch} from '@/utils/query-builder'
+import api from '@/utils/api-axios'
+import type {PyGridRequest, PyGridTensor} from '@/types'
 
-const Tensors: FunctionComponent = () => {
-  const {isLoading, data: tensorsData, error} = useQuery<PygridTensor[], Error>('tensors', fetchTensors)
-  const {isLoading: isLoadingRequests, data: requests} = useQuery<PyGridRequest[], Error>('requests', fetchRequests)
+const Tensors = () => {
+  const queryClient = useQueryClient()
+  const {isLoading, data, error} = useFetch<PyGridTensor[]>('/data-centric/tensors')
+  const {isLoading: isLoadingRequests, data: requests} = useFetch<PyGridRequest[]>('/data-centric/requests')
+  // TODO: Load settings
+  const settings = null
+
+  console.log({data})
+
+  const deleteTensor = useCallback(
+    id =>
+      api.delete(`/data-centric/tensors/${id}`).then(res => {
+        queryClient.invalidateQueries('/data-centric/tensors')
+        return res
+      }),
+    [queryClient]
+  )
 
   if (isLoading || isLoadingRequests || error) return null
 
@@ -28,18 +43,19 @@ const Tensors: FunctionComponent = () => {
           </a>
         </div>
       </section>
-      <p className="font-thin text-gray-400">
-        According to{' '}
-        <a href="/settings" target="blank">
-          your settings
-        </a>
-        , tensors are automatically deleted <strong>{settings?.tensorsExpiry}</strong> after being downloaded.
-      </p>
+      {settings && (
+        <p className="font-thin text-gray-400">
+          According to{' '}
+          <a href="/settings" target="blank">
+            your settings
+          </a>
+          , tensors are automatically deleted <strong>{settings.tensorsExpiry}</strong> after being downloaded.
+        </p>
+      )}
       <section className="grid grid-cols-1 gap-4 xl:gap-4">
         <div className="space-y-6 xl:space-y-8">
-          {!isLoading &&
-            !error &&
-            tensorsData.map(tensor => (
+          {data &&
+            data.tensors.map(tensor => (
               <TensorsCard
                 {...tensor}
                 key={`tensor-${tensor.id}`}

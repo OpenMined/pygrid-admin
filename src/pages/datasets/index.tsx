@@ -18,12 +18,8 @@ const Datasets = () => {
   const {data: datasets} = useFetch('/data-centric/datasets')
   const {data: requests} = useFetch('/data-centric/requests')
   const {data: tensors} = useFetch('/data-centric/tensors')
-
   const [searchText, setSearchText] = useState('')
   const {register, handleSubmit} = useForm()
-
-  const [indexes, setIndexes] = useState([])
-  const [counter, setCounter] = useState(0)
 
   const createDataset = useMutation(data =>
     axios.post('/data-centric/datasets', data, {
@@ -34,41 +30,6 @@ const Datasets = () => {
       }
     })
   )
-
-  const addTensor = () => {
-    setIndexes(prevIndexes => [...prevIndexes, counter])
-    setCounter(prevCounter => prevCounter + 1)
-  }
-
-  const removeTensor = index => () => {
-    setIndexes(prevIndexes => [...prevIndexes.filter(item => item !== index)])
-    setCounter(prevCounter => prevCounter - 1)
-  }
-
-  const toBase64 = file =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader()
-      reader.readAsDataURL(file)
-      reader.onload = () => resolve(reader.result)
-      reader.onerror = error => reject(error)
-    })
-
-  const submit = (values: Omit<IDataset, 'id' | 'createdAt'>) => {
-    const formData = new FormData()
-    formData.append('name', values.name)
-    formData.append('description', values.description)
-    formData.append('manifest', values.manifest)
-    formData.append(
-      'tags',
-      values.tags?.split(',').map(t => t.trim())
-    )
-    values.tensors?.forEach(async tensor => {
-      const b64 = await handleTensorUpload(tensor.content)
-      formData.append(`${tensor.name}[]`, tensor.content[0], tensor.content[0].filename)
-      formData.append(`${tensor.name}[]`, tensor.manifest)
-    })
-    createDataset.mutate(formData, {onSuccess: close})
-  }
 
   const closePanel = () => {
     close()
@@ -84,11 +45,6 @@ const Datasets = () => {
     },
     {title: 'Tensors pending deletion', value: tensors?.tensors.length, text: 'tensors', link: '/datasets/tensors'}
   ]
-
-  const handleTensorUpload = async files => {
-    const base = await toBase64(files[0])
-    return base
-  }
 
   const DatasetsList = ({datasets}) => {
     if (datasets.length > 0) {
@@ -160,33 +116,12 @@ const Datasets = () => {
               <p className="mt-2 text-sm text-gray-500">Upload a new dataset to this PyGrid Domain.</p>
             </header>
           </section>
-          <form onSubmit={handleSubmit(submit)}>
+          <form onSubmit={handleSubmit(() => {})}>
             <section className="flex flex-col space-y-4">
               <Input name="name" label="Dataset Name" ref={register} placeholder="Name" />
               <Input name="description" label="Description" ref={register} placeholder="Description" type="text" />
               <Input name="manifest" label="Manifest" ref={register} placeholder="Manifest" type="text" />
               <Input name="tags" label="Tags" ref={register} placeholder="Tags" type="text" />
-              {indexes.map(index => {
-                const fieldName = `tensors[${index}]`
-                return (
-                  <fieldset
-                    className="p-4 bg-gray-100 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 md:text-md"
-                    name={fieldName}
-                    key={fieldName}>
-                    <p className="block pb-2 font-medium text-gray-700 text-md">Tensor #{index}:</p>
-                    <Input label="Name:" type="text" name={`${fieldName}.name`} ref={register} />
-                    <Input label="Manifest" type="text" name={`${fieldName}.manifest`} ref={register} />
-                    <Input label="Content:" type="file" name={`${fieldName}.content`} ref={register} />
-                    <button className="mt-2 btn" type="button" onClick={removeTensor(index)}>
-                      Remove
-                    </button>
-                  </fieldset>
-                )
-              })}
-
-              <button type="button" onClick={addTensor}>
-                Add Tensor
-              </button>
               <div className="w-full sm:text-right">
                 <button
                   className="w-full btn lg:w-auto transition-all ease-in-out duration-700"

@@ -8,7 +8,6 @@ import api from '@/utils/api-axios'
 import {SidePanel} from '@/components/side-panel'
 import {DatasetCard} from '@/components/pages/datasets/cards/datasets'
 import {Right, ArrowForward} from '@/components/icons/arrows'
-import {Plus} from '@/components/icons/marks'
 import {Alert, Input, SearchBar} from '@/components/lib'
 import {useFetch} from '@/utils/query-builder'
 import {Spinner} from '@/components/icons/spinner'
@@ -179,6 +178,10 @@ const Datasets = () => {
             <header>
               <h3 className="text-2xl font-medium text-gray-900 leading-6">Create a new Dataset</h3>
               <p className="mt-2 text-sm text-gray-500">Upload a new dataset to this PyGrid Domain.</p>
+              <p>
+                If your compressed file already contains a description, manifest and tags file, you can ignore the
+                inputs below.
+              </p>
             </header>
           </section>
           <form onSubmit={handleSubmit(() => {})}>

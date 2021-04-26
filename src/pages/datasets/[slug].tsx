@@ -1,24 +1,16 @@
-import type {FunctionComponent} from 'react'
+import {useFetch} from '@/utils/query-builder'
 import {Tag, ButtonGhost} from '@/components/lib'
 import {Tabs, TabList, Tab, TabPanels, TabPanel} from '@reach/tabs'
-import {FileIcon} from '@/components/icons/file'
 
-const Dataset: FunctionComponent<{slug?: string}> = () => {
-  const DatasetData = {
-    title: 'Diabetes Study 01.289.301',
-    description:
-      'This was a double-blind diabetes study done in coordination with UC Santa Barbara between July 1st, 2017 and January 1st, 2019.',
-    tags: ['diabetes', 'california', 'healthcare', 'UCSF', 'beekeeper'],
-    tensors: 2
-  }
-
-  const {title, description, tags} = DatasetData
+function Dataset({slug = '064552b5-13bd-4ad7-b521-9f79e3e92ba3'}: {slug?: string}) {
+  const {isLoading, data: dataset, error} = useFetch(`/data-centric/datasets/${slug}`)
+  const {id, description, tags, manifest, data} = dataset ?? {}
 
   return (
     <main className="space-y-8">
       <div className="space-y-6">
         <div className="flex flex-col-reverse items-start justify-between space-y-4 space-y-reverse md:flex-row md:space-y-0">
-          <h1 className="pr-4 text-4xl leading-12">{title}</h1>
+          <h1 className="pr-4 text-4xl leading-12">{id}</h1>
           <div className="flex flex-row space-x-2">
             <button className="btn" onClick={() => alert('Edit dataset')}>
               Edit dataset
@@ -28,9 +20,9 @@ const Dataset: FunctionComponent<{slug?: string}> = () => {
             </ButtonGhost>
           </div>
         </div>
-        <p className="text-gray-500 lg:max-w-3xl">{description}</p>
+        <p className="text-gray-500 lg:max-w-3xl whitespace-pre-line">{description}</p>
         <div className="flex flex-row">
-          {tags.map(tag => (
+          {tags?.map(tag => (
             <Tag className="mr-2" key={`tag-${tag}`}>
               {tag}
             </Tag>
@@ -41,51 +33,38 @@ const Dataset: FunctionComponent<{slug?: string}> = () => {
         <h2 className="text-sm font-semibold tracking-widest uppercase">Tensors</h2>
         <Tabs>
           <TabList>
-            <Tab>data</Tab>
-            <Tab>target</Tab>
+            <Tab className="px-2 focus:outline-none">Manifest</Tab>
+            <Tab className="px-2 focus:outline-none">Data</Tab>
           </TabList>
           <hr />
           <TabPanels>
             <TabPanel>
               <section className="flex flex-col mt-4 space-y-1">
-                <span>
-                  <strong>File</strong>: <FileIcon className="h-4 text-gray-400" />{' '}
-                  <span className="underline">diabetes_data.csv</span>
-                </span>
-                <span>
-                  <strong>Shape</strong>: <span className="text-gray-400">[10000, 8]</span>
-                </span>
-                <span>
-                  <strong>Type</strong>: <span className="text-gray-400">64-bit floating point</span>
-                </span>
-                <span>
-                  <strong>Schema</strong>:{' '}
-                  <span className="text-gray-400">
-                    <ul className="list-horizontal">
-                      <li>id</li>
-                      <li>birthdate</li>
-                      <li>sex</li>
-                      <li>diagnosis_date</li>
-                      <li>type</li>
-                      <li>weight</li>
-                      <li>glucose_level</li>
-                      <li>medications</li>
-                    </ul>
-                  </span>
-                </span>
-                <span>
-                  <strong>Entities</strong>: <span className="text-gray-400">10,000 unique entities</span>
-                </span>
-                <span>
-                  <strong>Default Permissions</strong>: <span className="text-gray-400">search-only</span>
-                </span>
-                <span>
-                  <strong>Permissions</strong>: <a href="/">7 users, 2 groups</a>
-                </span>
+                <p className="text-gray-400 whitespace-pre-line">{manifest}</p>
               </section>
             </TabPanel>
             <TabPanel>
-              <section className="flex flex-col mt-4 space-y-1">Target</section>
+              <section className="flex flex-col space-y-4 divide-y-2">
+                {data &&
+                  data
+                    .sort((a, b) => a.name.localeCompare(b.name))
+                    .map(({name, id: dataId, dtype, shape}) => (
+                      <div key={dataId} className="flex flex-col pt-4 text-sm text-gray-400">
+                        <div>
+                          Syft id: <span className="text-base text-gray-600">{dataId}</span>
+                        </div>
+                        <div>
+                          File: <span className="text-base text-gray-600">{name}</span>
+                        </div>
+                        <div>
+                          Shape: <span className="text-base text-gray-600">{shape}</span>
+                        </div>
+                        <div>
+                          Type: <span className="text-base text-gray-600">{dtype}</span>
+                        </div>
+                      </div>
+                    ))}
+              </section>
             </TabPanel>
           </TabPanels>
         </Tabs>

@@ -1,6 +1,7 @@
 import {useState} from 'react'
 import {useRouter} from 'next/router'
 import cn from 'classnames'
+import {Dialog} from '@headlessui/react'
 import {useForm} from 'react-hook-form'
 import {Input} from '@/components/lib'
 import {getLayout} from '@/layouts/blank'
@@ -20,13 +21,17 @@ const steps = [
 ]
 
 export default function Example() {
-  const [currentStep, setStep] = useState(1)
+  const [currentStep, setStep] = useState(0)
   const {handleSubmit, register} = useForm()
+  const [loading, setLoading] = useState(false)
   const router = useRouter()
 
   function submit(values) {
     setStep(3)
-    api.post('/setup', values).then(() => router.push('/login'))
+    api.post('/setup', values).then(() => {
+      setLoading(true)
+      setTimeout(() => router.push('/login'), 2000)
+    })
   }
 
   function change() {
@@ -40,7 +45,7 @@ export default function Example() {
 
   return (
     <main className="mx-auto max-w-3xl h-screen flex items-center">
-      <article className="flex flex-row w-full max-w-xl mx-auto space-x-20">
+      <article className="flex flex-row items-center w-full max-w-3xl px-8 mx-auto space-x-8 lg:space-x-20">
         <nav aria-label="Progress" className="w-full">
           <ol className="overflow-hidden">
             {steps.map((step, stepIdx) => (
@@ -115,6 +120,14 @@ export default function Example() {
           </ol>
         </nav>
         <section className="w-full">
+          <h1 className={cn(currentStep > 0 ? 'sr-only' : 'mb-6')}>Welcome to PyGrid!</h1>
+          <p className="mb-4">
+            {currentStep === 0 &&
+              "Before you start your PyGrid Domain, let's validate the token you received during deployment and set up the data owner account."}
+            {currentStep === 1 && 'Please insert the token you received during deployment.'}
+            {currentStep === 2 && 'Set up the owner account.'}
+            {currentStep === 3 && 'Finally, name your PyGrid Domain.'}
+          </p>
           <form onSubmit={handleSubmit(submit)}>
             <div className={cn(currentStep !== 1 && 'sr-only')}>
               <Input ref={register} label="Token" placeholder="Insert the token" name="token" />
@@ -130,23 +143,23 @@ export default function Example() {
               />
             </div>
             <div className={cn(currentStep !== 3 && 'sr-only')}>
-              <Input ref={register} label="Domain name" placeholder="Domain name" name="domainName" />
+              <Input ref={register} label="Domain name" placeholder="Domain name" name="domain_name" />
             </div>
-            <div className="flex flex-row justify-between mt-8 space-x-4">
+            <div className={cn('flex flex-row justify-between mt-8', currentStep > 1 && 'space-x-4')}>
               <div>
                 <button
-                  className={cn('btn', currentStep <= 1 && 'hidden')}
+                  className={cn('btn w-full bg-gray-600', currentStep <= 1 && 'hidden')}
                   type="button"
                   onClick={() => setStep(curr => curr - 1)}>
-                  Previous
+                  Back
                 </button>
               </div>
               {currentStep === 3 ? (
-                <button key="finish" className="btn">
+                <button key="finish" className="w-full btn">
                   Finish setup
                 </button>
               ) : (
-                <button className="btn" onClick={change} type="button">
+                <button className="w-full btn" onClick={change} type="button">
                   Next
                 </button>
               )}
@@ -154,12 +167,16 @@ export default function Example() {
           </form>
         </section>
       </article>
-      {/* <Dialog open={true} onClose={() => false} className="fixed inset-0 z-10 overflow-y-auto"> */}
-      {/* <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" /> */}
-      {/* <img alt="PyGrid logo" src="/assets/logo.png" className="w-24 h-24 spin" /> */}
-      {/* <button onClick={() => false}>Cancel</button> */}
-      {/* <Dialog.Title>None</Dialog.Title> */}
-      {/* </Dialog> */}
+      <Dialog open={loading} onClose={() => false} className="fixed inset-0 z-10 overflow-y-auto">
+        <Dialog.Overlay className="fixed inset-0 z-10" />
+        <div className="flex items-center justify-center min-h-screen mx-auto bg-white min-w-screen transition-all">
+          <img alt="PyGrid logo" src="/assets/logo.png" className="z-30 w-24 h-24 opacity-100 animate-pulse" />
+          <h2 className="animate-pulse">Loading PyGrid...</h2>
+        </div>
+        <button className="sr-only" onClick={() => false}>
+          Cancel
+        </button>
+      </Dialog>
     </main>
   )
 }

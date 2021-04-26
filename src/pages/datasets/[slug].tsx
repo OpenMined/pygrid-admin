@@ -3,7 +3,7 @@ import {Tag, ButtonGhost} from '@/components/lib'
 import {Tabs, TabList, Tab, TabPanels, TabPanel} from '@reach/tabs'
 
 function Dataset({slug}: {slug?: string}) {
-  const {isLoading, data: dataset, error} = useFetch(`/data-centric/datasets/b61fd19c-92d1-4fbf-a5d8-3418e8711227`)
+  const {isLoading, data: dataset, error} = useFetch(`/data-centric/datasets/9bd99071-a1c8-4604-b3f9-f8af8600cd50`)
   const {id, description, tags, manifest, data} = dataset ?? {}
 
   return (

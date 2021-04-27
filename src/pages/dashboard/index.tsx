@@ -1,5 +1,4 @@
 import {Spinner} from '@/components/icons/spinner'
-import {Card} from '@/components/pages/dashboard/card'
 import {useFetch} from '@/utils/query-builder'
 
 const Dashboard = () => {

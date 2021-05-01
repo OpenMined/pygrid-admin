@@ -1,7 +1,7 @@
 import type {FunctionComponent} from 'react'
 import {useFetch} from '@/utils/query-builder'
 import {PyGridStatus} from '@/types'
-
+import cn from 'classnames'
 const Footer: FunctionComponent = () => {
   const {isLoading, error, isError, data: status} = useFetch<PyGridStatus>('/setup/status')
 
@@ -13,10 +13,15 @@ const Footer: FunctionComponent = () => {
             <svg
               viewBox="0 0 100 100"
               xmlns="http://www.w3.org/2000/svg"
-              className="h-3 w-3 animate-pulse fill-current text-green-500">
+              className={cn(
+                'h-3 w-3 animate-pulse fill-current',
+                isLoading ? 'text-yellow-500' : isError ? 'text-red-500' : 'text-green-500'
+              )}>
               <circle cx="50" cy="50" r="50" />
             </svg>
-            <span className="text-xs text-gray-600">Connected to {status?.domainName}</span>
+            {isLoading && <span className="text-xs text-gray-600">Connecting to PyGrid Domain...</span>}
+            {isError && <span className="text-xs text-gray-600">PyGrid API unreachable</span>}
+            {status && <span className="text-xs text-gray-600">Connected to {status?.domainName}</span>}
           </div>
         </div>
       </nav>

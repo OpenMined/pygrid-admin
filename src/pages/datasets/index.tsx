@@ -1,111 +1,41 @@
 import {useState} from 'react'
+import cn from 'classNames'
 import Link from 'next/link'
-import {useDisclosure} from 'react-use-disclosure'
-import {SidePanel} from '@/components/side-panel'
 import {useForm} from 'react-hook-form'
+import {useDisclosure} from 'react-use-disclosure'
+import {useQueryClient, useMutation} from 'react-query'
+import {VisuallyHidden} from '@reach/visually-hidden'
+import api from '@/utils/api-axios'
+import {SidePanel} from '@/components/side-panel'
 import {DatasetCard} from '@/components/pages/datasets/cards/datasets'
-import {ArrowForward} from '@/components/icons/arrows'
-import {Plus} from '@/components/icons/marks'
+import {Right, ArrowForward} from '@/components/icons/arrows'
 import {Alert, Input, SearchBar} from '@/components/lib'
 import {useFetch} from '@/utils/query-builder'
-import {useMutation} from 'react-query'
-import type {FunctionComponent} from 'react'
+import {formatBytes} from '@/utils/common'
 import {Spinner} from '@/components/icons/spinner'
-import {IDataset, IRequest} from '@/types/datasets'
-import axios from 'axios'
 import {getToken} from '@/lib/auth'
 
-const Datasets: FunctionComponent = () => {
+const Datasets = () => {
   const {open, close, isOpen} = useDisclosure()
-  const {isLoading: datasetsLoading, error: datasetsError, data: datasets} = useFetch<Array<IDataset>>(
-    '/data-centric/datasets'
-  )
-  const {isLoading: requestsLoading, error: requestsError, data: requests} = useFetch<Array<IRequest>>(
-    '/data-centric/requests'
-  )
-  const {isLoading: tensorsLoading, error: tensorsError, data: tensors} = useFetch<Array<IRequest>>(
-    '/data-centric/tensors'
-  )
-
+  const {isLoading, data: datasets, error} = useFetch('/data-centric/datasets')
+  const {isLoading: requestsLoading, data: requests, error: requestsError} = useFetch('/data-centric/requests')
+  const {isLoading: tensorsLoading, data: tensors, error: tensorsError} = useFetch('/data-centric/tensors')
   const [searchText, setSearchText] = useState('')
-  const {register, handleSubmit, setValue} = useForm()
+  const {register, handleSubmit, watch} = useForm({mode: 'onBlur'})
+  const [loading, setLoading] = useState(false)
+  const [createError, setCreateError] = useState(null)
+  const queryClient = useQueryClient()
 
-  const [indexes, setIndexes] = useState([])
-  const [counter, setCounter] = useState(0)
-
-  const createDataset = useMutation<Partial<IDataset>, IDataset>(data =>
-    axios.post('/data-centric/datasets', data, {
-      baseURL: process.env.NEXT_PUBLIC_API_URL,
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        token: getToken()
-      }
-    })
-  )
-
-  const addTensor = () => {
-    setIndexes(prevIndexes => [...prevIndexes, counter])
-    setCounter(prevCounter => prevCounter + 1)
-  }
-
-  const removeTensor = index => () => {
-    setIndexes(prevIndexes => [...prevIndexes.filter(item => item !== index)])
-    setCounter(prevCounter => prevCounter - 1)
-  }
-
-  const toBase64 = file =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader()
-      reader.readAsDataURL(file)
-      reader.onload = () => resolve(reader.result)
-      reader.onerror = error => reject(error)
-    })
-
-  const submit = (values: Omit<IDataset, 'id' | 'createdAt'>) => {
-    const formData = new FormData()
-    formData.append('name', values.name)
-    formData.append('description', values.description)
-    formData.append('manifest', values.manifest)
-    formData.append(
-      'tags',
-      values.tags?.split(',').map(t => t.trim())
-    )
-    values.tensors?.forEach(async tensor => {
-      const b64 = await handleTensorUpload(tensor.content)
-      formData.append(`${tensor.name}[]`, tensor.content[0], tensor.content[0].filename)
-      formData.append(`${tensor.name}[]`, tensor.manifest)
-    })
-    createDataset.mutate(formData, {onSuccess: close})
-  }
-
-  const closePanel = () => {
-    close()
-    createDataset.reset()
-  }
-
-  const sections = [
-    {
-      title: 'Permissions changes',
-      value: requests ? requests.filter(x => x.requestType === 'permissions' && x.status === 'pending').length : 0,
-      text: 'requests',
-      link: '/datasets/requests'
-    },
-    {title: 'Tensors pending deletion', value: tensors?.tensors.length, text: 'tensors', link: '/datasets/tensors'}
-  ]
-
-  const handleTensorUpload = async files => {
-    const base = await toBase64(files[0])
-    return base
-  }
+  const datafile = watch('file')
 
   const DatasetsList = ({datasets}) => {
     if (datasets.length > 0) {
       return (
         <>
           {datasets.map(dataset => (
-            <div key={`dataset-${dataset.name}`}>
-              <a href={`/datasets/${dataset.name}`}>
-                <DatasetCard {...dataset} numberTensors={Object.keys(dataset.tensors).length} />
+            <div key={`dataset-${dataset.id}`}>
+              <a href={`/datasets/${dataset.id}`}>
+                <DatasetCard {...dataset} numberTensors={Object.keys(dataset?.data).length} />
               </a>
             </div>
           ))}
@@ -116,51 +46,97 @@ const Datasets: FunctionComponent = () => {
     }
   }
 
-  const Stats = () => {
-    return (
-      <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-        {sections.map(({title, value, text, link}) => (
-          <div key={`section-${title}`}>
-            <small className="font-semibold tracking-wide text-gray-800 uppercase">{title}</small>
-            <p className="my-3">
-              <span className="text-xl font-semibold text-gray-800">{value}</span>{' '}
-              <span className="text-gray-400">{text}</span>
-              <Link href={link}>
-                <a>
-                  <ArrowForward className="w-4 h-4 text-blue-600" />
-                </a>
-              </Link>
-            </p>
-          </div>
-        ))}
-      </section>
-    )
+  function submit(values) {
+    const {file} = values
+    const formData = new FormData()
+    formData.append('file', file[0])
+    setLoading(true)
+    api
+      .post('/data-centric/datasets', formData, {headers: {'Content-Type': 'multipart/form-data'}})
+      .then(() => {
+        queryClient.invalidateQueries('/data-centric/datasets')
+        close()
+      })
+      .catch(err => setCreateError(err))
+      .finally(() => setLoading(false))
   }
 
-  // TODO : Support pagination.
-  // TODO : Filter datasets by tags
   return (
-    <main className="space-y-4">
-      <div className="flex flex-col-reverse items-start space-y-4 space-y-reverse md:space-y-0 md:flex-row md:justify-between">
-        <h1 className="pr-4 text-4xl leading-12">Datasets</h1>
-        <button className="inline-flex items-center btn hover:bg-blue-600 hover:shadow-sm space-x-6" onClick={open}>
-          <Plus className="w-4 h-4" />
-          <span>New dataset</span>
-        </button>
+    <article>
+      <div className="flex flex-col sm:flex-row sm:justify-between">
+        <header>
+          <h1>Datasets</h1>
+          <p className="subtitle">Manage all private data hosted in your node</p>
+        </header>
       </div>
-      <p className="pb-4 mb-6 text-xl font-light text-gray-400">Manage all private data hosted in your node</p>
+      <section className="mt-6">
+        <div className="flex flex-row justify-between max-w-xs text-sm text-gray-600 uppercase leading-6 hover:text-gray-800 focus:text-gray-800 active:text-gray-800">
+          <Link href="/datasets/requests">
+            <a>
+              {requestsLoading ? <Spinner className="h-3 mr-4" /> : requests?.length} Request
+              {requests?.length !== 1 && 's'}
+              <Right className="w-4 h-4" />
+            </a>
+          </Link>
+          <Link href="/datasets/tensors">
+            <a>
+              {tensorsLoading ? <Spinner className="h-3 mr-4" /> : tensors?.tensors.length} Tensor
+              {tensors?.tensors.length !== 1 && 's'}
+              <Right className="w-4 h-4" />
+            </a>
+          </Link>
+        </div>
+        {(!requestsLoading || !tensorsLoading) && (requestsError || tensorsError) && (
+          <Alert
+            className="mt-4"
+            error="Unable to fetch groups or roles data"
+            description={(requestsError?.message || tensorsError?.message) ?? 'Check your connection status'}
+          />
+        )}
+      </section>
+      <section className="mt-6 overflow-hidden bg-white shadow sm:rounded-md">
+        <header>
+          <div className="flex items-center justify-between px-4 py-4 text-xs font-medium tracking-wider text-gray-500 uppercase bg-gray-100 border-b border-gray-200 sm:px-6">
+            <div className="flex flex-col sm:flex-row">
+              <h2 className="flex-shrink-0 mr-2">Available datasets</h2>
+              <div className="flex-shrink-0">
+                {datasets?.length > 0 && (
+                  <p>
+                    ({datasets.length} Dataset{datasets.length !== 1 && 's'})
+                  </p>
+                )}
+                {isLoading && <Spinner className="w-4" />}
+              </div>
+            </div>
+            <div className="text-right">
+              <button className="btn" onClick={open}>
+                <span className="hidden sm:inline-block">Create Dataset</span>
+                <span className="sm:hidden">Create</span>
+              </button>
+            </div>
+          </div>
+        </header>
+      </section>
+      {!isLoading && error && (
+        <div className="mt-4">
+          <VisuallyHidden>An error occurred.</VisuallyHidden>
+          <Alert
+            error="It was not possible to get the dataset list. Please check if the Domain API is reachable."
+            description={error.message ?? 'Check your connection status'}
+          />
+        </div>
+      )}
+      <p className="pb-4 mb-6 text-xl font-light text-gray-400"></p>
       {datasets?.length > 0 && (
         <>
-          <Stats />
-          <SearchBar placeholder={'Search Datasets'} search={searchText} onChange={text => setSearchText(text)} />
           <section className="space-y-6">
             <DatasetsList
-              datasets={datasets.filter(item => item.name?.toLowerCase().includes(searchText.toLowerCase()))}
+              datasets={datasets.filter(item => item.id?.toLowerCase().includes(searchText.toLowerCase()))}
             />
           </section>
         </>
       )}
-      <SidePanel isOpen={isOpen} close={closePanel}>
+      <SidePanel isOpen={isOpen} close={close}>
         <article className="p-4 pr-8 space-y-6">
           <section>
             <header>
@@ -170,48 +146,61 @@ const Datasets: FunctionComponent = () => {
           </section>
           <form onSubmit={handleSubmit(submit)}>
             <section className="flex flex-col space-y-4">
-              <Input name="name" label="Dataset Name" ref={register} placeholder="Name" />
-              <Input name="description" label="Description" ref={register} placeholder="Description" type="text" />
-              <Input name="manifest" label="Manifest" ref={register} placeholder="Manifest" type="text" />
-              <Input name="tags" label="Tags" ref={register} placeholder="Tags" type="text" />
-              {indexes.map(index => {
-                const fieldName = `tensors[${index}]`
-                return (
-                  <fieldset
-                    className="p-4 bg-gray-100 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 md:text-md"
-                    name={fieldName}
-                    key={fieldName}>
-                    <p className="block pb-2 font-medium text-gray-700 text-md">Tensor #{index}:</p>
-                    <Input label="Name:" type="text" name={`${fieldName}.name`} ref={register} />
-                    <Input label="Manifest" type="text" name={`${fieldName}.manifest`} ref={register} />
-                    <Input label="Content:" type="file" name={`${fieldName}.content`} ref={register} />
-                    <button className="mt-2 btn" type="button" onClick={removeTensor(index)}>
-                      Remove
-                    </button>
-                  </fieldset>
-                )
-              })}
-
-              <button type="button" onClick={addTensor}>
-                Add Tensor
-              </button>
+              {datafile?.[0]?.name && (
+                <div className="flex flex-col space-y-1 text-sm text-gray-600">
+                  <span>Name: {datafile[0].name}</span>
+                  <span>Size: {formatBytes(datafile[0].size, 0)}</span>
+                  <span>Last modified: {datafile[0].lastModifiedDate?.toString()}</span>
+                </div>
+              )}
+              <label
+                htmlFor="file"
+                className="relative font-medium text-indigo-600 bg-white cursor-pointer rounded-md hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
+                <input name="file" id="file" type="file" className="sr-only" ref={register} />
+                <div
+                  className={cn(
+                    'w-full btn lg:w-auto transition-all ease-in-out duration-700',
+                    datafile?.[0] && 'bg-gray-700'
+                  )}>
+                  {datafile?.[0] ? 'Change file' : 'Select dataset'}
+                </div>
+              </label>
+              <p className="text-gray-500">
+                If your compressed file already contains files named description, manifest and/or tags, you can ignore
+                the fields below. Otherwise, we strongly suggest you add them.
+              </p>
+              <Input
+                type="textarea"
+                name="description"
+                label="Description"
+                ref={register}
+                rows={3}
+                placeholder="Description"
+              />
+              <Input type="textarea" name="manifest" label="Manifest" rows={3} ref={register} placeholder="Manifest" />
+              <Input
+                type="textarea"
+                name="tags"
+                label="Tags"
+                ref={register}
+                placeholder="Tags"
+                hint="One tag per line"
+              />
               <div className="w-full sm:text-right">
-                <button
-                  className="w-full btn lg:w-auto transition-all ease-in-out duration-700"
-                  disabled={createDataset.isLoading}>
-                  {createDataset.isLoading ? <Spinner className="w-4 text-white" /> : 'Create a new Dataset'}
+                <button className="w-full btn lg:w-auto transition-all ease-in-out duration-700" disabled={loading}>
+                  {loading ? <Spinner className="w-4 text-white" /> : 'Create a new Dataset'}
                 </button>
               </div>
-              {createDataset.isError && (
+              {createError && (
                 <div>
-                  <Alert error="There was an error creating the dataset" description={createDataset.error.message} />
+                  <Alert error="There was an error creating the dataset" description={createError.error?.message} />
                 </div>
               )}
             </section>
           </form>
         </article>
       </SidePanel>
-    </main>
+    </article>
   )
 }
 

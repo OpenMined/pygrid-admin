@@ -2,7 +2,6 @@ import Link from 'next/link'
 import {useRouter} from 'next/router'
 import {Left} from '@/components/icons/arrows'
 import type {FunctionComponent} from 'react'
-import {Logout} from '@/components/icons/things'
 import {useAuth} from '@/context/auth-context'
 
 const Header: FunctionComponent = () => {
@@ -66,7 +65,6 @@ const Header: FunctionComponent = () => {
               onClick={() => logout()}
               className="text-sm text-gray-600 hover:text-gray-400 active:text-gray-800 space-x-2">
               <span>Logout</span>
-              <Logout className="h-6 w-6" />
             </button>
           </Link>
         </div>

@@ -1,6 +1,6 @@
 import {PyGridUser, PyGridUserRole, PyGridUserGroup, PyGridUserPermissions} from './users'
 import {PyGridDataset, PyGridRequest, PyGridTensor} from './datasets'
-import {PyGridSettings} from './settings'
+import {PyGridSettings, PyGridStatus} from './settings'
 import {PyGridAssociationRequest, PyGridWorker} from './infrastructure'
 
 export type {
@@ -13,5 +13,6 @@ export type {
   PyGridRequest,
   PyGridSettings,
   PyGridAssociationRequest,
-  PyGridWorker
+  PyGridWorker,
+  PyGridStatus
 }

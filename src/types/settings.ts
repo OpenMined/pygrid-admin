@@ -9,3 +9,8 @@ export interface PyGridSettings {
   tensorExpirationPolicy: number
   allowUserSignup: boolean
 }
+
+export interface PyGridStatus {
+  domainName: string
+  init: boolean
+}

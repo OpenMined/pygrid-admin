@@ -21,7 +21,11 @@ const Footer: FunctionComponent = () => {
             </svg>
             {isLoading && <span className="text-xs text-gray-600">Connecting to PyGrid Domain...</span>}
             {isError && <span className="text-xs text-gray-600">PyGrid API unreachable</span>}
-            {status && <span className="text-xs text-gray-600">Connected to {status?.domainName}</span>}
+            {status && (
+              <span className="text-xs text-gray-600">
+                Connected to <b>{status?.domainName}</b> Domain
+              </span>
+            )}
           </div>
         </div>
       </nav>

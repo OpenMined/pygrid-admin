@@ -2,9 +2,11 @@ import Link from 'next/link'
 import {useRouter} from 'next/router'
 import {Left} from '@/components/icons/arrows'
 import type {FunctionComponent} from 'react'
+import {useAuth} from '@/context/auth-context'
 
 const Header: FunctionComponent = () => {
   const router = useRouter()
+  const {logout} = useAuth()
 
   let links
 
@@ -56,6 +58,15 @@ const Header: FunctionComponent = () => {
               )
             )}
           </div>
+        </div>
+        <div className="absolute inset-y-0 right-10 flex items-center pr-2">
+          <Link href="/login" passHref>
+            <button
+              onClick={() => logout()}
+              className="text-sm text-gray-600 hover:text-gray-400 active:text-gray-800 space-x-2">
+              <span>Logout</span>
+            </button>
+          </Link>
         </div>
       </div>
     </nav>

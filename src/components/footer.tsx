@@ -2,13 +2,15 @@ import type {FunctionComponent} from 'react'
 import {useFetch} from '@/utils/query-builder'
 import {PyGridStatus} from '@/types'
 import cn from 'classnames'
+import packageJson from '../../package.json'
+
 const Footer: FunctionComponent = () => {
   const {isLoading, error, isError, data: status} = useFetch<PyGridStatus>('/setup/status')
 
   return (
     <footer>
       <nav className="sticky bottom-0">
-        <div className="flex flex-row flex-wrap items-center justify-between py-2 shadow bg-gray-50 border">
+        <div className="flex flex-row flex-wrap items-center justify-between py-2 bg-gray-50 border">
           <div className="container mx-auto flex flex-row items-center space-x-2">
             <svg
               viewBox="0 0 100 100"
@@ -26,6 +28,9 @@ const Footer: FunctionComponent = () => {
                 Connected to <b>{status?.domainName}</b> Domain
               </span>
             )}
+          </div>
+          <div className="absolute inset-y-0 right-10 flex items-center pr-2">
+            <span className="text-xs text-gray-600">PyGrid Admin {packageJson.version}</span>
           </div>
         </div>
       </nav>

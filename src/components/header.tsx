@@ -37,7 +37,7 @@ const Header: FunctionComponent = () => {
             <img className="cursor-pointer" src="/assets/logo.png" alt="PyGrid home" width={50} height={50} />
           </Link>
           <div className="ml-6 space-x-4">
-            {router.pathname !== '/' && (
+            {router.pathname !== '/dashboard' && (
               <Link href="/">
                 <a aria-label="Return to main page">
                   <Left className="w-4 cursor-pointer" />

@@ -1,4 +1,4 @@
-export interface PygridTensor {
+export interface PyGridTensor {
   name: string
   id: string
   dtype: string

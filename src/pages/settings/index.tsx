@@ -77,7 +77,7 @@ const Settings: FunctionComponent = () => {
               name="replicateDb"
               ref={register}
               label="Replicate Database"
-              defaultValue={settings?.replicateDb}
+              defaultValue={settings?.replicateDb ? 1 : 0}
               options={[
                 {value: 1, label: 'Yes'},
                 {value: 0, label: 'No'}
@@ -87,7 +87,7 @@ const Settings: FunctionComponent = () => {
               name="autoScale"
               ref={register}
               label="Infraestructure Auto Scale"
-              defaultValue={settings?.autoScale}
+              defaultValue={settings?.autoScale ? 1 : 0}
               options={[
                 {value: 1, label: 'Yes'},
                 {value: 0, label: 'No'}
@@ -97,7 +97,7 @@ const Settings: FunctionComponent = () => {
               name="allowUserSignup"
               ref={register}
               label="Allow User Signup"
-              defaultValue={settings?.allowUserSignup}
+              defaultValue={settings?.allowUserSignup ? 1 : 0}
               options={[
                 {value: 1, label: 'Yes'},
                 {value: 0, label: 'No'}

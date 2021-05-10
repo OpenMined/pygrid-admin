@@ -20,7 +20,7 @@ const steps = [
   {name: 'Other settings', description: 'Set up some remaining options for PyGrid', href: '#', status: 'upcoming'}
 ]
 
-export default function Example() {
+export default function Start() {
   const [currentStep, setStep] = useState(0)
   const {handleSubmit, register} = useForm()
   const [loading, setLoading] = useState(false)
@@ -181,4 +181,4 @@ export default function Example() {
   )
 }
 
-Example.getLayout = getLayout
+Start.getLayout = getLayout

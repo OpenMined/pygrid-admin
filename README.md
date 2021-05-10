@@ -19,6 +19,12 @@ and manage users and datasets.
 
 ## Deployment
 
+First, add the PyGrid Domain url as an environment variable. Open `.env` and add
+
+```bash
+NEXT_PUBLIC_API_URL=<PyGrid Domain url>
+```
+
 The Admin UI can be hosted in static file services such as Amazon S3, Netlify, Google Cloud, Vercel or Heroku, and can
 be easily deployed to your own network. It was deliberately built separately from PyGrid to allow for the a very simple
 deployment.

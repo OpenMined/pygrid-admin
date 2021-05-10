@@ -108,6 +108,9 @@ const Infrastructure = () => {
     },
     [queryClient]
   )
+
+  console.log(workers)
+
   return (
     <main className="space-y-4">
       <div className="flex flex-col-reverse items-start space-y-4 space-y-reverse md:space-y-0 md:flex-row md:justify-between">
@@ -136,7 +139,7 @@ const Infrastructure = () => {
                         !workersError &&
                         workers !== undefined &&
                         workers
-                          .filter(w => w.state === 2)
+                          ?.filter(w => w.state === 2)
                           .map(worker => (
                             <tr key={`worker-${worker.id}`} className="py-10 border-b border-gray-200 hover:bg-gray-50">
                               <td className="px-4 py-4">{worker.id}</td>

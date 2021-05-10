@@ -71,9 +71,7 @@ const Requests = () => {
         <Notification
           title={`Request ${current.accepted ? 'accepted' : 'denied'}!`}
           Icon={!current.accepted && <Ban className="w-5 text-red-700" />}>
-          <p>
-            Request {current.id} by {current.user} accepted
-          </p>
+          <p>Request f2e43c1def6c417f9030901c79598703 by {current.user} accepted</p>
         </Notification>
       )}
     </article>

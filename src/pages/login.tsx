@@ -15,7 +15,6 @@ const Login: FunctionComponent & {getLayout: FunctionComponent} = () => {
   const [spin, setSpin] = useState<boolean>(false)
   const rotateStyle = useRef({})
   const {isValid} = formState
-  const nodeName = 'Node name'
 
   if (spin) {
     rotateStyle.current = {transform: `rotate(${Math.ceil(365 * Math.random())}deg)`}
@@ -43,10 +42,10 @@ const Login: FunctionComponent & {getLayout: FunctionComponent} = () => {
         <div className="transition transform" style={rotateStyle.current}>
           <img alt="PyGrid logo" src="/assets/logo.png" width={200} height={200} />
         </div>
-        <h1 className="text-3xl">Welcome to PyGrid Node</h1>
-        <h2>{nodeName}</h2>
+        <h1 className="text-3xl">Welcome to PyGrid</h1>
+        <h2>OpenMined Domain</h2>
         <form className="w-4/5" onSubmit={handleSubmit(onSubmit)}>
-          <div className="flex flex-col space-y-6 text-left">
+          <div className="flex flex-col text-left space-y-6">
             <div className="flex flex-col">
               <label className="text-gray-600" htmlFor="email">
                 Email or username

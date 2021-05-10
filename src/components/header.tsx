@@ -31,14 +31,19 @@ const Header: FunctionComponent = () => {
     ]
   }
 
+  function userLogout() {
+    logout()
+    router.push('/login')
+  }
+
   return (
     <nav className="sticky top-0">
       <div className="flex flex-row flex-wrap items-center justify-between px-3 shadow bg-gray-50">
-        <div className="container mx-auto flex flex-row items-center">
+        <div className="container mx-auto flex flex-row items-center w-full">
           <Link href="/" passHref>
             <img className="cursor-pointer" src="/assets/logo.png" alt="PyGrid home" width={50} height={50} />
           </Link>
-          <div className="ml-6 space-x-4">
+          <div className="w-full ml-6 space-x-4">
             {router.pathname !== '/' && (
               <Link href="/">
                 <a aria-label="Return to main page">
@@ -58,15 +63,13 @@ const Header: FunctionComponent = () => {
               )
             )}
           </div>
-        </div>
-        <div className="absolute inset-y-0 right-10 flex items-center pr-2">
-          <Link href="/login" passHref>
+          <div className="flex-shrink-0">
             <button
-              onClick={() => logout()}
+              onClick={userLogout}
               className="text-sm text-gray-600 hover:text-gray-400 active:text-gray-800 space-x-2">
               <span>Logout</span>
             </button>
-          </Link>
+          </div>
         </div>
       </div>
     </nav>

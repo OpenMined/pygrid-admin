@@ -5,7 +5,7 @@ import {useAuth} from '@/context/auth-context'
 const CheckAuthRoute: FunctionComponent = ({children}) => {
   const router = useRouter()
   const {getToken} = useAuth()
-  const publicRoutes = ['/login']
+  const publicRoutes = ['/login', '/start']
 
   if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
     const token = getToken()

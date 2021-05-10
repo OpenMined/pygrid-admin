@@ -3,17 +3,16 @@ import cn from 'classNames'
 import Link from 'next/link'
 import {useForm} from 'react-hook-form'
 import {useDisclosure} from 'react-use-disclosure'
-import {useQueryClient, useMutation} from 'react-query'
+import {useQueryClient} from 'react-query'
 import {VisuallyHidden} from '@reach/visually-hidden'
 import api from '@/utils/api-axios'
 import {SidePanel} from '@/components/side-panel'
 import {DatasetCard} from '@/components/pages/datasets/cards/datasets'
-import {Right, ArrowForward} from '@/components/icons/arrows'
-import {Alert, Input, SearchBar} from '@/components/lib'
+import {Right} from '@/components/icons/arrows'
+import {Alert, Input} from '@/components/lib'
 import {useFetch} from '@/utils/query-builder'
 import {formatBytes} from '@/utils/common'
 import {Spinner} from '@/components/icons/spinner'
-import {getToken} from '@/lib/auth'
 
 const Datasets = () => {
   const {open, close, isOpen} = useDisclosure()
@@ -34,7 +33,7 @@ const Datasets = () => {
         <>
           {datasets.map(dataset => (
             <div key={`dataset-${dataset.id}`}>
-              <a href={`/datasets/${dataset.id}`}>
+              <a href={`/datasets/d?id=${dataset.id}`}>
                 <DatasetCard {...dataset} numberTensors={Object.keys(dataset?.data).length} />
               </a>
             </div>

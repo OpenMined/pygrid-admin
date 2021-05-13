@@ -1,3 +1,4 @@
+import {useEffect} from 'react'
 import {useRouter} from 'next/router'
 import {Tabs, TabList, Tab, TabPanels, TabPanel} from '@reach/tabs'
 import {useFetch} from '@/utils/query-builder'
@@ -7,11 +8,16 @@ function Dataset() {
   const router = useRouter()
   const datasetId = router.query?.id
 
-  if (!datasetId) {
-    router.push('/datasets')
-  }
+  console.log({router})
 
-  const {isLoading, data: dataset, error} = useFetch(`/data-centric/datasets/${datasetId}`)
+  useEffect(() => {
+    if (!datasetId) {
+      router.push('/datasets')
+    }
+  }, [])
+
+  const {data: dataset} = useFetch(`/data-centric/datasets/${datasetId}`)
+
   const {id, description, tags, manifest, data} = dataset ?? {}
 
   return (

@@ -8,8 +8,6 @@ function Dataset() {
   const router = useRouter()
   const datasetId = router.query?.id
 
-  console.log({router})
-
   useEffect(() => {
     if (!datasetId) {
       router.push('/datasets')

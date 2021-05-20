@@ -3,21 +3,15 @@ import {useRouter} from 'next/router'
 import cn from 'classnames'
 import {Dialog} from '@headlessui/react'
 import {useForm} from 'react-hook-form'
-import {Input} from '@/components/lib'
+import {Input, Subtitle, Title} from '@/components/lib'
 import {getLayout} from '@/layouts/blank'
 import {CheckMark} from '@/components/icons/marks'
 import api from '@/utils/api-axios'
 
 const steps = [
-  {name: 'Deploy PyGrid', description: 'Deploy the PyGrid Domain via the PyGrid CLI.', href: '#', status: 'complete'},
-  {
-    name: 'PyGrid setup token',
-    description: 'Verify the token obtained during installation.',
-    href: '#',
-    status: 'current'
-  },
+  {name: 'Deploy PyGrid', description: 'Deploy a PyGrid Domain', href: '#', status: 'current'},
   {name: 'Owner account', description: 'Create the Domain Owner account.', href: '#', status: 'upcoming'},
-  {name: 'Other settings', description: 'Set up some remaining options for PyGrid', href: '#', status: 'upcoming'}
+  {name: 'Other settings', description: 'Set your PyGrid name', href: '#', status: 'upcoming'}
 ]
 
 export default function Start() {
@@ -27,7 +21,7 @@ export default function Start() {
   const router = useRouter()
 
   function submit(values) {
-    setStep(3)
+    setStep(2)
     api.post('/setup', values).then(() => {
       setLoading(true)
       setTimeout(() => router.push('/login'), 2000)
@@ -119,20 +113,21 @@ export default function Start() {
             ))}
           </ol>
         </nav>
-        <section className="w-full">
-          <h1 className={cn(currentStep > 0 ? 'sr-only' : 'mb-6')}>Welcome to PyGrid!</h1>
-          <p className="mb-4">
-            {currentStep === 0 &&
-              "Before you start your PyGrid Domain, let's validate the token you received during deployment and set up the data owner account."}
-            {currentStep === 1 && 'Please insert the token you received during deployment.'}
-            {currentStep === 2 && 'Set up the owner account.'}
-            {currentStep === 3 && 'Finally, name your PyGrid Domain.'}
-          </p>
+        <section className="w-full space-y-4">
+          <header>
+            <Title>
+              {currentStep === 0 && 'Welcome to PyGrid!'}
+              {currentStep === 1 && 'Account'}
+              {currentStep === 2 && 'Settings'}
+            </Title>
+            <Subtitle>
+              {currentStep === 0 && 'Configure you PyGrid Domain and start using it!'}
+              {currentStep === 1 && 'Set up the owner account.'}
+              {currentStep === 2 && 'Finally, name your PyGrid Domain.'}
+            </Subtitle>
+          </header>
           <form onSubmit={handleSubmit(submit)}>
-            <div className={cn(currentStep !== 1 && 'sr-only')}>
-              <Input ref={register} label="Token" placeholder="Insert the token" name="token" />
-            </div>
-            <div className={cn(currentStep !== 2 && 'sr-only', 'space-y-4')}>
+            <div className={cn(currentStep !== 1 && 'sr-only', 'space-y-4')}>
               <Input ref={register} label="Owner email" placeholder="Owner account email" name="email" />
               <Input
                 ref={register}
@@ -142,7 +137,7 @@ export default function Start() {
                 type="password"
               />
             </div>
-            <div className={cn(currentStep !== 3 && 'sr-only')}>
+            <div className={cn(currentStep !== 2 && 'sr-only')}>
               <Input ref={register} label="Domain name" placeholder="Domain name" name="domain_name" />
             </div>
             <div className={cn('flex flex-row justify-between mt-8', currentStep > 1 && 'space-x-4')}>
@@ -154,7 +149,7 @@ export default function Start() {
                   Back
                 </button>
               </div>
-              {currentStep === 3 ? (
+              {currentStep === 2 ? (
                 <button key="finish" className="w-full btn">
                   Finish setup
                 </button>

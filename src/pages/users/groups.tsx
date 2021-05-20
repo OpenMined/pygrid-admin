@@ -4,7 +4,7 @@ import take from 'lodash.take'
 import {useForm} from 'react-hook-form'
 import VisuallyHidden from '@reach/visually-hidden'
 import {useDisclosure} from 'react-use-disclosure'
-import {Alert, Input} from '@/components/lib'
+import {Alert, Input, Subtitle, Title} from '@/components/lib'
 import {Spinner} from '@/components/icons/spinner'
 import {GroupListItem} from '@/components/pages/users/group-list-item'
 import {SidePanel} from '@/components/side-panel'
@@ -48,8 +48,8 @@ const UserGroups: FunctionComponent = () => {
   return (
     <article>
       <header>
-        <h1>User groups</h1>
-        <p className="subtitle">Manage all user groups permissions</p>
+        <Title>User Groups</Title>
+        <Subtitle>Manage all user groups permissions</Subtitle>
       </header>
       <section className="mt-6 overflow-hidden bg-white shadow sm:rounded-md">
         <header>

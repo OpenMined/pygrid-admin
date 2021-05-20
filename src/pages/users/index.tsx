@@ -3,7 +3,7 @@ import Link from 'next/link'
 import VisuallyHidden from '@reach/visually-hidden'
 import {useDisclosure} from 'react-use-disclosure'
 import {useForm} from 'react-hook-form'
-import {Alert, Input, Select} from '@/components/lib'
+import {Alert, Input, Select, Subtitle, Title} from '@/components/lib'
 import {Spinner} from '@/components/icons/spinner'
 import {Right} from '@/components/icons/arrows'
 import {UserListItem} from '@/components/pages/users/user-list-item'
@@ -69,11 +69,8 @@ const Users: FunctionComponent = () => {
     <article>
       <div className="flex flex-col sm:flex-row sm:justify-between">
         <header>
-          <h1>Users</h1>
-          <p className="subtitle">
-            Manage all users (internal and external) <br className="sm:hidden" />
-            in your Domain
-          </p>
+          <Title>Users</Title>
+          <Subtitle>Manage internal and external users</Subtitle>
         </header>
       </div>
       <section className="mt-6">

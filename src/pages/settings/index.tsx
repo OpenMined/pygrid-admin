@@ -1,4 +1,4 @@
-import {Alert, Input, Select} from '@/components/lib'
+import {Alert, Input, Select, Subtitle, Title} from '@/components/lib'
 import React, {FunctionComponent} from 'react'
 import {useForm} from 'react-hook-form'
 import {useFetch, useMutate} from '@/utils/query-builder'
@@ -25,8 +25,10 @@ const Settings: FunctionComponent = () => {
 
   return (
     <main className="space-y-4">
-      <h1 className="text-4xl text-gray-800">Settings</h1>
-      <p className="text-xl font-light text-gray-400 pb-8">Configure your domain</p>
+      <header>
+        <Title>Settings</Title>
+        <Subtitle>Configure your domain</Subtitle>
+      </header>
       <div className="relative space-y-6">
         <div>
           <h3 className="text-2xl text-gray-800">General Domain Settings</h3>

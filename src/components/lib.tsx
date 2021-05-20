@@ -154,3 +154,7 @@ export const Select = forwardRef<
     </div>
   )
 })
+
+export const Title: FunctionComponent<{children: string}> = ({children}) => <h1>{children}</h1>
+
+export const Subtitle: FunctionComponent<{children: string}> = ({children}) => <p className="subtitle">{children}</p>

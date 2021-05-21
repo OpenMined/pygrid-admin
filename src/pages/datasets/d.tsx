@@ -8,12 +8,6 @@ function Dataset() {
   const router = useRouter()
   const datasetId = router.query?.id
 
-  useEffect(() => {
-    if (!datasetId) {
-      router.push('/datasets')
-    }
-  }, [])
-
   const {data: dataset} = useFetch(`/data-centric/datasets/${datasetId}`)
 
   const {id, description, tags, manifest, data} = dataset ?? {}

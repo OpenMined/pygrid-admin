@@ -88,7 +88,7 @@ const Settings: FunctionComponent = () => {
             <Select
               name="autoScale"
               ref={register}
-              label="Infraestructure Auto Scale"
+              label="Infrastructure Auto Scale"
               defaultValue={settings?.autoScale ? 1 : 0}
               options={[
                 {value: 1, label: 'Yes'},

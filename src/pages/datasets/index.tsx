@@ -13,13 +13,17 @@ import {Alert, Input, Title, Subtitle} from '@/components/lib'
 import {useFetch} from '@/utils/query-builder'
 import {formatBytes} from '@/utils/common'
 import {Spinner} from '@/components/icons/spinner'
+import {PyGridDataset, PyGridTensor} from '@/types'
 
 const Datasets = () => {
   const {open, close, isOpen} = useDisclosure()
   const {isLoading, data: datasets, error} = useFetch('/data-centric/datasets')
-  const {isLoading: requestsLoading, data: requests, error: requestsError} = useFetch('/data-centric/requests')
-  const {isLoading: tensorsLoading, data: tensors, error: tensorsError} = useFetch('/data-centric/tensors')
-  const [searchText, setSearchText] = useState('')
+  const {isLoading: requestsLoading, data: requests, error: requestsError} = useFetch<Array<PyGridDataset>>(
+    '/data-centric/requests'
+  )
+  const {isLoading: tensorsLoading, data: tensors, error: tensorsError} = useFetch<Array<PyGridTensor>>(
+    '/data-centric/tensors'
+  )
   const {register, handleSubmit, watch} = useForm({mode: 'onBlur'})
   const [loading, setLoading] = useState(false)
   const [createError, setCreateError] = useState(null)
@@ -134,9 +138,7 @@ const Datasets = () => {
       {datasets?.length > 0 && (
         <>
           <section className="space-y-6">
-            <DatasetsList
-              datasets={datasets.filter(item => item.id?.toLowerCase().includes(searchText.toLowerCase()))}
-            />
+            <DatasetsList datasets={datasets} />
           </section>
         </>
       )}

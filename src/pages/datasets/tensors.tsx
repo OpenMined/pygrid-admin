@@ -1,11 +1,13 @@
-import {useCallback} from 'react'
+import React, {useCallback} from 'react'
 import {useQueryClient} from 'react-query'
 import {TensorsCard} from '@/components/pages/datasets/cards/tensors'
-import {ArrowForward} from '@/components/icons/arrows'
+import {ArrowForward, Right} from '@/components/icons/arrows'
 import {useFetch} from '@/utils/query-builder'
 import api from '@/utils/api-axios'
 import type {PyGridRequest, PyGridTensor} from '@/types'
 import {Title, Subtitle} from '@/components/lib'
+import {Spinner} from '@/components/icons/spinner'
+import Link from 'next/link'
 
 const Tensors = () => {
   const queryClient = useQueryClient()
@@ -34,14 +36,19 @@ const Tensors = () => {
         <Subtitle>View all tensors resulting from your private data</Subtitle>
       </div>
       <section>
-        <small className="font-semibold tracking-wide text-gray-800 uppercase">Retrieve permissions changes</small>
-        <div className="mt-2">
-          <a href="/datasets/requests">
-            <span className="text-xl font-semibold text-gray-800">
-              {requests.filter(x => x.requestType === 'permissions' && x.status === 'pending').length}
-            </span>{' '}
-            <span className="text-gray-400">requests</span> <ArrowForward className="w-4 h-4 text-blue-600" />
-          </a>
+        <div className="flex flex-row justify-between max-w-xs text-sm text-gray-600 uppercase leading-6 hover:text-gray-800 focus:text-gray-800 active:text-gray-800">
+          <Link href="/datasets/requests">
+            <a>
+              {isLoadingRequests ? (
+                <Spinner className="h-3 mr-4" />
+              ) : (
+                requests?.filter(r => r.status === 'pending').length
+              )}{' '}
+              Request
+              {requests?.filter(r => r.status === 'pending').length !== 1 && 's'}
+              <Right className="w-4 h-4" />
+            </a>
+          </Link>
         </div>
       </section>
       {settings && (

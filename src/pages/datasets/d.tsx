@@ -1,14 +1,14 @@
-import {useEffect} from 'react'
 import {useRouter} from 'next/router'
 import {Tabs, TabList, Tab, TabPanels, TabPanel} from '@reach/tabs'
 import {useFetch} from '@/utils/query-builder'
 import {Tag, ButtonGhost} from '@/components/lib'
+import {PyGridDataset} from '@/types'
 
 function Dataset() {
   const router = useRouter()
   const datasetId = router.query?.id
 
-  const {data: dataset} = useFetch(`/data-centric/datasets/${datasetId}`)
+  const {data: dataset} = useFetch<PyGridDataset>(`/data-centric/datasets/${datasetId}`)
 
   const {id, description, tags, manifest, data} = dataset ?? {}
 

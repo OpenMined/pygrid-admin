@@ -13,12 +13,12 @@ import {Alert, Input, Title, Subtitle} from '@/components/lib'
 import {useFetch} from '@/utils/query-builder'
 import {formatBytes} from '@/utils/common'
 import {Spinner} from '@/components/icons/spinner'
-import {PyGridDataset, PyGridTensor} from '@/types'
+import {PyGridDataset, PyGridRequest, PyGridTensor} from '@/types'
 
 const Datasets = () => {
   const {open, close, isOpen} = useDisclosure()
-  const {isLoading, data: datasets, error} = useFetch('/data-centric/datasets')
-  const {isLoading: requestsLoading, data: requests, error: requestsError} = useFetch<Array<PyGridDataset>>(
+  const {isLoading, data: datasets, error} = useFetch<Array<PyGridDataset>>('/data-centric/datasets')
+  const {isLoading: requestsLoading, data: requests, error: requestsError} = useFetch<Array<PyGridRequest>>(
     '/data-centric/requests'
   )
   const {isLoading: tensorsLoading, data: tensors, error: tensorsError} = useFetch<Array<PyGridTensor>>(

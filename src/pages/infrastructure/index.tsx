@@ -7,6 +7,7 @@ import {AssociationRequestCard} from '@/components/pages/infrastructure/cards/re
 import {useFetch} from '@/utils/query-builder'
 import api from '@/utils/api-axios'
 import type {PyGridAssociationRequest, PyGridWorker} from '@/types'
+import Moment from 'moment'
 
 import '@reach/dialog/styles.css'
 import {useQueryClient} from 'react-query'
@@ -56,12 +57,12 @@ const Infrastructure = () => {
   const [selectedWorker, setSelectedWorker] = useState('')
   const [openDeleteWorkerModal, setOpenDeleteWorkerModal] = useState(false)
 
-  const {isLoading: isLoadingWorkers, data: workers, error: workersError} = useFetch<PyGridWorker>(
+  const {isLoading: isLoadingWorkers, data: workers, error: workersError} = useFetch<Array<PyGridWorker>>(
     '/data-centric/workers'
   )
-  const {isLoading: isLoadingRequests, data: requests, error: requestsError} = useFetch<PyGridAssociationRequest>(
-    '/association-requests'
-  )
+  const {isLoading: isLoadingRequests, data: requests, error: requestsError} = useFetch<
+    Array<PyGridAssociationRequest>
+  >('/association-requests')
 
   const TableHead = () => {
     const headers = ['ID', 'State', 'Provider', 'Region', 'Instance Type', 'Created At', 'Deleted At', '']
@@ -145,8 +146,8 @@ const Infrastructure = () => {
                               <td className="px-4 py-4">{worker.provider}</td>
                               <td className="px-4 py-4">{worker.region}</td>
                               <td className="px-4 py-4">{worker.instanceType}</td>
-                              <td className="px-4 py-4">{worker.createdAt}</td>
-                              <td className="px-4 py-4">{worker.destroyedAt}</td>
+                              <td className="px-4 py-4">{Moment(worker.createdAt).format('LLL')}</td>
+                              <td className="px-4 py-4">{Moment(worker.destroyedAt).format('LLL')}</td>
                               <td />
                             </tr>
                           ))}
@@ -196,8 +197,8 @@ const Infrastructure = () => {
                           <td className="px-4 py-4">{worker.provider}</td>
                           <td className="px-4 py-4">{worker.region}</td>
                           <td className="px-4 py-4">{worker.instanceType}</td>
-                          <td className="px-4 py-4">{worker.createdAt}</td>
-                          <td className="px-4 py-4">{worker.destroyedAt}</td>
+                          <td className="px-4 py-4">{Moment(worker.createdAt).format('LLL')}</td>
+                          <td className="px-4 py-4">{Moment(worker.destroyedAt).format('LLL')}</td>
                           <td className="px-4 py-4">
                             <button
                               onClick={() => {

@@ -59,7 +59,7 @@ const UserRoles: FunctionComponent = () => {
               <div className="flex-shrink-0">
                 {roles?.length > 0 && (
                   <p>
-                    ({roles.length} group{roles.length > 1 && 's'})
+                    ({roles.length} role{roles.length > 1 && 's'})
                   </p>
                 )}
                 {isLoading && <Spinner className="w-4" />}

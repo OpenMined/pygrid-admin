@@ -1,8 +1,8 @@
 import type {FunctionComponent} from 'react'
 import {Card} from '@/components/lib'
-import {IDataset} from '@/types/datasets'
+import {PyGridDataset} from '@/types/datasets'
 
-interface IDatasetCard extends IDataset {
+interface IDatasetCard extends PyGridDataset {
   numberTensors: number
 }
 

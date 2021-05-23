@@ -1,10 +1,10 @@
 import {FunctionComponent, MouseEventHandler, useState} from 'react'
 import {Card, ButtonAsLink, ButtonAsIcon} from '@/components/lib'
 import {CheckMark, XMark} from '@/components/icons/marks'
-import {IAssociationRequest} from '@/types/infrastructure'
+import {PyGridAssociationRequest} from '@/types/infrastructure'
 import Dialog from '@reach/dialog'
 
-interface AssociationRequestProperties extends IAssociationRequest {
+interface AssociationRequestProperties extends PyGridAssociationRequest {
   onClickAccept: MouseEventHandler<HTMLButtonElement>
   onClickReject: MouseEventHandler<HTMLButtonElement>
 }

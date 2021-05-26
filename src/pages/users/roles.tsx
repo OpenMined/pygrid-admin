@@ -103,7 +103,7 @@ const UserRoles: FunctionComponent = () => {
                 <button
                   className="w-full btn lg:w-auto transition-all ease-in-out duration-700"
                   disabled={create.isLoading}>
-                  {create.isLoading ? <Spinner className="w-4 text-white" /> : 'Create a new group'}
+                  {create.isLoading ? <Spinner className="w-4 text-white" /> : 'Create a new role'}
                 </button>
               </div>
               {create.isError && (
@@ -125,7 +125,7 @@ const UserRoles: FunctionComponent = () => {
           </section>
           <form onSubmit={handleSubmit(edit)}>
             <section className="flex flex-col space-y-4">
-              <Input name="name" label="User Role" ref={register} defaultValue={role?.name} />
+              <Input name="name" label="Role name" ref={register} defaultValue={role?.name} />
               <div className="flex flex-col text-right lg:flex-row-reverse">
                 <button
                   className="lg:ml-4 btn transition-all ease-in-out duration-700"

@@ -108,7 +108,7 @@ const UserRoles: FunctionComponent = () => {
               </div>
               {create.isError && (
                 <div>
-                  <Alert error="There was an error creating the group" description={create.error.message} />
+                  <Alert error="There was an error creating the role" description={create.error.message} />
                 </div>
               )}
             </section>

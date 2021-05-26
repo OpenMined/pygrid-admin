@@ -1,5 +1,5 @@
 import React from 'react'
-import {Title, Subtitle, ButtonRound} from '@/components/lib'
+import {Title, Subtitle} from '@/components/lib'
 import Link from 'next/link'
 
 const NoMatch = () => {

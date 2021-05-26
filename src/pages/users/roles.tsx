@@ -98,7 +98,7 @@ const UserRoles: FunctionComponent = () => {
           </section>
           <form onSubmit={handleSubmit(submit)}>
             <section className="flex flex-col space-y-4">
-              <Input name="name" label="Group name" ref={register} placeholder="Name" />
+              <Input name="name" label="Role name" ref={register} placeholder="Name" />
               <div className="w-full sm:text-right">
                 <button
                   className="w-full btn lg:w-auto transition-all ease-in-out duration-700"

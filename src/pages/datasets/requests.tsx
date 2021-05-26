@@ -1,58 +1,80 @@
-import {useCallback} from 'react'
+import {useCallback, useEffect, useState, useRef} from 'react'
 import {useQueryClient, useQuery} from 'react-query'
 import {PermissionRequestCard} from '@/components/pages/datasets/cards/requests'
 import {useFetch} from '@/utils/query-builder'
+import {Notification} from '@/components/notifications'
 import api from '@/utils/api-axios'
+import {Ban} from '@/components/icons/marks'
 import type {PyGridDataset, PyGridRequest} from '@/types'
 
 const Requests = () => {
   const queryClient = useQueryClient()
   const {isLoading, data: requests, error} = useFetch<PyGridRequest[]>('/data-centric/requests')
-  const {data: datasetsData} = useQuery<PyGridDataset[]>('/data-centric/datasets')
+  const {data: datasets} = useQuery<PyGridDataset[]>('/data-centric/datasets')
+  const [current, setCurrent] = useState(null)
+  const timer = useRef()
 
   const acceptOrDenyRequest = useCallback(
-    (id, isAccepted) =>
-      api.post(`/data-centric/requests/${id}`, {status: isAccepted ? 'accepted' : 'denied'}).then(() => {
+    (id, accepted, user) =>
+      api.put(`/data-centric/requests/${id}`, {status: accepted ? 'accepted' : 'denied'}).then(() => {
         queryClient.invalidateQueries('/data-centric/requests')
+        setCurrent({id, user, accepted: accepted})
       }),
     [queryClient]
   )
 
-  if (!datasetsData) return null
-
   const getDatasetName = (objectId: string): string => {
-    const dataset = datasetsData.find(x => x.id === objectId)
-    return dataset !== undefined ? dataset.name : ' - '
+    const dataset = datasets?.find(x => x.data?.find(d => d.id === objectId))
+    console.log(dataset, objectId)
+    return dataset !== undefined ? dataset.id : 'Dataset appears to be missing'
   }
 
+  const filteredRequests = requests?.filter(r => r.status === 'pending')
+
+  useEffect(() => {
+    if (current) {
+      clearTimeout(timer.current)
+      timer.current = setTimeout(() => setCurrent(null), 2000)
+    }
+  }, [current])
+
   return (
-    <main className="space-y-4">
-      <h1 className="text-4xl text-gray-800">Requests</h1>
-      <p className="text-xl font-light text-gray-400">Accept or deny permissions</p>
-      <section>
+    <article className="space-y-4">
+      <div className="flex flex-col sm:flex-row sm:justify-between">
+        <header>
+          <h1>Requests</h1>
+          <p className="subtitle">Accept or deny permissions to data scientists</p>
+        </header>
+      </div>
+      <section className="pt-4">
         <small className="font-semibold tracking-wide text-sm text-gray-800 uppercase">Permissions changes</small>
         <div className="pt-5 space-y-6 xl:space-y-6">
+          {!requests || (filteredRequests?.length === 0 && <p>There are no pending requests</p>)}
           {!isLoading &&
             !error &&
-            requests
-              .filter(x => x.status === 'pending')
+            filteredRequests
               .sort((a, b) => {
                 return new Date(b.date).getTime() - new Date(a.date).getTime()
               })
               .map(permission => (
                 <PermissionRequestCard
-                  {...permission}
-                  tensors={'data.target'}
+                  request={permission}
                   dataset={getDatasetName(permission.objectId)}
-                  retrieving={'requesting tensor'}
                   key={`permission-card-${permission.objectId}-${permission.userId}`}
-                  onClickAccept={() => acceptOrDenyRequest(permission.id, true)}
-                  onClickReject={() => acceptOrDenyRequest(permission.id, false)}
+                  accept={() => acceptOrDenyRequest(permission.id, true, permission.userName)}
+                  deny={() => acceptOrDenyRequest(permission.id, false, permission.userName)}
                 />
               ))}
         </div>
       </section>
-    </main>
+      {current?.id && (
+        <Notification
+          title={`Request ${current.accepted ? 'accepted' : 'denied'}!`}
+          Icon={!current.accepted && <Ban className="w-5 text-red-700" />}>
+          <p>Request f2e43c1def6c417f9030901c79598703 by {current.user} accepted</p>
+        </Notification>
+      )}
+    </article>
   )
 }
 

@@ -1,8 +1,8 @@
 import type {FunctionComponent, PropsWithChildren, HTMLAttributes, ComponentProps} from 'react'
-import {forwardRef} from 'react'
+import React, {forwardRef} from 'react'
 import cn from 'classnames'
 import {Search} from '@/components/icons/search'
-import {CloseCircle, CheckMark, XMark} from './icons/marks'
+import {CloseCircle} from './icons/marks'
 
 export const Tag: FunctionComponent<PropsWithChildren<{className?: string}>> = ({className, children}) => (
   <div className={cn('px-2 font-light text-xs text-white bg-blue-500 rounded-sm whitespace-nowrap', className)}>
@@ -49,12 +49,12 @@ export const SearchBar: FunctionComponent<SearchBarProperties> = ({search, place
   return (
     <div className="flex text-gray-800 bg-gray-50 container mx-auto border border-gray-200 rounded-md">
       <div className="flex">
-        <Search className="m-auto h-4 w-4 fill-current" />
+        <Search className="w-4 h-4 m-auto fill-current" />
       </div>
       <input
         name="search"
         placeholder={placeholder}
-        className="text-xl flex-1 bg-transparent h-12 px-5 rounded-full focus:outline-none"
+        className="flex-1 h-12 px-5 text-xl bg-transparent rounded-full focus:outline-none"
         onChange={e => onChange(e.target.value)}
         value={search}
       />
@@ -82,30 +82,44 @@ export const Alert: FunctionComponent<{
 
 export const Input = forwardRef<
   HTMLInputElement,
-  ComponentProps<'input'> & {label: string; hint?: string; error?: string}
+  ComponentProps<'textarea'> & ComponentProps<'input'> & {label?: string; hint?: string; error?: string}
 >(function InputField(props, ref) {
-  const {name, label, hint, error} = props
-  console.log(error)
+  const {name, label, hint, error, type = 'text'} = props
+
   return (
     <div>
       {label && (
-        <label htmlFor={name} className="block  ml-1 text-sm font-medium text-gray-700">
+        <label htmlFor={name} className="block ml-1 text-sm font-medium text-gray-700">
           {label}
         </label>
       )}
-      <input
-        ref={ref}
-        type="text"
-        name={name}
-        id={name}
-        className={cn(
-          'block w-full border-gray-300 rounded-md shadow-sm sm:text-sm placeholder-gray-400',
-          error ? 'focus:ring-red-500 focus:border-red-500' : 'focus:ring-indigo-500 focus:border-indigo-500'
-        )}
-        {...props}
-      />
-      {hint && <p className="text-xs ml-1 mt-1 text-gray-500">{hint}</p>}
-      {error && <p className="text-xs ml-1 mt-1 text-red-500">{error}</p>}
+      {type === 'textarea' ? (
+        <textarea
+          ref={ref}
+          type={type}
+          name={name}
+          id={name}
+          className={cn(
+            'block w-full border-gray-300 rounded-md shadow-sm sm:text-sm placeholder-gray-400',
+            error ? 'focus:ring-red-500 focus:border-red-500' : 'focus:ring-indigo-500 focus:border-indigo-500'
+          )}
+          {...props}
+        />
+      ) : (
+        <input
+          ref={ref}
+          type={type}
+          name={name}
+          id={name}
+          className={cn(
+            'block w-full border-gray-300 rounded-md shadow-sm sm:text-sm placeholder-gray-400',
+            error ? 'focus:ring-red-500 focus:border-red-500' : 'focus:ring-indigo-500 focus:border-indigo-500'
+          )}
+          {...props}
+        />
+      )}
+      {hint && <p className="mt-1 ml-1 text-xs text-gray-400">{hint}</p>}
+      {error && <p className="mt-1 ml-1 text-xs text-red-800">{error}</p>}
     </div>
   )
 })

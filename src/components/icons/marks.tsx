@@ -94,4 +94,16 @@ const CheckCircle: FunctionComponent<{className: string}> = ({className}) => (
   </svg>
 )
 
-export {CheckMark, XMark, Plus, CloseCircle, Ban, CheckCircle}
+const Dot: FunctionComponent<{className: string}> = ({className}) => (
+  <svg
+    viewBox="0 0 100 100"
+    aria-hidden="true"
+    focusable="false"
+    role="img"
+    xmlns="http://www.w3.org/2000/svg"
+    className={cn('inline', className)}>
+    <circle cx="50" cy="50" r="50" />
+  </svg>
+)
+
+export {CheckMark, XMark, Plus, CloseCircle, Ban, CheckCircle, Dot}

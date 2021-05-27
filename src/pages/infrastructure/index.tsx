@@ -2,11 +2,12 @@ import {useCallback, useState} from 'react'
 import {Tabs, TabList, Tab, TabPanels, TabPanel} from '@reach/tabs'
 import Dialog from '@reach/dialog'
 import {XMark} from '@/components/icons/marks'
-import {SearchBar} from '@/components/lib'
+import {SearchBar, Subtitle, Title} from '@/components/lib'
 import {AssociationRequestCard} from '@/components/pages/infrastructure/cards/requests'
 import {useFetch} from '@/utils/query-builder'
 import api from '@/utils/api-axios'
 import type {PyGridAssociationRequest, PyGridWorker} from '@/types'
+import Moment from 'moment'
 
 import '@reach/dialog/styles.css'
 import {useQueryClient} from 'react-query'
@@ -56,12 +57,12 @@ const Infrastructure = () => {
   const [selectedWorker, setSelectedWorker] = useState('')
   const [openDeleteWorkerModal, setOpenDeleteWorkerModal] = useState(false)
 
-  const {isLoading: isLoadingWorkers, data: workers, error: workersError} = useFetch<PyGridWorker>(
+  const {isLoading: isLoadingWorkers, data: workers, error: workersError} = useFetch<Array<PyGridWorker>>(
     '/data-centric/workers'
   )
-  const {isLoading: isLoadingRequests, data: requests, error: requestsError} = useFetch<PyGridAssociationRequest>(
-    '/association-requests'
-  )
+  const {isLoading: isLoadingRequests, data: requests, error: requestsError} = useFetch<
+    Array<PyGridAssociationRequest>
+  >('/association-requests')
 
   const TableHead = () => {
     const headers = ['ID', 'State', 'Provider', 'Region', 'Instance Type', 'Created At', 'Deleted At', '']
@@ -113,12 +114,10 @@ const Infrastructure = () => {
 
   return (
     <main className="space-y-4">
-      <div className="flex flex-col-reverse items-start space-y-4 space-y-reverse md:space-y-0 md:flex-row md:justify-between">
-        <h1 className="pr-4 text-4xl leading-12">Infrastructure</h1>
-      </div>
-      <p className="pb-4 mb-6 text-xl font-light text-gray-400">
-        Manage your entire infrastructure setup of Domains and Workers
-      </p>
+      <header>
+        <Title>Infrastructure</Title>
+        <Subtitle>Manage your entire infrastructure setup of Domains and Workers</Subtitle>
+      </header>
       <Tabs>
         <TabList>
           <Tab>Main</Tab>
@@ -147,8 +146,8 @@ const Infrastructure = () => {
                               <td className="px-4 py-4">{worker.provider}</td>
                               <td className="px-4 py-4">{worker.region}</td>
                               <td className="px-4 py-4">{worker.instanceType}</td>
-                              <td className="px-4 py-4">{worker.createdAt}</td>
-                              <td className="px-4 py-4">{worker.destroyedAt}</td>
+                              <td className="px-4 py-4">{Moment(worker.createdAt).format('LLL')}</td>
+                              <td className="px-4 py-4">{Moment(worker.destroyedAt).format('LLL')}</td>
                               <td />
                             </tr>
                           ))}
@@ -198,8 +197,8 @@ const Infrastructure = () => {
                           <td className="px-4 py-4">{worker.provider}</td>
                           <td className="px-4 py-4">{worker.region}</td>
                           <td className="px-4 py-4">{worker.instanceType}</td>
-                          <td className="px-4 py-4">{worker.createdAt}</td>
-                          <td className="px-4 py-4">{worker.destroyedAt}</td>
+                          <td className="px-4 py-4">{Moment(worker.createdAt).format('LLL')}</td>
+                          <td className="px-4 py-4">{Moment(worker.destroyedAt).format('LLL')}</td>
                           <td className="px-4 py-4">
                             <button
                               onClick={() => {

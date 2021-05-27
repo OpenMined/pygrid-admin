@@ -3,7 +3,7 @@ import {useState} from 'react'
 import {useForm} from 'react-hook-form'
 import VisuallyHidden from '@reach/visually-hidden'
 import {useDisclosure} from 'react-use-disclosure'
-import {Alert, Input} from '@/components/lib'
+import {Alert, Input, Subtitle, Title} from '@/components/lib'
 import {Spinner} from '@/components/icons/spinner'
 import {GroupListItem} from '@/components/pages/users/group-list-item'
 import {SidePanel} from '@/components/side-panel'
@@ -48,8 +48,8 @@ const UserRoles: FunctionComponent = () => {
   return (
     <article>
       <header>
-        <h1>User roles</h1>
-        <p className="subtitle">Manage all user roles</p>
+        <Title>User Roles</Title>
+        <Subtitle>Manage all user roles</Subtitle>
       </header>
       <section className="mt-6 overflow-hidden bg-white shadow sm:rounded-md">
         <header>
@@ -59,7 +59,7 @@ const UserRoles: FunctionComponent = () => {
               <div className="flex-shrink-0">
                 {roles?.length > 0 && (
                   <p>
-                    ({roles.length} group{roles.length > 1 && 's'})
+                    ({roles.length} role{roles.length > 1 && 's'})
                   </p>
                 )}
                 {isLoading && <Spinner className="w-4" />}
@@ -98,17 +98,17 @@ const UserRoles: FunctionComponent = () => {
           </section>
           <form onSubmit={handleSubmit(submit)}>
             <section className="flex flex-col space-y-4">
-              <Input name="name" label="Group name" ref={register} placeholder="Name" />
+              <Input name="name" label="Role name" ref={register} placeholder="Name" />
               <div className="w-full sm:text-right">
                 <button
                   className="w-full btn lg:w-auto transition-all ease-in-out duration-700"
                   disabled={create.isLoading}>
-                  {create.isLoading ? <Spinner className="w-4 text-white" /> : 'Create a new group'}
+                  {create.isLoading ? <Spinner className="w-4 text-white" /> : 'Create a new role'}
                 </button>
               </div>
               {create.isError && (
                 <div>
-                  <Alert error="There was an error creating the group" description={create.error.message} />
+                  <Alert error="There was an error creating the role" description={create.error.message} />
                 </div>
               )}
             </section>
@@ -125,7 +125,7 @@ const UserRoles: FunctionComponent = () => {
           </section>
           <form onSubmit={handleSubmit(edit)}>
             <section className="flex flex-col space-y-4">
-              <Input name="name" label="User Role" ref={register} defaultValue={role?.name} />
+              <Input name="name" label="Role name" ref={register} defaultValue={role?.name} />
               <div className="flex flex-col text-right lg:flex-row-reverse">
                 <button
                   className="lg:ml-4 btn transition-all ease-in-out duration-700"

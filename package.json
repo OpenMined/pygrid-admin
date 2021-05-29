@@ -22,7 +22,7 @@
     }
   },
   "dependencies": {
-    "@headlessui/react": "^0.3.1",
+    "@headlessui/react": "^0.3.2",
     "@reach/accordion": "^0.13.2",
     "@reach/dialog": "^0.13.2",
     "@reach/portal": "^0.13.2",

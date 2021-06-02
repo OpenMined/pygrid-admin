@@ -1,8 +1,11 @@
 import {useRouter} from 'next/router'
 import {Tabs, TabList, Tab, TabPanels, TabPanel} from '@reach/tabs'
-import {useFetch} from '@/utils/query-builder'
+import {useFetch, useMutate} from '@/utils/query-builder'
 import {Tag, ButtonGhost} from '@/components/lib'
 import {PyGridDataset} from '@/types'
+import {Notification} from '@/components/notifications'
+import {Ban} from '@/components/icons/marks'
+import {Spinner} from '@/components/icons/spinner'
 
 function Dataset() {
   const router = useRouter()
@@ -11,6 +14,15 @@ function Dataset() {
   const {data: dataset} = useFetch<PyGridDataset>(`/data-centric/datasets/${datasetId}`)
 
   const {id, description, tags, manifest, data} = dataset ?? {}
+  const deleteDataset = useMutate({
+    url: `/data-centric/datasets/${dataset?.id}`,
+    method: 'delete',
+    invalidate: '/data-centric/datasets'
+  })
+
+  const remove = () => {
+    deleteDataset.mutate(null, {onSuccess: () => router.push('/datasets/')})
+  }
 
   return (
     <main className="space-y-8">
@@ -21,9 +33,13 @@ function Dataset() {
             <button className="btn" onClick={() => alert('Edit dataset')}>
               Edit dataset
             </button>
-            <ButtonGhost className="text-sm" onClick={() => alert('Delete dataset')}>
-              Delete dataset
-            </ButtonGhost>
+            <button
+              type="button"
+              className="mt-4 font-normal text-red-600 bg-white shadow-none lg:mt-0 btn transition-all ease-in-out duration-700 hover:bg-red-400 hover:text-white active:bg-red-700"
+              disabled={deleteDataset.isLoading}
+              onClick={remove}>
+              {deleteDataset.isLoading ? <Spinner className="w-4 text-white" /> : 'Delete dataset'}
+            </button>
           </div>
         </div>
         <p className="text-gray-500 lg:max-w-3xl whitespace-pre-line">{description}</p>
@@ -75,6 +91,11 @@ function Dataset() {
           </TabPanels>
         </Tabs>
       </div>
+      {deleteDataset.isSuccess && (
+        <Notification title="Successfully removed!" Icon={<Ban className="text-red-700 w-5" />}>
+          <p>User successfully delete</p>
+        </Notification>
+      )}
     </main>
   )
 }

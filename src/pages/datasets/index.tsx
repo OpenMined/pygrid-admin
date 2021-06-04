@@ -1,5 +1,5 @@
 import {useState} from 'react'
-import cn from 'classNames'
+import cn from 'classnames'
 import Link from 'next/link'
 import {useForm} from 'react-hook-form'
 import {useDisclosure} from 'react-use-disclosure'

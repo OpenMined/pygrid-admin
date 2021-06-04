@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p $PORT",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "format": "pretty-quick --staged",
@@ -38,6 +38,7 @@
     "jwt-decode": "^3.1.2",
     "lodash.chunk": "^4.2.0",
     "lodash.take": "^4.1.1",
+    "moment": "^2.29.1",
     "next": "10.0.8",
     "postcss": "^8",
     "postcss-cli": "^8.3.1",

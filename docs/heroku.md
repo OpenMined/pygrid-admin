@@ -1,6 +1,8 @@
 # Deployment to Heroku
 
-Deploying PyGrid Admmin to Heroku is easy. If you haven't yet installed Heroku's CLI, you shall do so before continuing.
+Deploying PyGrid Admmin to Heroku is easy. Before continuing, make sure you have the following already set up
+* A Heroku account ( If you don't have one, create one [here](https://signup.heroku.com) ) 
+* Heroku's CLI installed ( If you don't have it yet, head over [this](https://devcenter.heroku.com/articles/heroku-cli) page )
 
 ## Clone PyGrid Admin
 First, clone PyGrid Admin

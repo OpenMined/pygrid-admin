@@ -19,9 +19,10 @@ heroku create $APP_NAME
 ```
 
 ## Push the Code to Heroku via Heroku CLI
-Now you can deploy PyGrid Admin to Heroku by simply pushing the code living in master branch
+Now you can deploy PyGrid Admin to Heroku by simply pushing the code living in master branch.
 
 ```bash
+git remote add heroku https://git.heroku.com/[APP_NAME].git
 git push heroku master
 ```
 

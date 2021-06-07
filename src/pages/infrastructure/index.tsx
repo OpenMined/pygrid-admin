@@ -1,16 +1,15 @@
 import {useCallback, useState} from 'react'
+import {useQuery, useQueryClient} from 'react-query'
 import {Tabs, TabList, Tab, TabPanels, TabPanel} from '@reach/tabs'
 import Dialog from '@reach/dialog'
 import {XMark} from '@/components/icons/marks'
 import {SearchBar, SectionHeader} from '@/components/lib'
 import {AssociationRequestCard} from '@/components/pages/infrastructure/cards/requests'
-import {useFetch} from '@/utils/query-builder'
 import api from '@/utils/api-axios'
 import type {PyGridAssociationRequest, PyGridWorker} from '@/types'
 import Moment from 'moment'
 
 import '@reach/dialog/styles.css'
-import {useQueryClient} from 'react-query'
 
 const DeleteWorkerModal = ({isOpen, onClose, onClickAccept}) => (
   <Dialog
@@ -57,10 +56,10 @@ const Infrastructure = () => {
   const [selectedWorker, setSelectedWorker] = useState('')
   const [openDeleteWorkerModal, setOpenDeleteWorkerModal] = useState(false)
 
-  const {isLoading: isLoadingWorkers, data: workers, error: workersError} = useFetch<Array<PyGridWorker>>(
+  const {isLoading: isLoadingWorkers, data: workers, error: workersError} = useQuery<Array<PyGridWorker>>(
     '/data-centric/workers'
   )
-  const {isLoading: isLoadingRequests, data: requests, error: requestsError} = useFetch<
+  const {isLoading: isLoadingRequests, data: requests, error: requestsError} = useQuery<
     Array<PyGridAssociationRequest>
   >('/association-requests')
 

@@ -1,17 +1,18 @@
 import {useRouter} from 'next/router'
 import {Tabs, TabList, Tab, TabPanels, TabPanel} from '@reach/tabs'
-import {useFetch, useMutate} from '@/utils/query-builder'
+import {useMutate} from '@/utils/query-builder'
 import {Tag, ButtonGhost} from '@/components/lib'
 import {PyGridDataset} from '@/types'
 import {Notification} from '@/components/notifications'
 import {Ban} from '@/components/icons/marks'
 import {Spinner} from '@/components/icons/spinner'
+import {useQuery} from 'react-query'
 
 function Dataset() {
   const router = useRouter()
   const datasetId = router.query?.id
 
-  const {data: dataset} = useFetch<PyGridDataset>(`/data-centric/datasets/${datasetId}`)
+  const {data: dataset} = useQuery<PyGridDataset>(`/data-centric/datasets/${datasetId}`)
 
   const {id, description, tags, manifest, data} = dataset ?? {}
   const deleteDataset = useMutate({

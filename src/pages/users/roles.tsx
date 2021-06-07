@@ -3,12 +3,13 @@ import {useState} from 'react'
 import {useForm} from 'react-hook-form'
 import VisuallyHidden from '@reach/visually-hidden'
 import {useDisclosure} from 'react-use-disclosure'
+import {useQuery} from 'react-query'
 import {Alert, Input, SectionHeader} from '@/components/lib'
 import {Spinner} from '@/components/icons/spinner'
 import {GroupListItem} from '@/components/pages/users/group-list-item'
 import {SidePanel} from '@/components/side-panel'
 import {Notification} from '@/components/notifications'
-import {useFetch, useMutate} from '@/utils/query-builder'
+import {useMutate} from '@/utils/query-builder'
 import {Ban} from '@/components/icons/marks'
 import type {PyGridUserRole} from '@/types'
 
@@ -16,7 +17,7 @@ const UserRoles: FunctionComponent = () => {
   const [role, setRole] = useState<PyGridUserRole>(null)
   const {isOpen, open, close} = useDisclosure()
   const {register, handleSubmit} = useForm()
-  const {data: roles, isLoading, isError, error} = useFetch('/roles')
+  const {data: roles, isLoading, isError, error} = useQuery('/roles')
   const create = useMutate<Pick<PyGridUserRole, 'name'>, PyGridUserRole>({url: '/roles', invalidate: '/roles'})
   const deleteRole = useMutate({url: `/roles/${role?.id}`, method: 'delete', invalidate: '/roles'})
   const editRole = useMutate<Partial<PyGridUserRole>, PyGridUserRole>({

@@ -3,25 +3,24 @@ import cn from 'classnames'
 import Link from 'next/link'
 import {useForm} from 'react-hook-form'
 import {useDisclosure} from 'react-use-disclosure'
-import {useQueryClient} from 'react-query'
+import {useQuery, useQueryClient} from 'react-query'
 import {VisuallyHidden} from '@reach/visually-hidden'
 import api from '@/utils/api-axios'
 import {SidePanel} from '@/components/side-panel'
 import {DatasetCard} from '@/components/pages/datasets/cards/datasets'
 import {Right} from '@/components/icons/arrows'
 import {Alert, Input, SectionHeader} from '@/components/lib'
-import {useFetch} from '@/utils/query-builder'
 import {formatBytes} from '@/utils/common'
 import {Spinner} from '@/components/icons/spinner'
 import {PyGridDataset, PyGridRequest, PyGridTensor} from '@/types'
 
 const Datasets = () => {
   const {open, close, isOpen} = useDisclosure()
-  const {isLoading, data: datasets, error} = useFetch<Array<PyGridDataset>>('/data-centric/datasets')
-  const {isLoading: requestsLoading, data: requests, error: requestsError} = useFetch<Array<PyGridRequest>>(
+  const {isLoading, data: datasets, error} = useQuery<Array<PyGridDataset>>('/data-centric/datasets')
+  const {isLoading: requestsLoading, data: requests, error: requestsError} = useQuery<Array<PyGridRequest>>(
     '/data-centric/requests'
   )
-  const {isLoading: tensorsLoading, data: tensors, error: tensorsError} = useFetch<Array<PyGridTensor>>(
+  const {isLoading: tensorsLoading, data: tensors, error: tensorsError} = useQuery<Array<PyGridTensor>>(
     '/data-centric/tensors'
   )
   const {register, handleSubmit, watch} = useForm({mode: 'onBlur'})

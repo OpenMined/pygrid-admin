@@ -6,24 +6,24 @@ import {useForm} from 'react-hook-form'
 import {Alert, Input, Select, SectionHeader} from '@/components/lib'
 import {Spinner} from '@/components/icons/spinner'
 import {Right} from '@/components/icons/arrows'
+import {Ban} from '@/components/icons/marks'
 import {UserListItem} from '@/components/pages/users/user-list-item'
 import {SidePanel} from '@/components/side-panel'
 import {Notification} from '@/components/notifications'
-import {useFetch, useMutate} from '@/utils/query-builder'
-import {Ban} from '@/components/icons/marks'
+import {useMutate} from '@/utils/query-builder'
 import api from '@/utils/api-axios'
 import type {PyGridUser, PyGridUserRole, PyGridUserGroup} from '@/types'
 import type {FunctionComponent} from 'react'
-import {useQueryClient} from 'react-query'
+import {useQuery, useQueryClient} from 'react-query'
 
 const Users: FunctionComponent = () => {
   const [user, setUser] = useState<PyGridUser>(null)
   const {open, close, isOpen} = useDisclosure()
   const {register, handleSubmit} = useForm()
   const queryClient = useQueryClient()
-  const {isLoading, error, isError, data: users} = useFetch<Array<PyGridUser>>('/users')
-  const {isLoading: rolesLoading, error: rolesError, data: roles} = useFetch<Array<PyGridUserRole>>('/roles')
-  const {isLoading: groupsLoading, error: groupsError, data: groups} = useFetch<Array<PyGridUserGroup>>('/groups')
+  const {isLoading, error, isError, data: users} = useQuery<Array<PyGridUser>>('/users')
+  const {isLoading: rolesLoading, error: rolesError, data: roles} = useQuery<Array<PyGridUserRole>>('/roles')
+  const {isLoading: groupsLoading, error: groupsError, data: groups} = useQuery<Array<PyGridUserGroup>>('/groups')
   const createUser = useMutate<Partial<PyGridUser>, PyGridUser>({url: `/users`, invalidate: '/users'})
   const deleteUser = useMutate({url: `/users/${user?.id}`, method: 'delete', invalidate: '/users'})
   const editUser = useMutate<Partial<PyGridUser>, PyGridUser>({

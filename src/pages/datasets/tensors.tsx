@@ -1,8 +1,7 @@
 import React, {useCallback} from 'react'
-import {useQueryClient} from 'react-query'
+import {useQuery, useQueryClient} from 'react-query'
 import {TensorsCard} from '@/components/pages/datasets/cards/tensors'
 import {Right} from '@/components/icons/arrows'
-import {useFetch} from '@/utils/query-builder'
 import api from '@/utils/api-axios'
 import type {PyGridRequest, PyGridTensor} from '@/types'
 import {SectionHeader} from '@/components/lib'
@@ -11,8 +10,8 @@ import Link from 'next/link'
 
 const Tensors = () => {
   const queryClient = useQueryClient()
-  const {isLoading, data, error} = useFetch<PyGridTensor[]>('/data-centric/tensors')
-  const {isLoading: isLoadingRequests, data: requests} = useFetch<PyGridRequest[]>('/data-centric/requests')
+  const {isLoading, data, error} = useQuery<PyGridTensor[]>('/data-centric/tensors')
+  const {isLoading: isLoadingRequests, data: requests} = useQuery<PyGridRequest[]>('/data-centric/requests')
   // TODO: Load settings
   const settings = null
   const deleteTensor = useCallback(

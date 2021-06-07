@@ -1,12 +1,12 @@
 import type {FunctionComponent} from 'react'
-import {useFetch} from '@/utils/query-builder'
 import {PyGridStatus} from '@/types'
 import cn from 'classnames'
 import packageJson from '../../package.json'
 import {Dot} from '@/components/icons/marks'
+import {useQuery} from 'react-query'
 
 const Footer: FunctionComponent = () => {
-  const {isLoading, error, isError, data: status} = useFetch<PyGridStatus>('/setup/status')
+  const {isLoading, error, isError, data: status} = useQuery<PyGridStatus>('/setup/status')
 
   return (
     <nav className="sticky bottom-0">

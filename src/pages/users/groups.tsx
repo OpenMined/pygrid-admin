@@ -1,6 +1,7 @@
 import type {FunctionComponent} from 'react'
 import {useState} from 'react'
 import take from 'lodash.take'
+import {useQuery} from 'react-query'
 import {useForm} from 'react-hook-form'
 import VisuallyHidden from '@reach/visually-hidden'
 import {useDisclosure} from 'react-use-disclosure'
@@ -9,7 +10,7 @@ import {Spinner} from '@/components/icons/spinner'
 import {GroupListItem} from '@/components/pages/users/group-list-item'
 import {SidePanel} from '@/components/side-panel'
 import {Notification} from '@/components/notifications'
-import {useFetch, useMutate} from '@/utils/query-builder'
+import {useMutate} from '@/utils/query-builder'
 import type {PyGridUserGroup} from '@/types'
 import {Ban} from '@/components/icons/marks'
 
@@ -17,7 +18,7 @@ const UserGroups: FunctionComponent = () => {
   const [group, setGroup] = useState(null)
   const {isOpen, open, close} = useDisclosure()
   const {register, handleSubmit} = useForm()
-  const {data: groups, isLoading, isError, error} = useFetch('/groups')
+  const {data: groups, isLoading, isError, error} = useQuery('/groups')
   const create = useMutate<Pick<PyGridUserGroup, 'name'>, PyGridUserGroup>({url: '/groups', invalidate: '/groups'})
   const deleteGroup = useMutate({url: `/groups/${group?.id}`, method: 'delete', invalidate: '/groups'})
   const editGroup = useMutate<Partial<PyGridUserGroup>, PyGridUserGroup>({

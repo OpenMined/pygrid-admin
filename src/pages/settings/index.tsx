@@ -1,13 +1,14 @@
 import {Alert, Input, Select, SectionHeader} from '@/components/lib'
 import React, {FunctionComponent} from 'react'
 import {useForm} from 'react-hook-form'
-import {useFetch, useMutate} from '@/utils/query-builder'
+import {useMutate} from '@/utils/query-builder'
 import {Notification} from '@/components/notifications'
 import {Spinner} from '@/components/icons/spinner'
 import {PyGridSettings} from '@/types'
+import {useQuery} from 'react-query'
 
 const Settings: FunctionComponent = () => {
-  const {isLoading, error, isError, data: settings} = useFetch<PyGridSettings>('/setup')
+  const {isLoading, error, isError, data: settings} = useQuery<PyGridSettings>('/setup')
   const editSettings = useMutate<Partial<PyGridSettings>, PyGridSettings>({
     url: `/setup`,
     method: 'put',

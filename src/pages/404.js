@@ -1,5 +1,4 @@
 import React from 'react'
-import {Title, Subtitle} from '@/components/lib'
 import Link from 'next/link'
 
 const NoMatch = () => {
@@ -7,8 +6,8 @@ const NoMatch = () => {
     <article className="flex justify-center items-center">
       <div className="text-center justify-items-center grid grid-flow-row auto-rows-max space-y-4">
         <header>
-          <Title>Ooops!</Title>
-          <Subtitle>This page is unknown or does not exist</Subtitle>
+          <h1>Ooops!</h1>
+          <p className="subtitle">This page is unknown or does not exist</p>
         </header>
         <Link href="/">
           <button className="w-full btn">Back to Dashboard</button>

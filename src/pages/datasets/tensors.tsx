@@ -5,7 +5,7 @@ import {Right} from '@/components/icons/arrows'
 import {useFetch} from '@/utils/query-builder'
 import api from '@/utils/api-axios'
 import type {PyGridRequest, PyGridTensor} from '@/types'
-import {Title, Subtitle} from '@/components/lib'
+import {SectionHeader} from '@/components/lib'
 import {Spinner} from '@/components/icons/spinner'
 import Link from 'next/link'
 
@@ -28,10 +28,10 @@ const Tensors = () => {
 
   return (
     <main className="space-y-8">
-      <div>
-        <Title>Tensors</Title>
-        <Subtitle>View all tensors resulting from your private data</Subtitle>
-      </div>
+      <SectionHeader>
+        <SectionHeader.Title>Tensors</SectionHeader.Title>
+        <SectionHeader.Description>View all tensors resulting from your private data</SectionHeader.Description>
+      </SectionHeader>
       <section>
         <div className="flex flex-row justify-between max-w-xs text-sm text-gray-600 uppercase leading-6 hover:text-gray-800 focus:text-gray-800 active:text-gray-800">
           <Link href="/datasets/requests">

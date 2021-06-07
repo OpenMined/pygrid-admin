@@ -3,7 +3,7 @@ import {useState} from 'react'
 import {useForm} from 'react-hook-form'
 import VisuallyHidden from '@reach/visually-hidden'
 import {useDisclosure} from 'react-use-disclosure'
-import {Alert, Input, Subtitle, Title} from '@/components/lib'
+import {Alert, Input, SectionHeader} from '@/components/lib'
 import {Spinner} from '@/components/icons/spinner'
 import {GroupListItem} from '@/components/pages/users/group-list-item'
 import {SidePanel} from '@/components/side-panel'
@@ -47,10 +47,10 @@ const UserRoles: FunctionComponent = () => {
 
   return (
     <article>
-      <header>
-        <Title>User Roles</Title>
-        <Subtitle>Manage all user roles</Subtitle>
-      </header>
+      <SectionHeader>
+        <SectionHeader.Title>User Roles</SectionHeader.Title>
+        <SectionHeader.Description>Manage all user roles</SectionHeader.Description>
+      </SectionHeader>
       <section className="mt-6 overflow-hidden bg-white shadow sm:rounded-md">
         <header>
           <div className="flex items-center justify-between px-4 py-4 text-xs font-medium tracking-wider text-gray-500 uppercase bg-gray-100 border-b border-gray-200 sm:px-6">

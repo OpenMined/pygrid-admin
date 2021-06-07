@@ -3,7 +3,7 @@ import Link from 'next/link'
 import VisuallyHidden from '@reach/visually-hidden'
 import {useDisclosure} from 'react-use-disclosure'
 import {useForm} from 'react-hook-form'
-import {Alert, Input, Select, Subtitle, Title} from '@/components/lib'
+import {Alert, Input, Select, SectionHeader} from '@/components/lib'
 import {Spinner} from '@/components/icons/spinner'
 import {Right} from '@/components/icons/arrows'
 import {UserListItem} from '@/components/pages/users/user-list-item'
@@ -66,14 +66,12 @@ const Users: FunctionComponent = () => {
   }
 
   return (
-    <article>
-      <div className="flex flex-col sm:flex-row sm:justify-between">
-        <header>
-          <Title>Users</Title>
-          <Subtitle>Manage internal and external users</Subtitle>
-        </header>
-      </div>
-      <section className="mt-6">
+    <article className="space-y-8">
+      <SectionHeader>
+        <SectionHeader.Title>Users</SectionHeader.Title>
+        <SectionHeader.Description>Manage internal and external users</SectionHeader.Description>
+      </SectionHeader>
+      <section>
         <div className="flex flex-row justify-between max-w-xs text-sm text-gray-600 uppercase leading-6 hover:text-gray-800 focus:text-gray-800 active:text-gray-800">
           <Link href="/users/groups">
             <a>
@@ -96,7 +94,7 @@ const Users: FunctionComponent = () => {
           />
         )}
       </section>
-      <section className="mt-6 overflow-hidden bg-white shadow sm:rounded-md">
+      <section className="overflow-hidden bg-white shadow sm:rounded-md">
         <header>
           <div className="flex items-center justify-between px-4 py-4 text-xs font-medium tracking-wider text-gray-500 uppercase bg-gray-100 border-b border-gray-200 sm:px-6">
             <div className="flex flex-col sm:flex-row">
@@ -162,17 +160,6 @@ const Users: FunctionComponent = () => {
                 required
                 options={roles?.map(role => ({value: role.id, label: role.name}))}
               />
-              {/* <p className="text-sm text-gray-400"> */}
-              {/*   User groups are used to easily manage permissions and access control */}
-              {/* </p> */}
-              {/* <Select */}
-              {/*   name="groups" */}
-              {/*   label="User group (optional)" */}
-              {/*   ref={register} */}
-              {/*   placeholder="No group selected" */}
-              {/*   defaultValue="" */}
-              {/*   options={groups?.map(group => ({value: group.id, label: group.name}))} */}
-              {/* /> */}
               <div className="w-full sm:text-right">
                 <button
                   className="w-full btn lg:w-auto transition-all ease-in-out duration-700"
@@ -217,16 +204,6 @@ const Users: FunctionComponent = () => {
                 defaultValue={`${user?.role}`}
                 options={roles?.map(role => ({value: role.id, label: role.name}))}
               />
-              {/* <p className="text-sm text-gray-400"> */}
-              {/*   User groups are used to easily manage permissions and access control */}
-              {/* </p> */}
-              {/* <Select */}
-              {/*   name="groups" */}
-              {/*   label="User groups (optional)" */}
-              {/*   ref={register} */}
-              {/*   placeholder="Select a group" */}
-              {/*   options={groups?.map(group => ({value: group.id, label: group.name}))} */}
-              {/* /> */}
               <div className="flex flex-col text-right lg:flex-row-reverse">
                 <button className="lg:ml-4 btn transition-all ease-in-out duration-700" disabled={editUser.isLoading}>
                   {editUser.isLoading || deleteUser.isLoading ? <Spinner className="w-4 text-white" /> : 'Edit'}
@@ -255,7 +232,7 @@ const Users: FunctionComponent = () => {
         </Notification>
       )}
       {deleteUser.isSuccess && (
-        <Notification title="Successfully removed!" Icon={<Ban className="text-red-700 w-5" />}>
+        <Notification title="Successfully removed!" Icon={<Ban className="w-5 text-red-700" />}>
           <p>User successfully delete</p>
         </Notification>
       )}

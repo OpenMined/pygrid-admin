@@ -1,4 +1,4 @@
-import {Alert, Input, Select, Subtitle, Title} from '@/components/lib'
+import {Alert, Input, Select, SectionHeader} from '@/components/lib'
 import React, {FunctionComponent} from 'react'
 import {useForm} from 'react-hook-form'
 import {useFetch, useMutate} from '@/utils/query-builder'
@@ -21,11 +21,11 @@ const Settings: FunctionComponent = () => {
   }
 
   return (
-    <main className="space-y-4">
-      <header>
-        <Title>Settings</Title>
-        <Subtitle>Configure your domain</Subtitle>
-      </header>
+    <main className="space-y-8">
+      <SectionHeader>
+        <SectionHeader.Title>Settings</SectionHeader.Title>
+        <SectionHeader.Description>Configure your domain</SectionHeader.Description>
+      </SectionHeader>
       <div className="relative space-y-6">
         <div>
           <h3 className="text-2xl text-gray-800">General Domain Settings</h3>

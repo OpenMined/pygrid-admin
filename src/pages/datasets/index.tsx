@@ -9,7 +9,7 @@ import api from '@/utils/api-axios'
 import {SidePanel} from '@/components/side-panel'
 import {DatasetCard} from '@/components/pages/datasets/cards/datasets'
 import {Right} from '@/components/icons/arrows'
-import {Alert, Input, Title, Subtitle} from '@/components/lib'
+import {Alert, Input, SectionHeader} from '@/components/lib'
 import {useFetch} from '@/utils/query-builder'
 import {formatBytes} from '@/utils/common'
 import {Spinner} from '@/components/icons/spinner'
@@ -66,12 +66,10 @@ const Datasets = () => {
 
   return (
     <article>
-      <div className="flex flex-col sm:flex-row sm:justify-between">
-        <header>
-          <Title>Datasets</Title>
-          <Subtitle>Manage all private data hosted in your node</Subtitle>
-        </header>
-      </div>
+      <SectionHeader>
+        <SectionHeader.Title>Datasets</SectionHeader.Title>
+        <SectionHeader.Description>Manage all private data hosted in your node</SectionHeader.Description>
+      </SectionHeader>
       <section className="mt-6">
         <div className="flex flex-row justify-between max-w-xs text-sm text-gray-600 uppercase leading-6 hover:text-gray-800 focus:text-gray-800 active:text-gray-800">
           <Link href="/datasets/requests">

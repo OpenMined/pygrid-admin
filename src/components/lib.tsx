@@ -155,6 +155,23 @@ export const Select = forwardRef<
   )
 })
 
-export const Title: FunctionComponent<{children: string}> = ({children}) => <h1>{children}</h1>
+function SectionHeaderRoot({children}) {
+  return (
+    <div className="flex flex-col sm:flex-row sm:justify-between">
+      <header>{children}</header>
+    </div>
+  )
+}
 
-export const Subtitle: FunctionComponent<{children: string}> = ({children}) => <p className="subtitle">{children}</p>
+function SectionHeaderTitle({children}) {
+  return <h1>{children}</h1>
+}
+
+function SectionHeaderDescription({children}) {
+  return <p className="subtitle">{children}</p>
+}
+
+export const SectionHeader = Object.assign(SectionHeaderRoot, {
+  Title: SectionHeaderTitle,
+  Description: SectionHeaderDescription
+})

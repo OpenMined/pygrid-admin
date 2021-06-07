@@ -3,7 +3,7 @@ import {useRouter} from 'next/router'
 import cn from 'classnames'
 import {Dialog} from '@headlessui/react'
 import {useForm} from 'react-hook-form'
-import {Input, Subtitle, Title} from '@/components/lib'
+import {Input, SectionHeader} from '@/components/lib'
 import {getLayout} from '@/layouts/blank'
 import {CheckMark} from '@/components/icons/marks'
 import api from '@/utils/api-axios'
@@ -114,18 +114,19 @@ export default function Start() {
           </ol>
         </nav>
         <section className="w-full space-y-4">
-          <header>
-            <Title>
+          <SectionHeader>
+            <SectionHeader.Title>
               {currentStep === 0 && 'Welcome to PyGrid!'}
               {currentStep === 1 && 'Account'}
               {currentStep === 2 && 'Settings'}
-            </Title>
-            <Subtitle>
-              {currentStep === 0 && 'Configure you PyGrid Domain and start using it!'}
+            </SectionHeader.Title>
+            <SectionHeader.Description>
+              {currentStep === 0 &&
+                "Congratulations on installing PyGrid! Now, let's finish configuring your PyGrid Domain."}
               {currentStep === 1 && 'Set up the owner account.'}
               {currentStep === 2 && 'Finally, name your PyGrid Domain.'}
-            </Subtitle>
-          </header>
+            </SectionHeader.Description>
+          </SectionHeader>
           <form onSubmit={handleSubmit(submit)}>
             <div className={cn(currentStep !== 1 && 'sr-only', 'space-y-4')}>
               <Input ref={register} label="Owner email" placeholder="Owner account email" name="email" />

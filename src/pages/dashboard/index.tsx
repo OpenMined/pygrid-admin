@@ -1,6 +1,6 @@
 import {Spinner} from '@/components/icons/spinner'
 import {useFetch} from '@/utils/query-builder'
-import {Title, Subtitle} from '@/components/lib'
+import {SectionHeader} from '@/components/lib'
 
 const Dashboard = () => {
   const {data: datasets, isLoading: loadingDatasets} = useFetch('/data-centric/datasets')
@@ -14,12 +14,10 @@ const Dashboard = () => {
 
   return (
     <article className="space-y-8">
-      <div className="flex flex-col sm:flex-row sm:justify-between">
-        <header>
-          <Title>Dashboard</Title>
-          <Subtitle>An overview of your PyGrid Domain</Subtitle>
-        </header>
-      </div>
+      <SectionHeader>
+        <SectionHeader.Title>Dashboard</SectionHeader.Title>
+        <SectionHeader.Description>An overview of your PyGrid Domain</SectionHeader.Description>
+      </SectionHeader>
       <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
         <div>
           <h2 className="flex text-xl text-gray-600 items-center tracking-tighter">

@@ -6,7 +6,7 @@ import {Notification} from '@/components/notifications'
 import api from '@/utils/api-axios'
 import {Ban} from '@/components/icons/marks'
 import type {PyGridDataset, PyGridRequest} from '@/types'
-import {Title, Subtitle} from '@/components/lib'
+import {SectionHeader} from '@/components/lib'
 
 const Requests = () => {
   const queryClient = useQueryClient()
@@ -41,12 +41,10 @@ const Requests = () => {
 
   return (
     <article className="space-y-4">
-      <div className="flex flex-col sm:flex-row sm:justify-between">
-        <header>
-          <Title>Requests</Title>
-          <Subtitle>Accept or deny permissions to data scientists</Subtitle>
-        </header>
-      </div>
+      <SectionHeader>
+        <SectionHeader.Title>Requests</SectionHeader.Title>
+        <SectionHeader.Description>Accept or deny permissions to data scientists</SectionHeader.Description>
+      </SectionHeader>
       <section className="pt-4">
         <small className="font-semibold tracking-wide text-sm text-gray-800 uppercase">Permissions changes</small>
         <div className="pt-5 space-y-6 xl:space-y-6">

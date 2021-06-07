@@ -2,7 +2,7 @@ import {useCallback, useState} from 'react'
 import {Tabs, TabList, Tab, TabPanels, TabPanel} from '@reach/tabs'
 import Dialog from '@reach/dialog'
 import {XMark} from '@/components/icons/marks'
-import {SearchBar, Subtitle, Title} from '@/components/lib'
+import {SearchBar, SectionHeader} from '@/components/lib'
 import {AssociationRequestCard} from '@/components/pages/infrastructure/cards/requests'
 import {useFetch} from '@/utils/query-builder'
 import api from '@/utils/api-axios'
@@ -113,11 +113,13 @@ const Infrastructure = () => {
   console.log(workers)
 
   return (
-    <main className="space-y-4">
-      <header>
-        <Title>Infrastructure</Title>
-        <Subtitle>Manage your entire infrastructure setup of Domains and Workers</Subtitle>
-      </header>
+    <article className="space-y-8">
+      <SectionHeader>
+        <SectionHeader.Title>Infrastructure</SectionHeader.Title>
+        <SectionHeader.Description>
+          Manage your entire infrastructure setup of Domains and Workers
+        </SectionHeader.Description>
+      </SectionHeader>
       <Tabs>
         <TabList>
           <Tab>Main</Tab>
@@ -221,7 +223,7 @@ const Infrastructure = () => {
         onClose={() => setOpenDeleteWorkerModal(false)}
         onClickAccept={() => deleteWorker(selectedWorker)}
       />
-    </main>
+    </article>
   )
 }
 

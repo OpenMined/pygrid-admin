@@ -12,7 +12,7 @@ git clone git@github.com:OpenMined/PyGrid.git
 cd pygrid-admin
 ```
 
-# Create a new heroku app
+## Create a new heroku app
 Via Heroku CLI we can create a new app. You might aswell do this via Heroku's UI.
 ```bash
 heroku create $APP_NAME

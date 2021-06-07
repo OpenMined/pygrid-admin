@@ -9,7 +9,7 @@ import {useAuth} from '@/context/auth-context'
 const Login: FunctionComponent & {getLayout: FunctionComponent} = () => {
   const router = useRouter()
   const {login} = useAuth()
-  const {register, handleSubmit, formState} = useForm({mode: 'onTouched'})
+  const {register, handleSubmit, formState} = useForm({mode: 'onChange'})
   const [error, setError] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
   const [spin, setSpin] = useState<boolean>(false)

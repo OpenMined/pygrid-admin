@@ -19,7 +19,7 @@ and manage users and datasets.
 
 ## Deployment
 
-First, add the PyGrid Domain url as an environment variable. Open `.env` and add
+First, add the PyGrid Domain url as an environment variable. Open `.env.production` and set your PyGrid Domain IP
 
 ```bash
 NEXT_PUBLIC_API_URL=<PyGrid Domain url>
@@ -56,6 +56,21 @@ The PyGrid Admin should be available at [http://localhost:3000](http://localhost
 We are reaching full support for the latest PyGrid Domain API version. And we know that the interface is not ideal.
 Please report to us any issues you have and keep in mind that we are working diligently to provide a better support in
 the upcoming versions.
+
+As of now, PyGrid Admin supports the following operations via PyGrid API
+
+| Feature       | READ          | CREATE        | UPDATE        | DELETE        |
+| ------------- |:-------------:|:-------------:|:-------------:|:-------------:|
+| Users         |      ✅       |       ✅      |      ✅      |        ✅     |
+| Groups        |      ✅       |       ✅      |      ✅      |        ✅     |
+| Roles         |      ✅       |       ✅      |      ✅      |        ✅     |
+| Datasets      |      ✅       |       ✅      |      ❌      |        ✅     |
+| Requests      |      ✅       |       -       |      -       |        ✅     |
+| Tensors       |      ✅       |       -       |      -       |        ✅     |
+| Workers       |      ✅       |       -       |      -       |        ✅     |
+| Associations  |      ✅       |       -       |      -       |        ✅     |
+| Settings      |      ✅       |       -       |      ❌      |        -      |
+
 
 ## Contributing & Support
 

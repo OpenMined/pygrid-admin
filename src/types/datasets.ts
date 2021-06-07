@@ -12,7 +12,7 @@ export interface PyGridDataset {
   manifest: string
   tags: string[]
   createdAt: Date
-  data: PygridTensor[]
+  data: PyGridTensor[]
 }
 
 export interface PyGridRequest {

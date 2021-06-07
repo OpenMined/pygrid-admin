@@ -1,16 +1,16 @@
+import {useQuery} from 'react-query'
 import {Spinner} from '@/components/icons/spinner'
-import {useFetch} from '@/utils/query-builder'
 import {SectionHeader} from '@/components/lib'
 
-const Dashboard = () => {
-  const {data: datasets, isLoading: loadingDatasets} = useFetch('/data-centric/datasets')
-  const {data: requests} = useFetch('/data-centric/requests')
-  const {data: tensors} = useFetch('/data-centric/tensors')
-  const {data: users, isLoading: loadingUsers} = useFetch('/users')
-  const {data: roles} = useFetch('/roles')
-  const {data: groups} = useFetch('/groups')
-
-  console.log(roles, groups)
+export default function Dashboard() {
+  // Only the main sections have loading information. If we are unable to load
+  // the requests, tensors, roles or groups, that's ok.
+  const {data: datasets, isLoading: loadingDatasets} = useQuery('/data-centric/datasets')
+  const {data: requests} = useQuery('/data-centric/requests')
+  const {data: tensors} = useQuery('/data-centric/tensors')
+  const {data: users, isLoading: loadingUsers} = useQuery('/users')
+  const {data: roles} = useQuery('/roles')
+  const {data: groups} = useQuery('/groups')
 
   return (
     <article className="space-y-8">
@@ -69,5 +69,3 @@ const Dashboard = () => {
     </article>
   )
 }
-
-export default Dashboard

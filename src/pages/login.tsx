@@ -63,6 +63,7 @@ const Login: FunctionComponent & {getLayout: FunctionComponent} = () => {
             </div>
             <div className="flex flex-col">
               <Input
+                type="password"
                 name="password"
                 label="Your password"
                 ref={register({required: 'This is required'})}

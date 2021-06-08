@@ -22,7 +22,7 @@ const Footer: FunctionComponent = () => {
           {isError && <span className="text-xs text-gray-600">PyGrid API unreachable</span>}
           {status && (
             <span className="text-xs text-gray-600">
-              Connected to <b>{status?.domainName}</b> Domain
+              Connected to <b>{status?.nodeName}</b> Domain
             </span>
           )}
         </div>

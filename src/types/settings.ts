@@ -11,6 +11,6 @@ export interface PyGridSettings {
 }
 
 export interface PyGridStatus {
-  domainName: string
+  nodeName: string
   init: boolean
 }

@@ -7,6 +7,7 @@ import {Spinner} from '@/components/icons/spinner'
 import {useAuth} from '@/context/auth-context'
 import {useFetch} from '@/utils/query-builder'
 import {PyGridStatus} from '@/types'
+import {Alert, Input, Select, Subtitle, Title} from '@/components/lib'
 
 const Login: FunctionComponent & {getLayout: FunctionComponent} = () => {
   const router = useRouter()
@@ -45,34 +46,28 @@ const Login: FunctionComponent & {getLayout: FunctionComponent} = () => {
         <div className="transition transform" style={rotateStyle.current}>
           <img alt="PyGrid logo" src="/assets/logo.png" width={200} height={200} />
         </div>
-        <h1 className="text-3xl">Welcome to PyGrid</h1>
-        {status && !isError && <h2>{status.nodeName} Domain</h2>}
+        <Title>Welcome to PyGrid</Title>
+        {status && !isError && <Subtitle>Connected to <b>{status.nodeName}</b> Domain</Subtitle>}
         <form className="w-4/5" onSubmit={handleSubmit(onSubmit)}>
           <div className="flex flex-col text-left space-y-6">
             <div className="flex flex-col">
-              <label className="text-gray-600" htmlFor="email">
-                Email or username
-              </label>
-              <input
-                className="base-input"
+              <Input
                 name="email"
-                type="email"
-                ref={register({required: true})}
-                placeholder="Your email or username"
+                label="Your email or username"
+                ref={register({required: 'This is required'})}
+                placeholder="researcher@openmined.com"
+                error={formState.errors.email?.message}
                 onChange={() => setSpin(true)}
               />
               {error && <span className="px-4 py-1 mt-0.5 text-sm text-gray-800 bg-red-200">{error}</span>}
             </div>
             <div className="flex flex-col">
-              <label className="text-gray-600" htmlFor="password">
-                Password
-              </label>
-              <input
-                className="base-input"
-                type="password"
+              <Input
                 name="password"
-                ref={register({required: true})}
-                placeholder="Your password"
+                label="Your password"
+                ref={register({required: 'This is required'})}
+                placeholder="********"
+                error={formState.errors.password?.message}
                 onChange={() => setSpin(true)}
               />
             </div>
@@ -80,9 +75,6 @@ const Login: FunctionComponent & {getLayout: FunctionComponent} = () => {
               {loading ? <Spinner className="w-4 h-4 animate-spin" /> : 'Login'}
             </button>
           </div>
-          {/* <div className="my-2 text-sm"> */}
-          {/*   No credentials? <a>Request access</a> */}
-          {/* </div> */}
         </form>
       </div>
     </main>

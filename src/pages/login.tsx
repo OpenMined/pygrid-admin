@@ -5,6 +5,8 @@ import {useForm} from 'react-hook-form'
 import {getLayout} from '@/layouts/blank'
 import {Spinner} from '@/components/icons/spinner'
 import {useAuth} from '@/context/auth-context'
+import {useFetch} from '@/utils/query-builder'
+import {PyGridStatus} from '@/types'
 
 const Login: FunctionComponent & {getLayout: FunctionComponent} = () => {
   const router = useRouter()
@@ -15,6 +17,7 @@ const Login: FunctionComponent & {getLayout: FunctionComponent} = () => {
   const [spin, setSpin] = useState<boolean>(false)
   const rotateStyle = useRef({})
   const {isValid} = formState
+  const {isLoading, isError, data: status} = useFetch<PyGridStatus>('/setup/status')
 
   if (spin) {
     rotateStyle.current = {transform: `rotate(${Math.ceil(365 * Math.random())}deg)`}
@@ -43,7 +46,7 @@ const Login: FunctionComponent & {getLayout: FunctionComponent} = () => {
           <img alt="PyGrid logo" src="/assets/logo.png" width={200} height={200} />
         </div>
         <h1 className="text-3xl">Welcome to PyGrid</h1>
-        <h2>OpenMined Domain</h2>
+        {status && !isError && <h2>{status.nodeName} Domain</h2>}
         <form className="w-4/5" onSubmit={handleSubmit(onSubmit)}>
           <div className="flex flex-col text-left space-y-6">
             <div className="flex flex-col">

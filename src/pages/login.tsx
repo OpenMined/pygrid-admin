@@ -47,7 +47,7 @@ const Login: FunctionComponent & {getLayout: FunctionComponent} = () => {
           <img alt="PyGrid logo" src="/assets/logo.png" width={200} height={200} />
         </div>
         <Title>Welcome to PyGrid</Title>
-        {status && !isError && <Subtitle>Connected to <b>{status.nodeName}</b> Domain</Subtitle>}
+        {status && !isError && <Subtitle>Login to <b>{status.nodeName}</b> Domain</Subtitle>}
         <form className="w-4/5" onSubmit={handleSubmit(onSubmit)}>
           <div className="flex flex-col text-left space-y-6">
             <div className="flex flex-col">

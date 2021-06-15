@@ -25,9 +25,9 @@ const Header: FunctionComponent = () => {
   } else {
     links = [
       {name: 'Datasets', link: '/datasets'},
-      {name: 'Users', link: '/users'},
-      {name: 'Infrastructure', link: '/infrastructure'},
-      {name: 'Settings', link: '/settings'}
+      {name: 'Users', link: '/users'}
+      // {name: 'Infrastructure', link: '/infrastructure'},
+      // {name: 'Settings', link: '/settings'}
     ]
   }
 

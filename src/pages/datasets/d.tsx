@@ -12,7 +12,7 @@ function Dataset() {
   const router = useRouter()
   const datasetId = router.query?.id
 
-  const {data: dataset} = useQuery<PyGridDataset>(`/data-centric/datasets/${datasetId}`)
+  const {data: dataset} = useQuery<PyGridDataset>(`/data-centric/datasets/${datasetId}`, {enabled: !!datasetId})
 
   const {id, description, tags, manifest, data} = dataset ?? {}
   const deleteDataset = useMutate({

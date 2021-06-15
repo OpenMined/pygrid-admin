@@ -25,6 +25,8 @@ const Tensors = () => {
 
   if (isLoading || isLoadingRequests || error) return null
 
+  console.log({data})
+
   return (
     <main className="space-y-8">
       <SectionHeader>

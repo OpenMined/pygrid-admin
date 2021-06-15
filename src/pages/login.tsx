@@ -7,7 +7,7 @@ import {Spinner} from '@/components/icons/spinner'
 import {useAuth} from '@/context/auth-context'
 import {useFetch} from '@/utils/query-builder'
 import {PyGridStatus} from '@/types'
-import {Alert, Input, Select, Subtitle, Title} from '@/components/lib'
+import {Input, SectionHeader} from '@/components/lib'
 
 const Login: FunctionComponent & {getLayout: FunctionComponent} = () => {
   const router = useRouter()
@@ -46,8 +46,14 @@ const Login: FunctionComponent & {getLayout: FunctionComponent} = () => {
         <div className="transition transform" style={rotateStyle.current}>
           <img alt="PyGrid logo" src="/assets/logo.png" width={200} height={200} />
         </div>
-        <Title>Welcome to PyGrid</Title>
-        {status && !isError && <Subtitle>Login to <b>{status.nodeName}</b> Domain</Subtitle>}
+        <SectionHeader>
+          <SectionHeader.Title>Welcome to PyGrid</SectionHeader.Title>
+          {status && !isError && (
+            <SectionHeader.Description>
+              Login to <b>{status.nodeName}</b> Domain
+            </SectionHeader.Description>
+          )}
+        </SectionHeader>
         <form className="w-4/5" onSubmit={handleSubmit(onSubmit)}>
           <div className="flex flex-col text-left space-y-6">
             <div className="flex flex-col">

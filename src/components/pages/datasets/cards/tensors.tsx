@@ -54,12 +54,6 @@ export const TensorsCard: FunctionComponent<{
   return (
     <Card className="flex flex-col font-light md:flex-row md:space-x-2 flex-nowrap">
       <div className="w-full">
-        <UserRequestingUI
-          userAvatarURL={userAvatarURL}
-          userName={userName}
-          userId={userId}
-          downloadedAt={downloadedAt}
-        />
         <div className="flex flex-col my-2 text-gray-800">
           <span>
             <strong>Tensor ID</strong>: <span className="text-gray-400">{id}</span>
@@ -88,12 +82,12 @@ export const TensorsCard: FunctionComponent<{
           </span> */}
         </div>
       </div>
-      <div className="self-end flex-shrink-0 text-gray-400 md:self-center">
+      {/*      <div className="self-end flex-shrink-0 text-gray-400 md:self-center">
         scheduled to delete in {daysUntilDeletion}
         <button className="w-4 mx-2 text-red-500 bg-transparent" onClick={onDelete} aria-label="Delete this tensor">
           <XMark />
         </button>
-      </div>
+      </div>*/}
     </Card>
   )
 }

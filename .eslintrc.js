@@ -10,7 +10,7 @@ module.exports = {
     node: true,
     jest: true
   },
-  plugins: ['jsx-a11y', '@typescript-eslint', 'react-hooks', 'cypress', 'testing-library'],
+  plugins: ['jsx-a11y', '@typescript-eslint', 'react-hooks', 'testing-library'],
   extends: [
     'eslint:recommended',
     'plugin:react/recommended',

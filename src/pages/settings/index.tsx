@@ -13,14 +13,11 @@ const Settings: FunctionComponent = () => {
     method: 'put',
     invalidate: ['/setup', '/setup/status']
   })
-  const {
-    register,
-    formState: {errors},
-    handleSubmit
-  } = useForm()
+  const {register, formState, handleSubmit, reset} = useForm()
 
   const submit = values => {
     editSettings.mutate(values as Partial<PyGridSettings>)
+    reset(values)
   }
 
   return (
@@ -35,7 +32,7 @@ const Settings: FunctionComponent = () => {
           <hr className="mt-3" />
         </div>
         <form onSubmit={handleSubmit(submit)} className="space-y-6">
-          <div className="grid grid-flow-row md:grid-rows-1 md:grid-cols-3 md:grid-flow-col gap-4 ">
+          <div className="grid grid-flow-row md:grid-rows-1 md:grid-cols-1 md:grid-flow-col gap-4 ">
             <Input
               name="domain_name"
               label="Domain Name"
@@ -43,73 +40,11 @@ const Settings: FunctionComponent = () => {
               placeholder="OpenMined Domain"
               defaultValue={settings?.domainName}
               hint="The public name for your domain"
-              error={errors.domainName?.message}
-            />
-            <Input
-              name="aws_credentials"
-              label="Cloud Provider API Credentials"
-              ref={register({required: 'This is required'})}
-              placeholder="nilcwjicwiweije90391nmos"
-              defaultValue={settings?.awsCredentials}
-              error={errors.awsCredentials?.message}
-            />
-            <Input
-              name="cache_strategy"
-              label="Cache Strategy"
-              ref={register({required: 'This is required'})}
-              placeholder="nilcwjicwiweije90391nmos"
-              defaultValue={settings?.cacheStrategy}
-              error={errors.cacheStrategy?.message}
-            />
-          </div>
-          <div>
-            <h3 className="text-2xl text-gray-800">Advanced Settings</h3>
-            <hr className="mt-3" />
-          </div>
-          <Input
-            name="tensor_expiration_policy"
-            label="Tensor Expiration Policy"
-            ref={register({required: 'This is required'})}
-            placeholder="30"
-            hint="Expiration time in seconds for Tensors"
-            defaultValue={settings?.tensorExpirationPolicy}
-            error={errors.tensorExpirationPolicy?.message}
-          />
-
-          <div className="grid grid-flow-row md:grid-rows-1 md:grid-cols-3 md:grid-flow-col gap-4">
-            <Select
-              name="replicate_db"
-              ref={register}
-              label="Replicate Database"
-              defaultValue={settings?.replicateDb ? 1 : 0}
-              options={[
-                {value: 1, label: 'Yes'},
-                {value: 0, label: 'No'}
-              ]}
-            />
-            <Select
-              name="auto_scale"
-              ref={register}
-              label="Infrastructure Auto Scale"
-              defaultValue={settings?.autoScale ? 1 : 0}
-              options={[
-                {value: 1, label: 'Yes'},
-                {value: 0, label: 'No'}
-              ]}
-            />
-            <Select
-              name="allow_user_signup"
-              ref={register}
-              label="Allow User Signup"
-              defaultValue={settings?.allowUserSignup ? 1 : 0}
-              options={[
-                {value: 1, label: 'Yes'},
-                {value: 0, label: 'No'}
-              ]}
+              error={formState.errors.domainName?.message}
             />
           </div>
           <div className="flex flex-col text-right lg:flex-row-reverse">
-            <button className="lg:ml-4 btn transition-all ease-in-out duration-700" disabled={editSettings.isLoading}>
+            <button className="lg:ml-4 btn transition-all ease-in-out duration-700" disabled={!formState.isDirty}>
               {editSettings.isLoading ? <Spinner className="w-4 text-white" /> : 'Edit'}
             </button>
           </div>

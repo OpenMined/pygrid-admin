@@ -10,8 +10,8 @@ const Settings: FunctionComponent = () => {
   const {isLoading, error, isError, data: settings} = useFetch<PyGridSettings>('/setup')
   const editSettings = useMutate<Partial<PyGridSettings>, PyGridSettings>({
     url: `/setup`,
-    method: 'post',
-    invalidate: '/setup'
+    method: 'put',
+    invalidate: ['/setup', '/setup/status']
   })
   const {
     register,
@@ -20,7 +20,7 @@ const Settings: FunctionComponent = () => {
   } = useForm()
 
   const submit = values => {
-    editSettings.mutate(values as Partial<PyGridSettings>, {onSuccess: close})
+    editSettings.mutate(values as Partial<PyGridSettings>)
   }
 
   return (
@@ -37,7 +37,7 @@ const Settings: FunctionComponent = () => {
         <form onSubmit={handleSubmit(submit)} className="space-y-6">
           <div className="grid grid-flow-row md:grid-rows-1 md:grid-cols-3 md:grid-flow-col gap-4 ">
             <Input
-              name="domainName"
+              name="domain_name"
               label="Domain Name"
               ref={register({required: 'This is required'})}
               placeholder="OpenMined Domain"
@@ -46,7 +46,7 @@ const Settings: FunctionComponent = () => {
               error={errors.domainName?.message}
             />
             <Input
-              name="awsCredentials"
+              name="aws_credentials"
               label="Cloud Provider API Credentials"
               ref={register({required: 'This is required'})}
               placeholder="nilcwjicwiweije90391nmos"
@@ -54,11 +54,12 @@ const Settings: FunctionComponent = () => {
               error={errors.awsCredentials?.message}
             />
             <Input
-              name="cacheStrategy"
+              name="cache_strategy"
               label="Cache Strategy"
               ref={register({required: 'This is required'})}
               placeholder="nilcwjicwiweije90391nmos"
-              error={errors.tensorExpirationPolicy?.message}
+              defaultValue={settings?.cacheStrategy}
+              error={errors.cacheStrategy?.message}
             />
           </div>
           <div>
@@ -66,17 +67,18 @@ const Settings: FunctionComponent = () => {
             <hr className="mt-3" />
           </div>
           <Input
-            name="tensorExpirationPolicy"
+            name="tensor_expiration_policy"
             label="Tensor Expiration Policy"
             ref={register({required: 'This is required'})}
             placeholder="30"
             hint="Expiration time in seconds for Tensors"
+            defaultValue={settings?.tensorExpirationPolicy}
             error={errors.tensorExpirationPolicy?.message}
           />
 
           <div className="grid grid-flow-row md:grid-rows-1 md:grid-cols-3 md:grid-flow-col gap-4">
             <Select
-              name="replicateDb"
+              name="replicate_db"
               ref={register}
               label="Replicate Database"
               defaultValue={settings?.replicateDb ? 1 : 0}
@@ -86,7 +88,7 @@ const Settings: FunctionComponent = () => {
               ]}
             />
             <Select
-              name="autoScale"
+              name="auto_scale"
               ref={register}
               label="Infrastructure Auto Scale"
               defaultValue={settings?.autoScale ? 1 : 0}
@@ -96,7 +98,7 @@ const Settings: FunctionComponent = () => {
               ]}
             />
             <Select
-              name="allowUserSignup"
+              name="allow_user_signup"
               ref={register}
               label="Allow User Signup"
               defaultValue={settings?.allowUserSignup ? 1 : 0}

@@ -1,71 +1,81 @@
+import {useMemo} from 'react'
 import {useQuery} from 'react-query'
-import {Spinner} from '@/components/icons/spinner'
-import {SectionHeader} from '@/components/lib'
+import api from '@/utils/api-axios'
+import {entityColors} from '@/utils'
+import {getLayout} from '@/layouts/blank'
+import {DashboardCards, LatestAssetsList} from '@/components/pages/dash'
+import {Sidebar} from '@/components/sidebar'
+import {AdjustmentsIcon, BookOpenIcon, DatabaseIcon, UsersIcon} from '@heroicons/react/outline'
+import type {Tensor, Dataset, Model} from '@/types/grid-types'
+
+interface DashReq {
+  [k: string]: number
+}
 
 export default function Dashboard() {
-  // Only the main sections have loading information. If we are unable to load
-  // the requests, tensors, roles or groups, that's ok.
-  const {data: datasets, isLoading: loadingDatasets} = useQuery('/data-centric/datasets')
-  const {data: requests} = useQuery('/data-centric/requests')
-  const {data: tensors} = useQuery('/data-centric/tensors')
-  const {data: users, isLoading: loadingUsers} = useQuery('/users')
-  const {data: roles} = useQuery('/roles')
-  const {data: groups} = useQuery('/groups')
+  const {data: dashboard} = useQuery<DashReq>('/dashboard')
+  const {data: datasets = []} = useQuery<Dataset[]>('/data-centric/datasets')
+  const {data: models = []} = useQuery<Model[]>('/data-centric/models')
+  const {data: tensors = []} = useQuery<Tensor[]>('/data-centric/tensors', () =>
+    // TODO: Fix this in Grid... just send an array
+    api.get<{tensors: Tensor[]}>('/data-centric/tensors').then(res => res.tensors)
+  )
+  const latestAdditions = useMemo(() => ({datasets, models, tensors}), [datasets, models, tensors])
 
   return (
-    <article className="space-y-8">
-      <SectionHeader>
-        <SectionHeader.Title>Dashboard</SectionHeader.Title>
-        <SectionHeader.Description>An overview of your PyGrid Domain</SectionHeader.Description>
-      </SectionHeader>
-      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
-        <div>
-          <h2 className="flex text-xl text-gray-600 items-center tracking-tighter">
-            Datasets information
-            {loadingDatasets && <Spinner className="w-4 h-4 mx-2 ml-2 text-gray-400" />}
-          </h2>
-          <div className="mt-2">
-            {datasets && (
-              <p>
-                <span className="font-bold">{datasets.length ?? 0}</span> total datasets
-              </p>
-            )}
-            {requests && (
-              <p>
-                <span className="font-bold">{requests?.filter(r => r.status === 'pending').length ?? 0}</span> pending
-                requests
-              </p>
-            )}
-            {tensors?.tensors && (
-              <p>
-                <span className="font-bold">{tensors.tensors.length ?? 0}</span> tensors available
-              </p>
-            )}
+    <article className="h-screen md:flex overflow-hidden max-w-7xl justify-self-center mx-auto">
+      <Sidebar />
+      <main className="w-full h-full p-4 px-8 space-y-8 md:space-y-12">
+        <header className="h-16">
+          <h1 className="text-3xl">Dashboard</h1>
+          <p>Welcome to your pygrid node</p>
+        </header>
+        <section>
+          <div>
+            <DashboardCards
+              cards={[
+                {
+                  link: '/users',
+                  bgColor: entityColors.user,
+                  icon: UsersIcon,
+                  main: 'Total registered users',
+                  value: dashboard ? dashboard.commonUsers + dashboard.orgUsers : undefined
+                },
+                {
+                  link: '/requests',
+                  bgColor: entityColors.request,
+                  icon: BookOpenIcon,
+                  main: 'Pending data requests',
+                  value: dashboard?.requests
+                },
+                {
+                  link: '/datasets',
+                  bgColor: entityColors.dataset,
+                  icon: DatabaseIcon,
+                  main: 'Datasets available',
+                  value: dashboard?.datasets
+                },
+                {
+                  link: '/models',
+                  bgColor: entityColors.model,
+                  icon: AdjustmentsIcon,
+                  main: 'Models available',
+                  value: models?.length
+                }
+              ]}
+            />
           </div>
-        </div>
-        <div>
-          <h2 className="flex text-xl tracking-tighter text-gray-600 iterms-center">
-            Users {loadingUsers && <Spinner className="w-4 h-4 mx-2 ml-2 text-gray-400" />}
-          </h2>
-          <div className="mt-2">
-            {users && (
-              <p>
-                <span className="font-bold">{users.length ?? 0}</span> total users
-              </p>
-            )}
-            {roles && (
-              <p>
-                <span className="font-bold">{roles.length ?? 0}</span> user roles
-              </p>
-            )}
-            {groups && (
-              <p>
-                <span className="font-bold">{groups.length ?? 0}</span> groups
-              </p>
-            )}
+        </section>
+        <section className="space-y-2">
+          <h2 className="text-xl font-medium">Latest assets</h2>
+          <div className="border border-gray-200 overflow-hidden rounded-md">
+            {/* search box */}
+            <LatestAssetsList {...latestAdditions} />
           </div>
-        </div>
-      </div>
+        </section>
+      </main>
     </article>
   )
 }
+
+Dashboard.getLayout = getLayout

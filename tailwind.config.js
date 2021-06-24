@@ -1,6 +1,8 @@
 const plugin = require('tailwindcss/plugin')
+const twcolors = require('tailwindcss/colors')
 
 module.exports = {
+  // mode: 'jit',
   purge: {
     content: ['./src/**/*.{ts,tsx}']
   },
@@ -27,6 +29,21 @@ module.exports = {
       },
       animation: {
         punch: 'punch 250ms ease-in-out'
+      },
+      colors: {
+        ...twcolors,
+        cyan: {
+          50: 'hsl(195, 75%, 95%)',
+          100: 'hsl(195, 75%, 90%)',
+          200: 'hsl(195, 75%, 80%)',
+          300: 'hsl(195, 75%, 70%)',
+          400: 'hsl(195, 75%, 60%)',
+          500: 'hsl(195, 75%, 50%)',
+          600: 'hsl(195, 75%, 40%)',
+          700: 'hsl(195, 75%, 30%)',
+          800: 'hsl(195, 75%, 20%)',
+          900: 'hsl(195, 75%, 10%)'
+        }
       }
     }
   },
@@ -35,8 +52,11 @@ module.exports = {
       animation: ['responsive', 'focus', 'hover', 'active'],
       transitionProperty: ['hover'],
       backgroundColor: ['active', 'disabled'],
+      opacity: ['active'],
       cursor: ['disabled'],
-      textColor: ['active']
+      textColor: ['active'],
+      ringWidth: ['hover', 'active'],
+      ringColor: ['hover', 'active']
     },
     textColor: ({after}) => after(['invalid'])
   },

@@ -1,8 +1,12 @@
-import type {FunctionComponent} from 'react'
 import {useRouter} from 'next/router'
 import {useAuth} from '@/context/auth-context'
+import type {ReactNode} from 'react'
 
-const CheckAuthRoute: FunctionComponent = ({children}) => {
+interface Pages {
+  children: ReactNode
+}
+
+const CheckAuthRoute = ({children}: Pages) => {
   const router = useRouter()
   const {getToken} = useAuth()
   const publicRoutes = ['/login', '/start']
@@ -12,7 +16,6 @@ const CheckAuthRoute: FunctionComponent = ({children}) => {
 
     if (!token && !publicRoutes.includes(router.route)) {
       router.push('/login')
-      // We could flash a return page here... or just a blank
       return null
     }
   }

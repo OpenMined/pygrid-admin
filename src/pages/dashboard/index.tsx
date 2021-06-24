@@ -1,6 +1,5 @@
 import {useMemo} from 'react'
 import {useQuery} from 'react-query'
-import api from '@/utils/api-axios'
 import {entityColors} from '@/utils'
 import {getLayout} from '@/layouts/blank'
 import {DashboardCards, LatestAssetsList} from '@/components/pages/dash'
@@ -16,10 +15,7 @@ export default function Dashboard() {
   const {data: dashboard} = useQuery<DashReq>('/dashboard')
   const {data: datasets = []} = useQuery<Dataset[]>('/data-centric/datasets')
   const {data: models = []} = useQuery<Model[]>('/data-centric/models')
-  const {data: tensors = []} = useQuery<Tensor[]>('/data-centric/tensors', () =>
-    // TODO: Fix this in Grid... just send an array
-    api.get<{tensors: Tensor[]}>('/data-centric/tensors').then(res => res.tensors)
-  )
+  const {data: tensors = []} = useQuery<Tensor[]>('/data-centric/tensors')
   const latestAdditions = useMemo(() => ({datasets, models, tensors}), [datasets, models, tensors])
 
   return (

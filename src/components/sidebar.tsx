@@ -1,4 +1,5 @@
 import {Fragment, createContext, useContext, useState} from 'react'
+import Link from 'next/link'
 import cn from 'classnames'
 import {useQuery} from 'react-query'
 import {Dialog, Transition} from '@headlessui/react'
@@ -78,7 +79,7 @@ function MobileSidebar() {
 
 function DesktopSidebar() {
   return (
-    <aside className="border border-gray-200">
+    <aside className="sticky h-screen top-0 border border-gray-200">
       <div className="hidden h-full bg-gray-100 text-gray-800 md:flex md:flex-shrink-0">
         <div className="flex flex-col w-64">
           <div className="flex flex-col h-0 flex-1">
@@ -101,6 +102,7 @@ function useDomainStatus() {
 
 function useUser() {
   const {data, ...rest} = useQuery('/users/me')
+  // TODO: User types
   return {email: data?.email, role: data?.role, ...rest}
 }
 
@@ -120,14 +122,14 @@ function LogoutBox() {
 
   return (
     <div className="flex-shrink-0 flex border-t border-gray-200 p-4">
-      <a href="#" className="flex-shrink-0 w-full group block">
+      <div className="flex-shrink-0 w-full group cursor-pointer block">
         <div className="flex items-center">
           <div className="font-regular">
             <p className="text-sm">{email}</p>
             <p className="text-xs group-hover:text-cyan-300">Log out</p>
           </div>
         </div>
-      </a>
+      </div>
     </div>
   )
 }
@@ -136,18 +138,18 @@ function Navigation() {
   return (
     <nav className="mt-5 px-2 space-y-1">
       {navigation.map(item => (
-        <a
-          key={item.name}
-          href={item.href}
-          className={cn(
-            item.current
-              ? 'bg-cyan-500 text-white'
-              : 'text-gray-800 hover:text-white hover:bg-cyan-600 hover:bg-opacity-75 active:bg-opacity-100',
-            'group flex items-center px-2 py-2 text-sm font-regular rounded-sm'
-          )}>
-          {/*<item.icon className="mr-3 flex-shrink-0 h-6 w-6 text-indigo-300" aria-hidden="true" />*/}
-          {item.name}
-        </a>
+        <Link href={item.href}>
+          <a
+            key={item.name}
+            className={cn(
+              item.current
+                ? 'bg-cyan-500 text-white'
+                : 'text-gray-800 hover:text-white hover:bg-cyan-600 hover:bg-opacity-75 active:bg-opacity-100',
+              'group flex items-center px-2 py-2 text-sm font-regular rounded-sm'
+            )}>
+            {item.name}
+          </a>
+        </Link>
       ))}
     </nav>
   )

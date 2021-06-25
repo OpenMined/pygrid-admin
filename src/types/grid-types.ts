@@ -22,6 +22,5 @@ export interface Model {
   tags: string[]
   description: string | string[]
   id: string
-  createAt: Date | string
+  createdAt?: Date | string
 }
-

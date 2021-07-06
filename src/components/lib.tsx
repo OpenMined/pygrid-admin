@@ -1,8 +1,8 @@
-import type {FunctionComponent, PropsWithChildren, HTMLAttributes, ComponentProps} from 'react'
 import React, {forwardRef} from 'react'
 import cn from 'classnames'
 import {Search} from '@/components/icons/search'
 import {CloseCircle} from './icons/marks'
+import type {ReactNode, FunctionComponent, PropsWithChildren, HTMLAttributes, ComponentPropsWithoutRef} from 'react'
 
 export const Tag: FunctionComponent<PropsWithChildren<{className?: string}>> = ({className, children}) => (
   <div className={cn('px-2 font-light text-xs text-white bg-blue-500 rounded-sm whitespace-nowrap', className)}>
@@ -80,80 +80,114 @@ export const Alert: FunctionComponent<{
   </div>
 )
 
-export const Input = forwardRef<
-  HTMLInputElement,
-  ComponentProps<'textarea'> & ComponentProps<'input'> & {label?: string; hint?: string; error?: string}
->(function InputField(props, ref) {
-  const {name, label, hint, error, type = 'text'} = props
+interface NormalInput {
+  pre?: string
+  type?: string
+  label?: string
+  hint?: string
+  error?: string
+  id: string
+  className?: string
+  placeholder?: string
+  container?: string
+}
 
+function WrapComponent({container = '', id, label, hint, error, children}: PropsWithChildren<NormalInput>) {
   return (
-    <div>
+    <div className={cn(container)}>
       {label && (
-        <label htmlFor={name} className="block ml-1 text-sm font-medium text-gray-700">
+        <label htmlFor={id} className="block ml-1 text-sm font-medium text-gray-700 capitalize">
           {label}
         </label>
       )}
-      {type === 'textarea' ? (
-        <textarea
-          ref={ref}
-          type={type}
-          name={name}
-          id={name}
-          className={cn(
-            'block w-full border-gray-300 rounded-md shadow-sm sm:text-sm placeholder-gray-400',
-            error ? 'focus:ring-red-500 focus:border-red-500' : 'focus:ring-indigo-500 focus:border-indigo-500'
-          )}
-          {...props}
-        />
-      ) : (
-        <input
-          ref={ref}
-          type={type}
-          name={name}
-          id={name}
-          className={cn(
-            'block w-full border-gray-300 rounded-md shadow-sm sm:text-sm placeholder-gray-400',
-            error ? 'focus:ring-red-500 focus:border-red-500' : 'focus:ring-indigo-500 focus:border-indigo-500'
-          )}
-          {...props}
-        />
-      )}
+      {children}
       {hint && <p className="mt-1 ml-1 text-xs text-gray-400">{hint}</p>}
       {error && <p className="mt-1 ml-1 text-xs text-red-800">{error}</p>}
     </div>
   )
-})
+}
 
-export const Select = forwardRef<
-  HTMLSelectElement,
-  ComponentProps<'select'> & {label: string; options: {value: string | number; label: string}[]}
->(function SelectField(props, ref) {
-  const {name, label, placeholder, options, ...inputProps} = props
+export const TextArea = forwardRef<HTMLTextAreaElement, NormalInput & ComponentPropsWithoutRef<'textarea'>>(
+  function InputField(props, ref) {
+    return (
+      <WrapComponent {...props}>
+        <textarea
+          {...props}
+          ref={ref}
+          className={cn(
+            'block w-full py-1.5 sm:py-2 border-gray-300 rounded-md shadow-sm sm:text-sm placeholder-gray-400',
+            props.error ? 'focus:ring-red-500 focus:border-red-500' : 'focus:ring-indigo-500 focus:border-indigo-500',
+            props.className
+          )}
+        />
+      </WrapComponent>
+    )
+  }
+)
+function PreInput({children}: {children: ReactNode}) {
   return (
-    <div>
-      <label htmlFor={name} className="block text-sm font-medium text-gray-700">
-        {label}
-      </label>
-      <select
-        {...inputProps}
-        id={name}
-        name={name}
-        ref={ref}
-        className="block w-full py-2 pl-3 pr-10 mt-1 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md invalid:text-gray-400">
-        {placeholder && (
-          <option value="" disabled hidden>
-            {placeholder}
-          </option>
-        )}
-        {options.map(({value, label}) => (
-          <option key={`option-${value}`} value={value}>
-            {label}
-          </option>
-        ))}
-      </select>
+    <div className="inline-block mt-auto">
+      <div className="border border-gray-300 bg-blueGray-200 border-r-0 rounded-l-md py-2 px-3 shadow-sm text-sm flex items-center px-2 text-gray-500">
+        {children}
+      </div>
     </div>
   )
+}
+
+export const Input = forwardRef<HTMLInputElement, NormalInput & ComponentPropsWithoutRef<'input'>>(function InputField(
+  props,
+  ref
+) {
+  return (
+    <WrapComponent {...props}>
+      <div className="flex">
+        {props.pre && <PreInput>{props.pre}</PreInput>}
+        <input
+          {...props}
+          type={props.type ?? 'text'}
+          ref={ref}
+          className={cn(
+            'block py-1.5 sm:py-2 w-full border-gray-300 rounded-md shadow-sm sm:text-sm placeholder-gray-400',
+            props.error ? 'focus:ring-red-500 focus:border-red-500' : 'focus:ring-indigo-500 focus:border-indigo-500',
+            props.className
+          )}
+        />
+      </div>
+    </WrapComponent>
+  )
 })
+
+interface SelectInput extends NormalInput {
+  options: {value: string | number; label: string}[]
+  defaultValue?: string
+}
+
+export const Select = forwardRef<HTMLSelectElement, SelectInput & ComponentPropsWithoutRef<'select'>>(
+  function SelectField(props, ref) {
+    const {placeholder, options, ...selectProps} = props
+    return (
+      <WrapComponent {...props}>
+        <select
+          defaultValue={props.value ? undefined : ''}
+          {...selectProps}
+          ref={ref}
+          placeholder="kakakaka"
+          className="block w-full py-1.5 sm:py-2 pl-3 pr-10 mt-1 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md invalid:text-gray-400 placeholder-gray-50">
+          {placeholder && (
+            <option value="" disabled hidden>
+              {placeholder}
+            </option>
+          )}
+          {options.map(({value, label}) => (
+            <option key={`option-${value}`} value={value}>
+              {label}
+            </option>
+          ))}
+        </select>
+      </WrapComponent>
+    )
+  }
+)
 
 function SectionHeaderRoot({children}) {
   return (

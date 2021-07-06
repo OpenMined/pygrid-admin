@@ -2,7 +2,6 @@ const plugin = require('tailwindcss/plugin')
 const twcolors = require('tailwindcss/colors')
 
 module.exports = {
-  // mode: 'jit',
   purge: {
     content: ['./src/**/*.{ts,tsx}']
   },
@@ -14,6 +13,9 @@ module.exports = {
       },
       lineHeight: {
         12: '3rem'
+      },
+      minWidth: {
+        lg: '32rem'
       },
       maxWidth: {
         112: '28rem'
@@ -51,12 +53,13 @@ module.exports = {
     extend: {
       animation: ['responsive', 'focus', 'hover', 'active'],
       transitionProperty: ['hover'],
-      backgroundColor: ['active', 'disabled'],
-      opacity: ['active'],
+      backgroundColor: ['active', 'disabled', 'group-hover'],
+      opacity: ['active', 'group-hover'],
       cursor: ['disabled'],
-      textColor: ['active'],
+      textColor: ['active', 'disabled'],
       ringWidth: ['hover', 'active'],
-      ringColor: ['hover', 'active']
+      ringColor: ['hover', 'active'],
+      display: ['hover', 'group-hover']
     },
     textColor: ({after}) => after(['invalid'])
   },

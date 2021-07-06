@@ -24,3 +24,68 @@ export interface Model {
   id: string
   createdAt?: Date | string
 }
+
+export type RequestStatus = 'pending' | 'accepted' | 'denied'
+
+export interface Request {
+  id: string
+  date: Date | string
+  userId: string | number
+  userName: string
+  objectId: string
+  reason: string | string[]
+  status: RequestStatus
+  request_type: 'permissions'
+  verifyKey: string
+  objectType: string
+  tags: string[]
+}
+
+export interface User {
+  email: string
+  id: number
+  role: number
+}
+
+export type UserPermissions =
+  | 'canTriageRequests'
+  | 'canEditSettings'
+  | 'canCreateUsers'
+  | 'canCreateGroups'
+  | 'canEditRoles'
+  | 'canManageInfrastructure'
+  | 'canUploadData'
+
+export type GridPermissions = {
+  [k in UserPermissions]: boolean
+}
+
+export type Role = {
+  id: number
+  name: string
+} & GridPermissions
+
+export interface EnhancedUser {
+  user: Partial<User>
+  permissions: GridPermissions
+  role: Partial<Role>
+}
+
+export interface Me {
+  id: number
+  email: string
+  permissions: GridPermissions
+  role: Pick<Role, 'id' | 'name'>
+}
+
+export interface Settings {
+  // FIX: Which one is it? :)
+  domainName: string
+  nodeName: string
+  id: number
+}
+
+export interface DomainStatus {
+  nodeName: string
+  init: boolean
+}

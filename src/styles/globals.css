@@ -4,7 +4,7 @@
 
 @layer base {
   html {
-    @apply min-h-screen;
+    @apply min-h-screen overflow-y-scroll;
   }
 
   body {

@@ -1,7 +1,6 @@
 import {useState} from 'react'
 import {useQueryClient, useMutation} from 'react-query'
 import {NormalButton, Input} from '@/components'
-import {Spinner} from '@/components/icons/spinner'
 import {cacheKeys} from '@/utils'
 import api from '@/utils/api-axios'
 import type {Settings} from '@/types/grid-types'
@@ -15,7 +14,7 @@ function ChangeNodeName({domainName}: Partial<Settings>) {
   })
 
   return (
-    <div className="max-w-xl flex space-x-4">
+    <div className="flex max-w-xl space-x-4">
       <Input
         container="w-full"
         id="node-name"
@@ -25,9 +24,10 @@ function ChangeNodeName({domainName}: Partial<Settings>) {
       />
       <NormalButton
         onClick={() => mutation.mutate()}
-        className="w-24 flex-shrink-0 mt-auto hover:bg-trueGray-200"
-        disabled={mutation.isLoading}>
-        {mutation.isLoading ? <Spinner className="w-3 h-3" /> : 'Submit'}
+        className="flex-shrink-0 w-24 mt-auto hover:bg-trueGray-200"
+        disabled={mutation.isLoading}
+        isLoading={mutation.isLoading}>
+        Submit
       </NormalButton>
     </div>
   )

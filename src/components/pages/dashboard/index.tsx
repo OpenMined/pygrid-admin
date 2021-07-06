@@ -2,8 +2,7 @@ import {useMemo} from 'react'
 import cn from 'classnames'
 import Link from 'next/link'
 import {dateFromNow, entityColors, localeSortByVariable} from '@/utils'
-import {Badge} from '@/components'
-import {Spinner} from '@/components/icons/spinner'
+import {Badge, Spinner} from '@/components'
 import type {Tensor, Dataset, Model} from '@/types/grid-types'
 
 function prepareTensorsForAssetList(tensor: Tensor) {
@@ -41,7 +40,7 @@ function prepareModelForAssetList(model: Model) {
 
 function AssetListItem({title, href, description, createdAt, type, id}) {
   return (
-    <li key={id} className="col-span-full px-4 py-4 hover:bg-gray-100">
+    <li key={id} className="px-4 py-4 col-span-full hover:bg-gray-100">
       <Link href={`${href}?v=${id}`}>
         <a>
           <div className="flex items-center justify-between space-x-4">
@@ -51,7 +50,7 @@ function AssetListItem({title, href, description, createdAt, type, id}) {
             </div>
             <span className="text-sm text-gray-500">{createdAt}</span>
           </div>
-          <div className="text-sm text-gray-500 overflow-ellipsis line-clamp-3 mt-1">{description}</div>
+          <div className="mt-1 text-sm text-gray-500 overflow-ellipsis line-clamp-3">{description}</div>
           <span className="text-xs text-gray-400">{id}</span>
         </a>
       </Link>
@@ -74,7 +73,7 @@ export function LatestAssetsList({datasets = [], models = [], tensors = []}) {
     ],
     [datasets, models, tensors]
   )
-  return <ul className="grid grid-cols-1 md:grid-cols-8 divide-y divide-gray-300">{assets.map(AssetListItem)}</ul>
+  return <ul className="grid grid-cols-1 divide-y divide-gray-300 md:grid-cols-8">{assets.map(AssetListItem)}</ul>
 }
 
 export interface Card {
@@ -93,9 +92,9 @@ export function MiniCard({link, bgColor, icon: Icon, main, value}: Card) {
           bgColor ? `bg-${bgColor}-600` : 'bg-cyan-600',
           'flex-shrink-0 flex items-center justify-center w-16 text-white text-sm font-medium rounded-l-md'
         )}>
-        {Icon && <Icon className="text-white h-8 w-8" aria-hidden />}
+        {Icon && <Icon className="w-8 h-8 text-white" aria-hidden />}
       </div>
-      <div className="flex-1 flex justify-between border-t border-r border-b border-gray-200 bg-white rounded-r-md truncate">
+      <div className="flex justify-between flex-1 truncate bg-white border-t border-b border-r border-gray-200 rounded-r-md">
         <div className="flex-1 px-4 py-2 text-sm truncate">
           <Link href={link}>
             <a className="text-gray-500 hover:text-gray-800">

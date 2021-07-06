@@ -1,6 +1,5 @@
 import {useRouter} from 'next/router'
-import {getLayout} from '@/layouts/blank'
-import {useDomainStatus} from '@/lib/data/useMe'
+import {useDomainStatus} from '@/lib/data'
 
 export default function Offline() {
   const router = useRouter()
@@ -12,7 +11,7 @@ export default function Offline() {
   }
 
   return (
-    <main className="max-w-7xl py-8 px-4 flex flex-col items-center justify-center h-screen mx-auto">
+    <main className="flex flex-col items-center justify-center h-screen px-4 py-8 mx-auto max-w-7xl">
       <h1 className="text-xl tracking-tight">The Domain is offline.</h1>
       <p>Trying to reach the API at {process.env.NEXT_PUBLIC_API_URL}.</p>
       <div>
@@ -22,5 +21,3 @@ export default function Offline() {
     </main>
   )
 }
-
-Offline.getLayout = getLayout

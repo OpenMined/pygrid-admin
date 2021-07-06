@@ -1,8 +1,7 @@
 import {useMemo, useState} from 'react'
-import {getLayout} from '@/layouts/blank'
 import {Page, SearchBar, SpinnerWithText, MutationError} from '@/components'
 import {TensorList} from '@/components/pages/tensors'
-import {useTensors} from '@/lib/data/useMe'
+import {useTensors} from '@/lib/data'
 import type {Tensor} from '@/types/grid-types'
 
 interface TensorsList {
@@ -50,5 +49,3 @@ export default function Tensors() {
     </Page>
   )
 }
-
-Tensors.getLayout = getLayout

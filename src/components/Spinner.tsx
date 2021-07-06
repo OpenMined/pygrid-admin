@@ -1,7 +1,6 @@
-import type {FunctionComponent} from 'react'
 import cn from 'classnames'
 
-const Spinner: FunctionComponent<{className?: string}> = ({className}) => {
+export function Spinner({className}) {
   return (
     <svg
       aria-hidden="true"
@@ -17,5 +16,3 @@ const Spinner: FunctionComponent<{className?: string}> = ({className}) => {
     </svg>
   )
 }
-
-export {Spinner}

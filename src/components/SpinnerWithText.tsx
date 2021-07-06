@@ -1,4 +1,4 @@
-import {Spinner} from '@/components/icons/spinner'
+import {Spinner} from '@/components'
 
 export function SpinnerWithText({children}) {
   return (

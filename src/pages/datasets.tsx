@@ -1,11 +1,9 @@
 import {useMemo, useState} from 'react'
 import {useRouter} from 'next/router'
-import {getLayout} from '@/layouts/blank'
 import {Page, NormalButton, SearchBar, SpinnerWithText, MutationError, Alert} from '@/components'
-import {DatasetList} from '@/components/pages/ds'
-import {DatasetCreatePanel} from '@/components/pages/datasets'
+import {DatasetCreatePanel, DatasetList} from '@/components/pages/datasets'
 import {formatFullDate} from '@/utils'
-import {useDatasets} from '@/lib/data/useMe'
+import {useDatasets} from '@/lib/data'
 import {useEnhancedCurrentUser} from '@/lib/users/self'
 import {ViewDataset} from '@/components/pages/datasets/ViewDataset'
 import type {Dataset} from '@/types/grid-types'
@@ -44,18 +42,9 @@ function ViewOne({id}: {id: string}) {
 }
 
 function DatasetsList({datasets, isLoading, isError, error}) {
-  if (isLoading) {
-    return <SpinnerWithText>Loading all available datasets</SpinnerWithText>
-  }
-
-  if (isError) {
-    return <MutationError isError error="Unable to load datasets" description={error?.message} />
-  }
-
-  if (datasets.length === 0) {
-    return <p>There are no datasets in this Domain.</p>
-  }
-
+  if (isLoading) return <SpinnerWithText>Loading all available datasets</SpinnerWithText>
+  if (isError) return <MutationError isError error="Unable to load datasets" description={error?.message} />
+  if (datasets.length === 0) return <p>There are no datasets in this Domain.</p>
   return <DatasetList datasets={datasets} />
 }
 
@@ -102,5 +91,3 @@ export default function Datasets() {
 
   return <ViewAll />
 }
-
-Datasets.getLayout = getLayout

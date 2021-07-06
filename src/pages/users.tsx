@@ -1,23 +1,12 @@
 import {useEffect, useMemo, useState} from 'react'
 import {useQueries} from 'react-query'
-import {getLayout} from '@/layouts/blank'
 import {Page, NormalButton, SearchBar, SpinnerWithText, MutationError} from '@/components'
-import {UserList, UserCreate} from '@/components/pages/usrs'
+import {UserList, UserCreate} from '@/components/pages/users'
 import {cacheKeys} from '@/utils'
 import api from '@/utils/api-axios'
+import {buildSelfWithRoles} from '@/lib/users/self'
 import type {EnhancedUser, User, Me, Role} from '@/types/grid-types'
 import type {ErrorMessage} from '@/utils/api-axios'
-
-function buildSelfWithRoles(me: User, roles: Role[]): Me {
-  const selfRole = roles.find(role => role.id === me.role)
-  const {id: selfRoleId, name: selfRoleName, ...selfPermissions} = selfRole
-  return {
-    id: me.id,
-    email: me.email,
-    permissions: selfPermissions,
-    role: {id: selfRoleId, name: selfRoleName}
-  }
-}
 
 function buildUsersWithRoles(users: User[], roles: Role[]): EnhancedUser[] {
   return users.map(user => {
@@ -127,5 +116,3 @@ export default function Users() {
     </Page>
   )
 }
-
-Users.getLayout = getLayout

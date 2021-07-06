@@ -1,8 +1,7 @@
 import {useMemo, useState} from 'react'
-import {getLayout} from '@/layouts/blank'
 import {Page, SpinnerWithText, SearchBar, MutationError} from '@/components'
 import {ModelList} from '@/components/pages/models'
-import {useModels} from '@/lib/data/useMe'
+import {useModels} from '@/lib/data'
 import type {Model} from '@/types/grid-types'
 
 interface ModelsList {
@@ -45,5 +44,3 @@ export default function Models() {
     </Page>
   )
 }
-
-Models.getLayout = getLayout

@@ -1,8 +1,8 @@
 import {useCallback, useState} from 'react'
 import {useForm} from 'react-hook-form'
-import {Input, NormalButton, ToggleablePermissionsList} from '@/components'
+import {Input, NormalButton, PermissionsListToggle} from '@/components'
 import {gridPermissions} from '@/utils'
-import {useRoles} from '@/lib/data/useMe'
+import {useRoles} from '@/lib/data'
 import type {Role} from '@/types/grid-types'
 
 const getBlankRole = () => ({
@@ -37,14 +37,14 @@ export function CreateRole({onClose}: {onClose: () => void}) {
   )
 
   return (
-    <div className="bg-blueGray-200 rounded-md p-8 space-y-6">
-      <header className="space-y-2 max-w-xl">
+    <div className="p-8 space-y-6 rounded-md bg-blueGray-200">
+      <header className="max-w-xl space-y-2">
         <h2 className="text-xl font-medium">Create a new role</h2>
         <p>Combine the permissions for creating a new role for your Domain.</p>
       </header>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="space-y-4">
-          <ToggleablePermissionsList
+          <PermissionsListToggle
             onChange={(permission, enabled) => changePermission(permission, enabled)}
             id="create-new-role"
             defaultPermissions={newRole}
@@ -61,7 +61,7 @@ export function CreateRole({onClose}: {onClose: () => void}) {
             />
           </div>
           <NormalButton
-            className="mr-4 w-24 flex-shrink-0 mt-auto bg-gray-700 text-gray-50 bg-opacity-80 hover:bg-opacity-100"
+            className="flex-shrink-0 w-24 mt-auto mr-4 bg-gray-700 text-gray-50 bg-opacity-80 hover:bg-opacity-100"
             disabled={!isValid || mutation.isLoading}
             isLoading={mutation.isLoading}>
             Submit

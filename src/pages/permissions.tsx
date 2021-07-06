@@ -1,10 +1,9 @@
 import {useMemo, useState} from 'react'
 import {flatten, uniq} from 'lodash'
-import {getLayout} from '@/layouts/blank'
 import {Page, NormalButton, SpinnerWithText, MutationError} from '@/components'
 import {PermissionList, CreateRole} from '@/components/pages/permissions'
 import {PermissionsFilter} from '@/components/FilterMenu'
-import {useRoles} from '@/lib/data/useMe'
+import {useRoles} from '@/lib/data'
 import {useEnhancedCurrentUser} from '@/lib/users/self'
 import {gridPermissions} from '@/utils'
 import type {Role} from '@/types/grid-types'
@@ -77,5 +76,3 @@ export default function Permissions() {
     </Page>
   )
 }
-
-Permissions.getLayout = getLayout

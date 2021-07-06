@@ -1,20 +1,18 @@
-import {FunctionComponent, useState, useRef} from 'react'
+import {useState, useRef} from 'react'
 import cn from 'classnames'
 import {useRouter} from 'next/router'
 import {useForm} from 'react-hook-form'
-import {getLayout} from '@/layouts/blank'
-import {Spinner} from '@/components/icons/spinner'
 import {DomainConnectionStatus} from '@/components'
-import {useDomainStatus} from '@/lib/data/useMe'
+import {useDomainStatus} from '@/lib/data'
 import {useAuth} from '@/context/auth-context'
-import {Input} from '@/components/lib'
+import {Input, NormalButton} from '@/components'
 
-interface Login {
+interface UserLogin {
   email: string
   password: string
 }
 
-const Login: FunctionComponent & {getLayout: FunctionComponent} = () => {
+export default function Login() {
   const router = useRouter()
   const {login} = useAuth()
   const {register, handleSubmit, formState} = useForm({mode: 'onChange'})
@@ -33,7 +31,7 @@ const Login: FunctionComponent & {getLayout: FunctionComponent} = () => {
     }
   }
 
-  const onSubmit = async (values: Login) => {
+  const onSubmit = async (values: UserLogin) => {
     try {
       setLoading(true)
       await login(values)
@@ -58,7 +56,7 @@ const Login: FunctionComponent & {getLayout: FunctionComponent} = () => {
           </p>
         )}
         <form className="w-4/5" onSubmit={handleSubmit(onSubmit)}>
-          <div className="flex flex-col text-left space-y-6">
+          <div className="flex flex-col space-y-6 text-left">
             <div className="flex flex-col">
               <Input
                 name="email"
@@ -82,9 +80,12 @@ const Login: FunctionComponent & {getLayout: FunctionComponent} = () => {
                 onChange={() => setSpin(true)}
               />
             </div>
-            <button className={cn('btn', loading && 'pointer-events-none')} disabled={!isValid || error}>
-              {loading ? <Spinner className="w-4 h-4 animate-spin" /> : 'Login'}
-            </button>
+            <NormalButton
+              className={cn('btn', loading && 'pointer-events-none')}
+              disabled={!isValid || error}
+              isLoading={loading}>
+              Login
+            </NormalButton>
           </div>
         </form>
         <DomainConnectionStatus />
@@ -92,7 +93,3 @@ const Login: FunctionComponent & {getLayout: FunctionComponent} = () => {
     </main>
   )
 }
-
-Login.getLayout = getLayout
-
-export default Login

@@ -1,9 +1,8 @@
 import {useMemo} from 'react'
 import {entityColors} from '@/utils'
-import {getLayout} from '@/layouts/blank'
-import {DashboardCards, LatestAssetsList} from '@/components/pages/dash'
+import {DashboardCards, LatestAssetsList} from '@/components/pages/dashboard'
 import {Page} from '@/components'
-import {useDatasets, useRequests, useModels, useTensors, useUsers} from '@/lib/data/useMe'
+import {useDatasets, useRequests, useModels, useTensors, useUsers} from '@/lib/data'
 import {AdjustmentsIcon, BookOpenIcon, DatabaseIcon, UsersIcon} from '@heroicons/react/outline'
 
 export default function Dashboard() {
@@ -62,7 +61,7 @@ export default function Dashboard() {
         </section>
         <section className="space-y-2">
           <h2 className="text-xl font-medium">Latest Domains, Models and Tensors</h2>
-          <div className="border border-gray-200 overflow-hidden rounded-md">
+          <div className="overflow-hidden border border-gray-200 rounded-md">
             {/* TODO: search box? filters? */}
             <LatestAssetsList {...latestAdditions} />
           </div>
@@ -71,5 +70,3 @@ export default function Dashboard() {
     </Page>
   )
 }
-
-Dashboard.getLayout = getLayout

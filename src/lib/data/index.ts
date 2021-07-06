@@ -32,9 +32,13 @@ export function useRoles() {
 }
 
 export function useSettings() {
-  return useCrudify<Settings>([cacheKeys.settings])
+  return useQuery<Settings>(cacheKeys.settings)
 }
 
 export function useDomainStatus() {
   return useQuery<DomainStatus>(cacheKeys.status)
+}
+
+export function useInitialSetup() {
+  return useCrudify<Settings>([cacheKeys.settings]).create
 }

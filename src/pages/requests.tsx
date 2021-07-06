@@ -1,8 +1,7 @@
 import {useMemo, useState} from 'react'
-import {getLayout} from '@/layouts/blank'
 import {Page, SearchBar, SpinnerWithText, MutationError} from '@/components'
 import {RequestList} from '@/components/pages/requests'
-import {useRequests} from '@/lib/data/useMe'
+import {useRequests} from '@/lib/data'
 import type {Request} from '@/types/grid-types'
 
 interface RequestsList {
@@ -53,5 +52,3 @@ export default function Requests() {
     </Page>
   )
 }
-
-Requests.getLayout = getLayout

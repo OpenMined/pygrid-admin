@@ -1,4 +1,4 @@
-import {useDomainStatus} from '@/lib/data/useMe'
+import {useDomainStatus} from '@/lib/data'
 
 export function DomainConnectionStatus() {
   const {isLoading, isError} = useDomainStatus()
@@ -17,10 +17,10 @@ export function DomainConnectionStatus() {
   }
 
   return (
-    <div className="flex items-center p-4 text-sm space-x-2">
-      <div className="w-2 h-2 flex relative">
+    <div className="flex items-center p-4 space-x-2 text-sm">
+      <div className="relative flex w-2 h-2">
         {isLoading && (
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gray-400 opacity-75"></span>
+          <span className="absolute inline-flex w-full h-full bg-gray-400 rounded-full opacity-75 animate-ping"></span>
         )}
         <span className={`relative rounded-full w-2 h-2 bg-${bgColor}-500`} />
       </div>

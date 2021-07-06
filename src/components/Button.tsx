@@ -1,6 +1,6 @@
 import {forwardRef} from 'react'
 import cn from 'classnames'
-import {Spinner} from '@/components/icons/spinner'
+import {Spinner} from '@/components'
 import type {ComponentPropsWithRef} from 'react'
 
 export function Button(props: ComponentPropsWithRef<'button'>) {
@@ -55,7 +55,7 @@ export function ActionButton(props: GridButton) {
   return (
     <NormalButton
       {...props}
-      className="mr-4 w-24 flex-shrink-0 mt-auto bg-gray-700 text-gray-50 bg-opacity-80 hover:bg-opacity-100"
+      className="flex-shrink-0 w-24 mt-auto mr-4 bg-gray-700 text-gray-50 bg-opacity-80 hover:bg-opacity-100"
     />
   )
 }

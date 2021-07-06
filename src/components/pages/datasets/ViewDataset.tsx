@@ -1,16 +1,16 @@
-import {createContext, useContext, useCallback, useState} from 'react'
+import {createContext, useContext, useState} from 'react'
 import {useRouter} from 'next/router'
 import cn from 'classnames'
 import {useForm} from 'react-hook-form'
 import {XCircleIcon} from '@heroicons/react/outline'
 import {Input, DeleteButton, NormalButton, Tag, Table, TableData, TableRow} from '@/components'
-import {useDatasets} from '@/lib/data/useMe'
+import {useDatasets} from '@/lib/data'
 import type {ReactNode, ChangeEventHandler} from 'react'
 import type {Dataset} from '@/types/grid-types'
 import {useEnhancedCurrentUser} from '@/lib/users/self'
 
 function Title({children}) {
-  return <h2 className="font-semibold text-xl capitalize">{children}</h2>
+  return <h2 className="text-xl font-semibold capitalize">{children}</h2>
 }
 
 function Section({title, children}: {title: string; children: ReactNode}) {
@@ -84,7 +84,7 @@ function TagList() {
   const {update} = useDatasets()
   const mutation = update(id, {mutationKey: 'dataset-tag-remove'})
 
-  const deleteTag = useCallback(tag => mutation.mutate({tags: tags.filter(t => t !== tag)}), [tags])
+  const deleteTag = (tag: string) => mutation.mutate({tags: tags.filter(t => t !== tag)})
 
   if (!id) {
     return null
@@ -93,7 +93,7 @@ function TagList() {
   if (tags?.length === 1) {
     return (
       <div>
-        <Tag className="bg-blueGray-50 mb-2">{tags[0]}</Tag>
+        <Tag className="mb-2 bg-blueGray-50">{tags[0]}</Tag>
       </div>
     )
   }
@@ -101,8 +101,8 @@ function TagList() {
   return (
     <div className="flex flex-wrap">
       {tags?.map(tag => (
-        <div key={`${id}-${tag}`} className="group flex mr-2 mb-2">
-          <Tag className="bg-pink-50 rounded-r-none">{tag}</Tag>
+        <div key={`${id}-${tag}`} className="flex mb-2 mr-2 group">
+          <Tag className="rounded-r-none bg-pink-50">{tag}</Tag>
           <button
             className={cn(
               'cursor-pointer px-2 rounded-r-md text-white items-center flex bg-red-400',
@@ -172,7 +172,7 @@ export function ViewDataset({dataset}: {dataset: Dataset}) {
 
   return (
     <DatasetContext.Provider value={dataset}>
-      <article className="space-y-6 pb-20">
+      <article className="pb-20 space-y-6">
         <section className="flex max-w-md space-x-4">
           <ChangeDatasetName />
         </section>
@@ -188,7 +188,7 @@ export function ViewDataset({dataset}: {dataset: Dataset}) {
               ?.sort((a, b) => a?.name?.localeCompare(b?.name))
               .map((entry, index) => (
                 <TableRow key={entry.id} darkBackground={index % 2}>
-                  <TableData className="font-medium text-gray-700 text-sm">{entry.name}</TableData>
+                  <TableData className="text-sm font-medium text-gray-700">{entry.name}</TableData>
                   <TableData>{entry.id}</TableData>
                   <TableData>{entry.dtype}</TableData>
                   <TableData>{entry.shape}</TableData>

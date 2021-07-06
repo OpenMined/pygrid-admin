@@ -1,9 +1,7 @@
 import {useRouter} from 'next/router'
 import {useForm} from 'react-hook-form'
-import {getLayout} from '@/layouts/blank'
 import {Input, NormalButton, DomainConnectionStatus, MutationError} from '@/components'
-import {Spinner} from '@/components/icons/spinner'
-import {useSettings} from '@/lib/data/useMe'
+import {useInitialSetup} from '@/lib/data'
 
 interface Onboarding {
   domainName: string
@@ -19,10 +17,11 @@ export default function Onboarding() {
     formState: {isValid}
   } = useForm({mode: 'onTouched'})
 
-  const {create} = useSettings()
+  const create = useInitialSetup()
   const mutation = create({
     onSuccess: () => {
       router.push('/login')
+      return
     }
   })
 
@@ -31,8 +30,8 @@ export default function Onboarding() {
   }
 
   return (
-    <main className="mx-auto max-w-7xl min-h-screen flex justify-center items-center flex-col">
-      <div className="p-12 bg-blueGray-200 rounded-lg md:min-w-lg space-y-6 m-8">
+    <main className="flex flex-col items-center justify-center min-h-screen mx-auto max-w-7xl">
+      <div className="p-12 m-8 space-y-6 rounded-lg bg-blueGray-200 md:min-w-lg">
         <header className="space-y-3">
           <h1>PyGrid</h1>
           <p className="text-gray-500">One last step to finish the Domain setup</p>
@@ -56,11 +55,12 @@ export default function Onboarding() {
             placeholder="••••••••••"
             ref={register}
           />
-          <div className="mt-4 flex items-center">
+          <div className="flex items-center mt-4">
             <NormalButton
               className="w-36 disabled:bg-gray-200 disabled:text-white"
-              disabled={!isValid || mutation.isLoading}>
-              {mutation.isLoading ? <Spinner className="w-4 h-4" /> : 'Start domain'}
+              disabled={!isValid || mutation.isLoading}
+              isLoading={mutation.isLoading}>
+              Start Domain
             </NormalButton>
             <DomainConnectionStatus />
           </div>
@@ -69,5 +69,3 @@ export default function Onboarding() {
     </main>
   )
 }
-
-Onboarding.getLayout = getLayout

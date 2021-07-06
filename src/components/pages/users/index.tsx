@@ -4,7 +4,6 @@ import {useQueryClient, useMutation, useQuery} from 'react-query'
 import {useForm} from 'react-hook-form'
 import {XIcon, CheckIcon} from '@heroicons/react/outline'
 import {NormalButton, DeleteButton, Input, Select, Badge, List, AccordionListItem} from '@/components'
-import {Spinner} from '@/components/icons/spinner'
 import {entityColors, gridPermissions, cacheKeys} from '@/utils'
 import api from '@/utils/api-axios'
 import type {ChangeEvent} from 'react'
@@ -34,7 +33,7 @@ export function UserList({users, me}: UsersAsProp & {me: Me}) {
 function UserInfoTitle() {
   const {user, role} = useContext(UserListContext)
   return (
-    <div className="flex truncate space-x-2">
+    <div className="flex space-x-2 truncate">
       <p className="font-medium truncate">{user.email}</p>
       <Badge bgColor={entityColors.roles}>{role.name}</Badge>
     </div>
@@ -44,7 +43,7 @@ function UserInfoTitle() {
 function ShowPermissions() {
   return (
     <div className="max-w-xl">
-      <h3 className="font-medium text-base">User permissions</h3>
+      <h3 className="text-base font-medium">User permissions</h3>
       <div className="space-y-2">
         <p>Permissions are set by roles and they are used for managing the domain.</p>
         <p>
@@ -68,18 +67,18 @@ function ShowPermissions() {
 function PermissionsList() {
   const {permissions} = useContext(UserListContext)
   return (
-    <div className="space-y-1 my-4 mx-2">
+    <div className="mx-2 my-4 space-y-1">
       {Object.keys(permissions).map(permission => (
         <div key={permission}>
           <div className="flex items-center space-x-2">
             {permissions[permission] ? (
               <>
-                <CheckIcon className="mr-2 w-4 h-4" />
+                <CheckIcon className="w-4 h-4 mr-2" />
                 <p className="italic font-medium">{gridPermissions[permission]?.name}</p>
               </>
             ) : (
               <>
-                <XIcon className="mr-2 w-3 h-3 text-red-700" />
+                <XIcon className="w-3 h-3 mr-2 text-red-700" />
                 <p>{gridPermissions[permission]?.name}</p>
               </>
             )}
@@ -101,21 +100,22 @@ function ChangeRole() {
   })
 
   return (
-    <div className="max-w-xl flex space-x-4">
+    <div className="flex max-w-xl space-x-4">
       <Select
         id="user-roles"
         label="Change user role"
         container="flex-grow w-full"
         options={allRoles.map(role => ({value: String(role.id), label: role.name}))}
-        className="truncate overflow-hidden"
+        className="overflow-hidden truncate"
         value={newRole}
         onChange={e => chooseNewRole(e.target.value)}
       />
       <NormalButton
         onClick={() => mutation.mutate()}
-        className="w-24 flex-shrink-0 mt-auto hover:bg-trueGray-200"
-        disabled={mutation.isLoading}>
-        {mutation.isLoading ? <Spinner className="w-3 h-3" /> : 'Submit'}
+        className="flex-shrink-0 w-24 mt-auto hover:bg-trueGray-200"
+        disabled={mutation.isLoading}
+        isLoading={mutation.isLoading}>
+        Submit
       </NormalButton>
     </div>
   )
@@ -142,10 +142,11 @@ function ChangePassword() {
         value={password}
       />
       <NormalButton
-        className="w-24 flex-shrink-0 mt-auto hover:bg-trueGray-200"
+        className="flex-shrink-0 w-24 mt-auto hover:bg-trueGray-200"
         disabled={mutation.isLoading}
-        onClick={() => mutation.mutate()}>
-        {mutation.isLoading ? <Spinner className="w-3 h-3" /> : 'Submit'}
+        onClick={() => mutation.mutate()}
+        isLoading={mutation.isLoading}>
+        Submit
       </NormalButton>
     </div>
   )
@@ -168,10 +169,11 @@ function ChangeEmail() {
         value={email}
       />
       <NormalButton
-        className="w-24 flex-shrink-0 mt-auto hover:bg-trueGray-200"
+        className="flex-shrink-0 w-24 mt-auto hover:bg-trueGray-200"
         disabled={mutation.isLoading}
-        onClick={() => mutation.mutate()}>
-        {mutation.isLoading ? <Spinner className="w-3 h-3" /> : 'Submit'}
+        onClick={() => mutation.mutate()}
+        isLoading={mutation.isLoading}>
+        Submit
       </NormalButton>
     </div>
   )
@@ -203,7 +205,7 @@ function DeleteUser() {
 function UserInfoPanel() {
   const {user, permissions, me} = useContext(UserListContext)
   return (
-    <div className="py-6 pl-16 pr-4 text-sm border-t border-gray-100 bg-blueGray-100 space-y-6">
+    <div className="py-6 pl-16 pr-4 space-y-6 text-sm border-t border-gray-100 bg-blueGray-100">
       <ShowPermissions {...permissions} />
       {me.permissions.canEditRoles && <ChangeRole />}
       {(user.id === me.id || me.permissions.canCreateUsers) && (
@@ -258,13 +260,13 @@ export function UserCreate({onClose}: {onClose: () => void}) {
   }
 
   return (
-    <div className="bg-blueGray-200 rounded-md p-8 space-y-6">
-      <header className="space-y-2 max-w-xl">
+    <div className="p-8 space-y-6 rounded-md bg-blueGray-200">
+      <header className="max-w-xl space-y-2">
         <h2 className="text-xl font-medium">Create a new user</h2>
         <p>
           PyGrid utilizes users and roles to appropriately permission data at a higher level. All users with the
           permission{' '}
-          <span className="bg-gray-100 uppercase text-trueGray-800 text-xs tracker-tighter p-1">Can create users</span>{' '}
+          <span className="p-1 text-xs uppercase bg-gray-100 text-trueGray-800 tracker-tighter">Can create users</span>{' '}
           are allowed to create new users in the domain.
         </p>
       </header>
@@ -286,15 +288,16 @@ export function UserCreate({onClose}: {onClose: () => void}) {
             name="roleId"
             placeholder="Select a role"
             options={options}
-            className="truncate overflow-hidden"
+            className="overflow-hidden truncate"
             error={errors.role}
             ref={register}
             required
           />
           <NormalButton
-            className="mr-4 w-24 flex-shrink-0 mt-auto bg-gray-700 text-gray-50 bg-opacity-80 hover:bg-opacity-100"
-            disabled={!isValid || mutation.isLoading}>
-            {mutation.isLoading ? <Spinner className="w-3 h-3" /> : 'Submit'}
+            className="flex-shrink-0 w-24 mt-auto mr-4 bg-gray-700 text-gray-50 bg-opacity-80 hover:bg-opacity-100"
+            disabled={!isValid || mutation.isLoading}
+            isLoading={mutation.isLoading}>
+            Submit
           </NormalButton>
           <NormalButton
             type="button"

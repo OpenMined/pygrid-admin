@@ -1,9 +1,8 @@
 import {useEffect} from 'react'
 import {useRouter} from 'next/router'
-import {getLayout} from '@/layouts/blank'
 import {LoadingPyGrid} from '@/components'
 import {useAuth} from '@/context/auth-context'
-import {useDomainStatus} from '@/lib/data/useMe'
+import {useDomainStatus} from '@/lib/data'
 import type {ReactNode} from 'react'
 
 interface Pages {
@@ -36,6 +35,7 @@ export function CheckAuthRoute({children}: Pages) {
         return null
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data?.init])
 
   if (!data && !isPublicRoute) {
@@ -44,5 +44,3 @@ export function CheckAuthRoute({children}: Pages) {
 
   return <>{children}</>
 }
-
-CheckAuthRoute.getLayout = getLayout

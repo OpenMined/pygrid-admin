@@ -8,7 +8,7 @@ interface PermissionListWithToggle {
   id: string | number
 }
 
-export function ToggleablePermissionsList({onChange, defaultPermissions, id}: PermissionListWithToggle) {
+export function PermissionsListToggle({onChange, defaultPermissions, id}: PermissionListWithToggle) {
   return (
     <>
       {Object.keys(gridPermissions).map((permission: UserPermissions) => (

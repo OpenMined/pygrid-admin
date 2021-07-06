@@ -1,9 +1,8 @@
 import {XCircleIcon, CheckCircleIcon} from '@heroicons/react/solid'
 import dayjs from 'dayjs'
-import {Badge, Accordion} from '@/components'
-import {Spinner} from '@/components/icons/spinner'
+import {Badge, Accordion, Spinner} from '@/components'
 import {dateFromNow, statusColors, formatFullDate} from '@/utils'
-import {useRequests} from '@/lib/data/useMe'
+import {useRequests} from '@/lib/data'
 import type {MouseEventHandler} from 'react'
 import type {Request, RequestStatus} from '@/types/grid-types'
 
@@ -29,8 +28,8 @@ function RequestListType({requests, listType}: ListType) {
 
   return (
     <div className="space-y-2">
-      <h2 className="flex space-x-3 items-center">
-        <Badge bgColor="bg-white" textColor="text-gray-800" className="text-sm py-2 tracking-tight">
+      <h2 className="flex items-center space-x-3">
+        <Badge bgColor="bg-white" textColor="text-gray-800" className="py-2 text-sm tracking-tight">
           {listType}
           {list.length >= 0 && (
             <div className="h-full px-2 rounded-md inline-block bg-yellow-400 text-gray-800 font-semibold text-xs py-0.5 ml-2">
@@ -65,13 +64,13 @@ function RequestAccordionActions(request: Request) {
 
 function RequestStatusAndDate({status, date}: Pick<Request, 'status' | 'date'>) {
   return (
-    <div className="flex flex-col lg:flex-row flex-shrink-0 space-y-1 items-end justify-center lg:justify-start lg:items-center lg:space-x-2 lg:space-y-0 ">
+    <div className="flex flex-col items-end justify-center flex-shrink-0 space-y-1 lg:flex-row lg:justify-start lg:items-center lg:space-x-2 lg:space-y-0 ">
       <div className="w-20">
         <Badge className="w-auto" bgColor={statusColors.requests[status]}>
           {status}
         </Badge>
       </div>
-      <div className="flex-shrink-0 text-right text-sm w-24 text-gray-500">{dateFromNow(date)}</div>
+      <div className="flex-shrink-0 w-24 text-sm text-right text-gray-500">{dateFromNow(date)}</div>
     </div>
   )
 }
@@ -89,7 +88,7 @@ function RequestAccordionTitle(request: Request) {
 
 function RequestInfoPanel(request: Request) {
   return (
-    <div className="py-6 pl-16 pr-4 text-sm border-t border-gray-100 bg-blueGray-100 space-y-6">
+    <div className="py-6 pl-16 pr-4 space-y-6 text-sm border-t border-gray-100 bg-blueGray-100">
       <PermissionRequestInfo {...request} />
       <PermissionObjectInfo {...request} />
       <PermissionReason {...request} />
@@ -117,7 +116,7 @@ function AcceptOrDenyPermissionRequest({id}: Pick<Request, 'id'>) {
   }
 
   return (
-    <div className="flex items-center text-gray-300 space-x-2">
+    <div className="flex items-center space-x-2 text-gray-300">
       <button onClick={handleAccept}>
         <CheckCircleIcon className="w-8 h-8 hover:text-green-600" />
       </button>
@@ -131,11 +130,11 @@ function AcceptOrDenyPermissionRequest({id}: Pick<Request, 'id'>) {
 function PermissionRequestInfo({userName, date, id}: Pick<Request, 'userName' | 'date' | 'id'>) {
   return (
     <div className="space-y-1">
-      <h3 className="font-medium text-base mb-1">Permission request</h3>
+      <h3 className="mb-1 text-base font-medium">Permission request</h3>
       <p>
         Requested by {userName} on {formatFullDate(date)}
       </p>
-      <p className="text-gray-500 text-sm">Request id #{id}</p>
+      <p className="text-sm text-gray-500">Request id #{id}</p>
     </div>
   )
 }
@@ -143,12 +142,12 @@ function PermissionRequestInfo({userName, date, id}: Pick<Request, 'userName' | 
 function PermissionObjectInfo({objectId, objectType}: Pick<Request, 'objectId' | 'objectType'>) {
   return (
     <div>
-      <h3 className="font-medium text-base mb-1">Object information</h3>
+      <h3 className="mb-1 text-base font-medium">Object information</h3>
       <div className="space-y-2">
         <p>Object id </p>
-        <div className="py-1 px-2 bg-gray-50 text-sm">{objectId}</div>
+        <div className="px-2 py-1 text-sm bg-gray-50">{objectId}</div>
         <p>Object type</p>
-        <div className="py-1 px-2 bg-gray-50 text-sm">{objectType}</div>
+        <div className="px-2 py-1 text-sm bg-gray-50">{objectType}</div>
       </div>
     </div>
   )
@@ -158,7 +157,7 @@ function PermissionReason({reason}: Pick<Request, 'reason'>) {
   return (
     <div className="space-y-2">
       <h3 className="text-base font-medium">Reason</h3>
-      <p className="p-2 border-l-8 rounded-l-sm border-amber-400 bg-amber-100 text-sm">{reason}</p>
+      <p className="p-2 text-sm border-l-8 rounded-l-sm border-amber-400 bg-amber-100">{reason}</p>
     </div>
   )
 }

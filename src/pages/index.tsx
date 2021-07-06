@@ -1,6 +1,6 @@
 import {useRouter} from 'next/router'
 import {useAuth} from '@/context/auth-context'
-import {useDomainStatus} from '@/lib/data/useMe'
+import {useDomainStatus} from '@/lib/data'
 
 export default function Home() {
   const router = useRouter()

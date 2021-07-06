@@ -1,6 +1,6 @@
 import {useState} from 'react'
-import {NormalButton, DeleteButton, Accordion, ToggleablePermissionsList} from '@/components'
-import {useRoles} from '@/lib/data/useMe'
+import {NormalButton, DeleteButton, Accordion, PermissionsListToggle} from '@/components'
+import {useRoles} from '@/lib/data'
 import type {UserPermissions, Role} from '@/types/grid-types'
 
 // TODO: Unfortunately Grid is not Restful (yet).
@@ -20,7 +20,7 @@ export function PermissionList({roles}: {roles: Role[]}) {
 
 function PermissionInfoTitle({name}: Partial<Role>) {
   return (
-    <div className="flex truncate space-x-2">
+    <div className="flex space-x-2 truncate">
       <p className="font-medium truncate">{name}</p>
     </div>
   )
@@ -49,9 +49,9 @@ function PermissionInfoPanel(role: Role) {
     setRole(role => ({...role, [permission]: value}))
 
   return (
-    <div className="py-6 px-16 text-sm border-t border-gray-200 bg-blueGray-100 space-y-6">
+    <div className="px-16 py-6 space-y-6 text-sm border-t border-gray-200 bg-blueGray-100">
       <div className="space-y-6">
-        <ToggleablePermissionsList
+        <PermissionsListToggle
           id={role.id}
           defaultPermissions={editableRole}
           onChange={(permission: UserPermissions, enabled: boolean) => changePermission(permission, enabled)}

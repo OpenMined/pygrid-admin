@@ -1,21 +1,22 @@
-import type {FunctionComponent} from 'react'
 import {useRouter} from 'next/router'
 import {useAuth} from '@/context/auth-context'
+import {useDomainStatus} from '@/lib/data/useMe'
 
-const Homepage: FunctionComponent = () => {
-  const {getToken} = useAuth()
+export default function Home() {
   const router = useRouter()
+  const {getToken} = useAuth()
   const isAuthenticated = getToken()
+  const {data} = useDomainStatus()
 
-  if (typeof window !== 'undefined') {
+  if (typeof window !== 'undefined' && data) {
     if (isAuthenticated) {
       router.replace('/dashboard')
+      return null
     } else {
       router.replace('/login')
+      return null
     }
   }
 
   return null
 }
-
-export default Homepage

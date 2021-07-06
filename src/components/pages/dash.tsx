@@ -1,7 +1,7 @@
 import {useMemo} from 'react'
 import cn from 'classnames'
 import Link from 'next/link'
-import {dateFromNow, entityColors} from '@/utils'
+import {dateFromNow, entityColors, localeSortByVariable} from '@/utils'
 import {Badge} from '@/components'
 import {Spinner} from '@/components/icons/spinner'
 import type {Tensor, Dataset, Model} from '@/types/grid-types'
@@ -10,9 +10,10 @@ function prepareTensorsForAssetList(tensor: Tensor) {
   return {
     title: tensor.name,
     id: tensor.id,
-    description: tensor.description ?? tensor.tags ?? '',
+    description: tensor.description || tensor.tags?.join(', ') || '',
     type: 'tensor',
-    createdAt: ''
+    createdAt: 'Unknown',
+    href: '/tensors'
   }
 }
 
@@ -21,8 +22,9 @@ function prepareDatasetForAssetList(dataset: Dataset) {
     title: dataset.name,
     description: dataset.description,
     id: dataset.id,
-    createdAt: dateFromNow(dataset.createdAt),
-    type: 'dataset'
+    createdAt: dataset.createdAt ? dateFromNow(dataset.createdAt) : 'Unknown',
+    type: 'dataset',
+    href: '/datasets'
   }
 }
 
@@ -31,23 +33,28 @@ function prepareModelForAssetList(model: Model) {
     title: model.name,
     description: model.description,
     id: model.id,
-    createdAt: dateFromNow(model.createAt),
-    type: 'model'
+    createdAt: model?.createdAt ? dateFromNow(model.createdAt) : 'Unknown',
+    type: 'model',
+    href: '/models'
   }
 }
 
-function AssetListItem({title, description, createdAt, type, id}) {
+function AssetListItem({title, href, description, createdAt, type, id}) {
   return (
-    <li key={id} className="col-span-full px-4 py-4 cursor-pointer hover:bg-gray-100">
-      <div className="flex items-center justify-between space-x-4">
-        <div className="flex items-center space-x-2">
-          <span className="">{title || `Unknown ${type}`}</span>
-          <Badge bgColor={entityColors[type]}>{type}</Badge>
-        </div>
-        <span className="text-sm text-gray-500">{createdAt}</span>
-      </div>
-      <div className="text-sm text-gray-500 overflow-ellipsis line-clamp-3 mt-1">{description}</div>
-      <span className="text-xs text-gray-400">{id}</span>
+    <li key={id} className="col-span-full px-4 py-4 hover:bg-gray-100">
+      <Link href={`${href}?v=${id}`}>
+        <a>
+          <div className="flex items-center justify-between space-x-4">
+            <div className="flex items-center space-x-2">
+              <span className="">{title || `Unknown ${type}`}</span>
+              <Badge bgColor={entityColors[type]}>{type}</Badge>
+            </div>
+            <span className="text-sm text-gray-500">{createdAt}</span>
+          </div>
+          <div className="text-sm text-gray-500 overflow-ellipsis line-clamp-3 mt-1">{description}</div>
+          <span className="text-xs text-gray-400">{id}</span>
+        </a>
+      </Link>
     </li>
   )
 }
@@ -58,12 +65,12 @@ export interface AssetList {
   tensors: Tensor[]
 }
 
-export function LatestAssetsList({datasets, models, tensors}) {
+export function LatestAssetsList({datasets = [], models = [], tensors = []}) {
   const assets = useMemo(
     () => [
-      ...datasets.map(prepareDatasetForAssetList),
-      ...models.map(prepareModelForAssetList),
-      ...tensors.map(prepareTensorsForAssetList)
+      ...localeSortByVariable(datasets.map(prepareDatasetForAssetList).slice(0, 3), 'createdAt'),
+      ...models.map(prepareModelForAssetList).slice(0, 3),
+      ...tensors.map(prepareTensorsForAssetList).slice(0, 3)
     ],
     [datasets, models, tensors]
   )

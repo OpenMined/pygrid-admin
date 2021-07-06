@@ -1,180 +1,73 @@
-import {useState} from 'react'
 import {useRouter} from 'next/router'
-import cn from 'classnames'
-import {Dialog} from '@headlessui/react'
 import {useForm} from 'react-hook-form'
-import {Input, SectionHeader} from '@/components/lib'
 import {getLayout} from '@/layouts/blank'
-import {CheckMark} from '@/components/icons/marks'
-import api from '@/utils/api-axios'
+import {Input, NormalButton, DomainConnectionStatus, MutationError} from '@/components'
+import {Spinner} from '@/components/icons/spinner'
+import {useSettings} from '@/lib/data/useMe'
 
-const steps = [
-  {name: 'Deploy PyGrid', description: 'Deploy a PyGrid Domain', href: '#', status: 'current'},
-  {name: 'Owner account', description: 'Create the Domain Owner account.', href: '#', status: 'upcoming'},
-  {name: 'Other settings', description: 'Set your PyGrid name', href: '#', status: 'upcoming'}
-]
+interface Onboarding {
+  domainName: string
+  email: string
+  password: string
+}
 
-export default function Start() {
-  const [currentStep, setStep] = useState(0)
-  const {handleSubmit, register} = useForm()
-  const [loading, setLoading] = useState(false)
+export default function Onboarding() {
   const router = useRouter()
+  const {
+    register,
+    handleSubmit,
+    formState: {isValid}
+  } = useForm({mode: 'onTouched'})
 
-  function submit(values) {
-    setStep(2)
-    api.post('/setup', values).then(() => {
-      setLoading(true)
-      setTimeout(() => router.push('/login'), 2000)
-    })
-  }
-
-  function change() {
-    if (steps[currentStep].status !== 'complete') {
-      steps[currentStep].status = 'complete'
-      steps[currentStep + 1].status = 'current'
+  const {create} = useSettings()
+  const mutation = create({
+    onSuccess: () => {
+      router.push('/login')
     }
+  })
 
-    setStep(curr => curr + 1)
+  const onSubmit = ({email, password, domainName}: Onboarding) => {
+    mutation.mutate({email, password, nodeName: domainName})
   }
 
   return (
-    <main className="mx-auto max-w-3xl h-screen flex items-center">
-      <article className="flex flex-row items-center w-full max-w-3xl px-8 mx-auto space-x-8 lg:space-x-20">
-        <nav aria-label="Progress" className="w-full">
-          <ol className="overflow-hidden">
-            {steps.map((step, stepIdx) => (
-              <li key={step.name} className={cn(stepIdx !== steps.length - 1 ? 'pb-10' : '', 'relative')}>
-                {step.status === 'complete' ? (
-                  <>
-                    {stepIdx !== steps.length - 1 ? (
-                      <div
-                        className="-ml-px absolute mt-0.5 top-4 left-4 w-0.5 h-full bg-indigo-600"
-                        aria-hidden="true"
-                      />
-                    ) : null}
-                    <div onClick={() => setStep(stepIdx)}>
-                      <a href={step.href} className="relative flex items-start group">
-                        <span className="flex items-center h-9">
-                          <span className="relative z-10 flex items-center justify-center w-8 h-8 bg-indigo-600 rounded-full group-hover:bg-indigo-800">
-                            <CheckMark className="w-5 h-5 text-white" aria-hidden="true" />
-                          </span>
-                        </span>
-                        <span className="flex flex-col min-w-0 ml-4">
-                          <span className="text-xs font-semibold tracking-wide uppercase">{step.name}</span>
-                          <span className="text-sm text-gray-500">{step.description}</span>
-                        </span>
-                      </a>
-                    </div>
-                  </>
-                ) : step.status === 'current' ? (
-                  <>
-                    {stepIdx !== steps.length - 1 ? (
-                      <div
-                        className="-ml-px absolute mt-0.5 top-4 left-4 w-0.5 h-full bg-gray-300"
-                        aria-hidden="true"
-                      />
-                    ) : null}
-                    <a href={step.href} className="relative flex items-start group" aria-current="step">
-                      <span className="flex items-center h-9" aria-hidden="true">
-                        <span className="relative z-10 flex items-center justify-center w-8 h-8 bg-white border-2 border-indigo-600 rounded-full">
-                          <span className="h-2.5 w-2.5 bg-indigo-600 rounded-full" />
-                        </span>
-                      </span>
-                      <span className="flex flex-col min-w-0 ml-4">
-                        <span className="text-xs font-semibold tracking-wide text-indigo-600 uppercase">
-                          {step.name}
-                        </span>
-                        <span className="text-sm text-gray-500">{step.description}</span>
-                      </span>
-                    </a>
-                  </>
-                ) : (
-                  <>
-                    {stepIdx !== steps.length - 1 ? (
-                      <div
-                        className="-ml-px absolute mt-0.5 top-4 left-4 w-0.5 h-full bg-gray-300"
-                        aria-hidden="true"
-                      />
-                    ) : null}
-                    <a href={step.href} className="relative flex items-start group">
-                      <span className="flex items-center h-9" aria-hidden="true">
-                        <span className="relative z-10 flex items-center justify-center w-8 h-8 bg-white border-2 border-gray-300 rounded-full group-hover:border-gray-400">
-                          <span className="h-2.5 w-2.5 bg-transparent rounded-full group-hover:bg-gray-300" />
-                        </span>
-                      </span>
-                      <span className="flex flex-col min-w-0 ml-4">
-                        <span className="text-xs font-semibold tracking-wide text-gray-500 uppercase">{step.name}</span>
-                        <span className="text-sm text-gray-500">{step.description}</span>
-                      </span>
-                    </a>
-                  </>
-                )}
-              </li>
-            ))}
-          </ol>
-        </nav>
-        <section className="w-full space-y-4">
-          <SectionHeader>
-            <SectionHeader.Title>
-              {currentStep === 0 && 'Welcome to PyGrid!'}
-              {currentStep === 1 && 'Account'}
-              {currentStep === 2 && 'Settings'}
-            </SectionHeader.Title>
-            <SectionHeader.Description>
-              {currentStep === 0 &&
-                "Congratulations on installing PyGrid! Now, let's finish configuring your PyGrid Domain."}
-              {currentStep === 1 && 'Set up the owner account.'}
-              {currentStep === 2 && 'Finally, name your PyGrid Domain.'}
-            </SectionHeader.Description>
-          </SectionHeader>
-          <form onSubmit={handleSubmit(submit)}>
-            <div className={cn(currentStep !== 1 && 'sr-only', 'space-y-4')}>
-              <Input ref={register} label="Owner email" placeholder="Owner account email" name="email" />
-              <Input
-                ref={register}
-                label="Owner password"
-                placeholder="Owner account password"
-                name="password"
-                type="password"
-              />
-            </div>
-            <div className={cn(currentStep !== 2 && 'sr-only')}>
-              <Input ref={register} label="Domain name" placeholder="Domain name" name="domain_name" />
-            </div>
-            <div className={cn('flex flex-row justify-between mt-8', currentStep > 1 && 'space-x-4')}>
-              <div>
-                <button
-                  className={cn('btn w-full bg-gray-600', currentStep <= 1 && 'hidden')}
-                  type="button"
-                  onClick={() => setStep(curr => curr - 1)}>
-                  Back
-                </button>
-              </div>
-              {currentStep === 2 ? (
-                <button key="finish" className="w-full btn">
-                  Finish setup
-                </button>
-              ) : (
-                <button className="w-full btn" onClick={change} type="button">
-                  Next
-                </button>
-              )}
-            </div>
-          </form>
-        </section>
-      </article>
-      <Dialog open={loading} onClose={() => false} className="fixed inset-0 z-10 overflow-y-auto">
-        <Dialog.Overlay className="fixed inset-0 z-10" />
-        <div className="flex items-center justify-center min-h-screen mx-auto bg-white min-w-screen transition-all">
-          <img alt="PyGrid logo" src="/assets/logo.png" className="z-30 w-24 h-24 opacity-100 animate-pulse" />
-          <h2 className="animate-pulse">Loading PyGrid...</h2>
-        </div>
-        <button className="sr-only" onClick={() => false}>
-          Cancel
-        </button>
-      </Dialog>
+    <main className="mx-auto max-w-7xl min-h-screen flex justify-center items-center flex-col">
+      <div className="p-12 bg-blueGray-200 rounded-lg md:min-w-lg space-y-6 m-8">
+        <header className="space-y-3">
+          <h1>PyGrid</h1>
+          <p className="text-gray-500">One last step to finish the Domain setup</p>
+        </header>
+        <p className="max-w-lg">
+          After installing PyGrid, you must set up a Domain owner account and give your Domain a name.
+        </p>
+        <form className="max-w-lg space-y-3" onSubmit={handleSubmit(onSubmit)}>
+          <MutationError
+            isError={mutation.isError}
+            error="Unable to setup domain"
+            description={mutation.error?.message}
+          />
+          <Input label="Domain name" id="domainName" name="domainName" placeholder="Grid Domain" ref={register} />
+          <Input label="Email or username" placeholder="owner@openmined.org" id="email" name="email" ref={register} />
+          <Input
+            label="Password"
+            id="password"
+            name="password"
+            type="password"
+            placeholder="••••••••••"
+            ref={register}
+          />
+          <div className="mt-4 flex items-center">
+            <NormalButton
+              className="w-36 disabled:bg-gray-200 disabled:text-white"
+              disabled={!isValid || mutation.isLoading}>
+              {mutation.isLoading ? <Spinner className="w-4 h-4" /> : 'Start domain'}
+            </NormalButton>
+            <DomainConnectionStatus />
+          </div>
+        </form>
+      </div>
     </main>
   )
 }
 
-Start.getLayout = getLayout
+Onboarding.getLayout = getLayout

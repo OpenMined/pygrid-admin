@@ -4,10 +4,15 @@ import {useRouter} from 'next/router'
 import {useForm} from 'react-hook-form'
 import {getLayout} from '@/layouts/blank'
 import {Spinner} from '@/components/icons/spinner'
+import {DomainConnectionStatus} from '@/components'
+import {useDomainStatus} from '@/lib/data/useMe'
 import {useAuth} from '@/context/auth-context'
-import {useFetch} from '@/utils/query-builder'
-import {PyGridStatus} from '@/types'
-import {Input, SectionHeader} from '@/components/lib'
+import {Input} from '@/components/lib'
+
+interface Login {
+  email: string
+  password: string
+}
 
 const Login: FunctionComponent & {getLayout: FunctionComponent} = () => {
   const router = useRouter()
@@ -18,7 +23,7 @@ const Login: FunctionComponent & {getLayout: FunctionComponent} = () => {
   const [spin, setSpin] = useState<boolean>(false)
   const rotateStyle = useRef({})
   const {isValid} = formState
-  const {isLoading, isError, data: status} = useFetch<PyGridStatus>('/setup/status')
+  const {data: status} = useDomainStatus()
 
   if (spin) {
     rotateStyle.current = {transform: `rotate(${Math.ceil(365 * Math.random())}deg)`}
@@ -28,13 +33,13 @@ const Login: FunctionComponent & {getLayout: FunctionComponent} = () => {
     }
   }
 
-  const onSubmit = async values => {
+  const onSubmit = async (values: Login) => {
     try {
       setLoading(true)
       await login(values)
       router.push('/dashboard')
     } catch ({message}) {
-      setError(message ?? 'API unreachable')
+      setError(message)
     } finally {
       setLoading(false)
     }
@@ -46,22 +51,21 @@ const Login: FunctionComponent & {getLayout: FunctionComponent} = () => {
         <div className="transition transform" style={rotateStyle.current}>
           <img alt="PyGrid logo" src="/assets/logo.png" width={200} height={200} />
         </div>
-        <SectionHeader>
-          <SectionHeader.Title>Welcome to PyGrid</SectionHeader.Title>
-          {status && !isError && (
-            <SectionHeader.Description>
-              Login to <b>{status.nodeName}</b> Domain
-            </SectionHeader.Description>
-          )}
-        </SectionHeader>
+        <h1>PyGrid UI</h1>
+        {status && (
+          <p className="text-gray-600">
+            Login to <b>{status.nodeName}</b> Domain
+          </p>
+        )}
         <form className="w-4/5" onSubmit={handleSubmit(onSubmit)}>
           <div className="flex flex-col text-left space-y-6">
             <div className="flex flex-col">
               <Input
                 name="email"
-                label="Your email or username"
-                ref={register({required: 'This is required'})}
-                placeholder="researcher@openmined.com"
+                id="email"
+                label="Email"
+                ref={register({required: "Don't forget your email"})}
+                placeholder="owner@openmined.org"
                 error={formState.errors.email?.message}
                 onChange={() => setSpin(true)}
               />
@@ -70,11 +74,11 @@ const Login: FunctionComponent & {getLayout: FunctionComponent} = () => {
             <div className="flex flex-col">
               <Input
                 type="password"
+                id="password"
                 name="password"
-                label="Your password"
-                ref={register({required: 'This is required'})}
-                placeholder="********"
-                error={formState.errors.password?.message}
+                label="Password"
+                ref={register({required: 'This needs a password...'})}
+                placeholder="••••••••••"
                 onChange={() => setSpin(true)}
               />
             </div>
@@ -83,6 +87,7 @@ const Login: FunctionComponent & {getLayout: FunctionComponent} = () => {
             </button>
           </div>
         </form>
+        <DomainConnectionStatus />
       </div>
     </main>
   )

@@ -9,3 +9,7 @@ export function formatBytes(bytes, decimals = 2) {
 
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i]
 }
+
+export function localeSortByVariable<T>(array: T[], variable: string): T[] {
+  return array.sort((a, b) => a[variable].localeCompare(b[variable]))
+}

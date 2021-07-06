@@ -28,7 +28,9 @@ instance.interceptors.request.use((config: AxiosRequestConfig) => {
     config.headers.token = token
   }
 
-  decamelizeKeys(config.data)
+  if (config.data && config.headers['Content-Type'] === 'application/json') {
+    config.data = decamelizeKeys(config.data)
+  }
 
   return config
 })

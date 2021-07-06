@@ -1,6 +1,16 @@
 export const entityColors = {
-  model: 'lime',
-  dataset: 'fuchsia',
-  request: 'pink',
-  user: 'blue'
+  models: 'lime',
+  datasets: 'fuchsia',
+  requests: 'pink',
+  users: 'sky',
+  tensors: 'blueGray',
+  roles: 'sky'
+}
+
+export const statusColors = {
+  requests: {
+    pending: 'coolGray',
+    accepted: 'green',
+    denied: 'red'
+  }
 }

@@ -1,23 +1,46 @@
-import type {FunctionComponent} from 'react'
+import {useEffect} from 'react'
 import {useRouter} from 'next/router'
+import {LoadingPyGrid} from '@/components'
 import {useAuth} from '@/context/auth-context'
+import {useDomainStatus} from '@/lib/data'
+import type {ReactNode} from 'react'
 
-const CheckAuthRoute: FunctionComponent = ({children}) => {
+interface Pages {
+  children: ReactNode
+}
+
+export function CheckAuthRoute({children}: Pages) {
   const router = useRouter()
   const {getToken} = useAuth()
-  const publicRoutes = ['/login']
+  const {data, isError} = useDomainStatus()
+  const publicRoutes = ['/offline', '/login', '/start']
+  const isPublicRoute = publicRoutes.includes(router.route)
 
-  if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
-    const token = getToken()
-
-    if (!token && !publicRoutes.includes(router.route)) {
-      router.push('/login')
-      // We could flash a return page here... or just a blank
+  useEffect(() => {
+    if (data && !data.init) {
+      router.push('/start')
       return null
     }
+
+    if (!isPublicRoute) {
+      if (isError) {
+        router.push('/offline')
+        return null
+      }
+
+      const token = getToken()
+
+      if (!token) {
+        router.push('/login')
+        return null
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data?.init])
+
+  if (!data && !isPublicRoute) {
+    return <LoadingPyGrid />
   }
 
   return <>{children}</>
 }
-
-export {CheckAuthRoute}

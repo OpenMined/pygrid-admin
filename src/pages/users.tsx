@@ -63,23 +63,20 @@ export default function Users() {
   const [filtered, setFiltered] = useState<EnhancedUser[]>(null)
   const searchFields = useMemo(() => ['email', 'role'], [])
 
-  const isLoading = useMemo(() => Boolean(usersQuery.isLoading || rolesQuery.isLoading || meQuery.isLoading), [
-    usersQuery.isLoading,
-    rolesQuery.isLoading,
-    meQuery.isLoading
-  ])
+  const isLoading = useMemo(
+    () => Boolean(usersQuery.isLoading || rolesQuery.isLoading || meQuery.isLoading),
+    [usersQuery.isLoading, rolesQuery.isLoading, meQuery.isLoading]
+  )
 
-  const isError = useMemo(() => Boolean(usersQuery.isError || rolesQuery.isError || meQuery.isError), [
-    usersQuery.isError,
-    rolesQuery.isError,
-    meQuery.isError
-  ])
+  const isError = useMemo(
+    () => Boolean(usersQuery.isError || rolesQuery.isError || meQuery.isError),
+    [usersQuery.isError, rolesQuery.isError, meQuery.isError]
+  )
 
-  const error = useMemo(() => (usersQuery.error || rolesQuery.error || meQuery.error) as ErrorMessage, [
-    usersQuery.error,
-    rolesQuery.error,
-    meQuery.error
-  ])
+  const error = useMemo(
+    () => (usersQuery.error || rolesQuery.error || meQuery.error) as ErrorMessage,
+    [usersQuery.error, rolesQuery.error, meQuery.error]
+  )
 
   useEffect(() => {
     if (usersQuery.data && rolesQuery.data && meQuery.data) {

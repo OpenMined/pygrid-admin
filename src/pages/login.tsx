@@ -1,5 +1,4 @@
 import {useState, useRef} from 'react'
-import cn from 'classnames'
 import {useRouter} from 'next/router'
 import {useForm} from 'react-hook-form'
 import {DomainConnectionStatus} from '@/components'
@@ -81,7 +80,7 @@ export default function Login() {
               />
             </div>
             <NormalButton
-              className={cn('btn', loading && 'pointer-events-none')}
+              className="bg-sky-500 hover:bg-sky-300 active:bg-sky-800 text-white"
               disabled={!isValid || error}
               isLoading={loading}>
               Login

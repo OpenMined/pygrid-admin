@@ -3,7 +3,6 @@ import {AppProviders} from '@/context'
 import {CheckAuthRoute} from '@/components/auth-route'
 import type {AppProps} from 'next/app'
 
-import '@reach/dialog/styles.css'
 import '@/styles/globals.css'
 
 export default function PyGridAdmin({Component, pageProps}: AppProps) {

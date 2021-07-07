@@ -1,5 +1,15 @@
 ![PyGrid logo](https://raw.githubusercontent.com/OpenMined/design-assets/master/logos/PyGrid/horizontal-primary-trans.png)
 
+### Deprecation note
+
+For convenience reasons, this repository is moving into PySyft:
+
+```
+https://github.com/OpenMined/PySyft/tree/dev/packages/grid
+```
+
+New developments and issues will be managed in this monorepo structure.
+
 # PyGrid Admin
 
 PyGrid Admin is the user interface that allows data owners to manage their **deployed** PyGrid Domain or Network. This
@@ -25,9 +35,9 @@ First, add the PyGrid Domain url as an environment variable. Open `.env.producti
 NEXT_PUBLIC_API_URL=<PyGrid Domain url>
 ```
 
-The Admin UI can be hosted in static file services such as Amazon S3, Netlify, Google Cloud, Vercel or [Heroku](/docs/heroku.md), and can
-be easily deployed to your own network. It was deliberately built separately from PyGrid to allow for the a very simple
-deployment.
+The Admin UI can be hosted in static file services such as Amazon S3, Netlify, Google Cloud, Vercel or
+[Heroku](/docs/heroku.md), and can be easily deployed to your own network. It was deliberately built separately from
+PyGrid to allow for the a very simple deployment.
 
 ```bash
 yarn install
@@ -43,7 +53,7 @@ provide the functionality that seems to be missing.
 Run the development server:
 
 ```bash
-git clone git@github.com:OpenMined/PyGrid.git
+git clone git@github.com:OpenMined/PyGrid-Admin.git
 cd pygrid-admin
 yarn install
 yarn dev
@@ -59,18 +69,17 @@ the upcoming versions.
 
 As of now, PyGrid Admin supports the following operations via PyGrid API
 
-| Feature       | READ          | CREATE        | UPDATE        | DELETE        |
-| ------------- |:-------------:|:-------------:|:-------------:|:-------------:|
-| Users         |      ✅       |       ✅      |      ✅      |        ✅     |
-| Groups        |      ✅       |       ✅      |      ✅      |        ✅     |
-| Roles         |      ✅       |       ✅      |      ✅      |        ✅     |
-| Datasets      |      ✅       |       ✅      |      ❌      |        ✅     |
-| Requests      |      ✅       |       -       |      -       |        ✅     |
-| Tensors       |      ✅       |       -       |      -       |        ✅     |
-| Workers       |      ✅       |       -       |      -       |        ✅     |
-| Associations  |      ✅       |       -       |      -       |        ✅     |
-| Settings      |      ✅       |       -       |      ❌      |        -      |
-
+| Feature      | READ | CREATE | UPDATE | DELETE |
+| ------------ | :--: | :----: | :----: | :----: |
+| Users        |  ✅  |   ✅   |   ✅   |   ✅   |
+| Groups       |  ✅  |   ✅   |   ✅   |   ✅   |
+| Roles        |  ✅  |   ✅   |   ✅   |   ✅   |
+| Datasets     |  ✅  |   ✅   |   ❌   |   ✅   |
+| Requests     |  ✅  |   -    |   -    |   ✅   |
+| Tensors      |  ✅  |   -    |   -    |   ❌   |
+| Workers      |  ❌  |   -    |   -    |   ❌   |
+| Associations |  ❌  |   -    |   -    |   ❌   |
+| Settings     |  ✅  |   -    |   ❌   |   -    |
 
 ## Contributing & Support
 
